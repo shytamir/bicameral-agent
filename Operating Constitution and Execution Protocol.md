@@ -982,23 +982,54 @@ An Episode begins when the Kernel wakes the Operator because of:
 
 An Episode contains zero or more reasoning/tool cycles.
 
-It ends when the Operator declares one of:
+Its execution phase ends in exactly one of two ways.
+
+## Operator-declared outcome
+
+The Operator may declare one of:
 
 - `COMPLETED`;
 - `BLOCKED`;
 - `AWAITING_OPERATOR`;
 - `CHECKPOINT`.
 
-The Kernel may force an Episode boundary on:
+These values are semantic judgments about the current unit of work.
 
-- fatal tool failure;
-- invocation failure;
-- configured context ceiling;
-- process interruption.
+## Kernel interruption
 
-The Steward runs at Episode boundaries.
+A **Kernel interruption** occurs when the Kernel ends the execution phase of an `OPEN` Episode without receiving a valid Operator-declared outcome because a deterministic runtime or control condition prevents or prohibits another Operator cycle in that Episode.
 
-It does **not** run after every `ls`, `grep`, file read or other micro-action.
+v0 interruption reasons are:
+
+- `FATAL_TOOL_INFRASTRUCTURE_FAILURE`;
+- `OPERATOR_INVOCATION_FAILURE`;
+- `CONTEXT_CEILING`;
+- `PROCESS_INTERRUPTION`;
+- `CONTROL_STATE_TERMINATED_EXECUTION`.
+
+Their meanings are narrow:
+
+- `FATAL_TOOL_INFRASTRUCTURE_FAILURE` means the tool transport or adapter can no longer safely authorize, execute or journal further calls. An ordinary tool error, non-zero exit, timeout or unsatisfied postcondition is not fatal merely because the action failed.
+- `OPERATOR_INVOCATION_FAILURE` means the Operator call produced no valid structured outcome after the configured invocation-attempt limit was exhausted.
+- `CONTEXT_CEILING` means the next required Operator input package cannot fit within the fixed configured context limit. This is measured mechanically rather than inferred from semantic importance.
+- `PROCESS_INTERRUPTION` means the Kernel or its execution host stopped unexpectedly, including an orphaned `OPEN` Episode detected during recovery.
+- `CONTROL_STATE_TERMINATED_EXECUTION` means an authorized control transition, such as Objective closure or process termination, prohibited continued execution.
+
+An Operator-declared outcome and a Kernel interruption are mutually exclusive.
+
+Only the Operator may declare `COMPLETED`, `BLOCKED`, `AWAITING_OPERATOR` or `CHECKPOINT`.
+
+The Kernel does not synthesize one of those outcomes after an interruption.
+
+In particular:
+
+> **`BLOCKED` is an Operator judgment about the work. A Kernel interruption is a Kernel-recorded fact about execution discontinuity.**
+
+Neither changes Objective status.
+
+After either execution-ending condition, no further reasoning or tool action may occur in that Episode. The Episode proceeds to finalization and, where the selected experimental condition includes it, Steward consolidation. Later continuation begins a new Episode rather than reopening the interrupted execution phase.
+
+The Steward does **not** run after every `ls`, `grep`, file read or other micro-action.
 
 This is a frozen protocol decision.
 
@@ -1010,7 +1041,7 @@ In particular:
 
 > **Episode `COMPLETED` means that the Episode completed normally. It does not mean that its Objective is `SATISFIED`.**
 
-At Episode closure, the Operator may additionally record an Objective recommendation:
+With an Operator-declared outcome, the Operator may additionally record an Objective recommendation:
 
 - `CONTINUE`;
 - `PROPOSE_SATISFIED`;
@@ -1784,12 +1815,19 @@ They may be journaled compactly where needed for audit.
 
 # 44. Consolidation Cadence
 
-The Steward runs:
+Where the selected experimental condition includes Steward consolidation, the Steward runs:
 
-- at Episode completion;
-- at Episode checkpoint;
-- when an Episode becomes blocked;
-- following a forced Episode termination where useful evidence exists.
+- after `COMPLETED`;
+- after `CHECKPOINT`;
+- after `BLOCKED`;
+- after `AWAITING_OPERATOR`;
+- following every Kernel interruption.
+
+The interruption record and all preceding Episode events are evidence.
+
+The Kernel does not decide whether that evidence is semantically useful before invoking the Steward.
+
+If the Steward cannot run or its complete required evidence package cannot be assembled within the configured contract, the Episode remains visibly pending finalization. The Kernel does not fabricate an Operator outcome or silently discard Episode evidence to close it.
 
 It does not run after every tool call.
 
@@ -1797,7 +1835,7 @@ It does not run merely because time has elapsed while nothing happened.
 
 If later experiments test reduced consolidation frequency, that is a separate experimental condition.
 
-The default architecture condition consolidates once per meaningful Episode boundary.
+The default architecture condition consolidates once per Episode finalization.
 
 ---
 
