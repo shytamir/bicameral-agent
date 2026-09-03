@@ -723,6 +723,8 @@ A partially successful action must not be represented as complete.
 
 A timeout must not be treated as evidence that the requested operation failed or succeeded unless the postcondition establishes that fact.
 
+Every admitted Operator or Steward model invocation has one positive maximum elapsed duration fixed by the sealed Run Configuration. The Kernel measures it monotonically from provider dispatch. If no complete response arrives by the deadline, the Kernel stops awaiting the call, records an uncertain invocation with no output, rejects any later response, and applies the existing invocation-failure transition. The deadline consumes the Operator attempt or spends the Steward session as applicable; it causes no automatic retry and does not imply that remote generation was cancelled.
+
 The Event Journal preserves actual outcomes.
 
 The Steward may interpret them.
