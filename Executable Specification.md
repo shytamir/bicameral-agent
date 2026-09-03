@@ -272,6 +272,7 @@ A Run Configuration is immutable once sealed.
 |---|---|---:|---|
 | `run_configuration_id` | UUIDv7 | yes | Identity |
 | `specification_version` | string | yes | This document's version |
+| `kernel_enforcement_build_digest` | SHA-256 | yes | Exact deterministic enforcement build |
 | `configuration_name` | string | yes | Human-readable label, not identity |
 | `configuration` | JSON object | yes | Validated against the Run Configuration contract in section 11 |
 | `configuration_hash` | SHA-256 | yes | Hash of canonical `configuration` |
@@ -398,6 +399,8 @@ Normal tool activity advances the Environment without erasing prior snapshots. R
 | `content_hash` | SHA-256 | Hash of exact governed document bytes |
 | `content_payload_id` | UUIDv7 | Immutable document payload |
 | `predecessor_version_id` | UUID/null | Null only for genesis version |
+| `compatible_specification_version` | string | Ratification basis |
+| `compatible_kernel_enforcement_build_digest` | SHA-256 | Ratification basis |
 | `activated_at` | timestamp | Kernel time |
 | `ratification_event_id` | UUID/null | Null only for explicitly registered genesis |
 
@@ -412,17 +415,19 @@ There is exactly one active Constitution version at a time per Run. Activation c
 | `proposed_version_label` | string | yes | Must not already exist |
 | `frozen_diff_payload_id` | UUIDv7 | yes | Exact immutable diff |
 | `frozen_diff_hash` | SHA-256 | yes | Integrity check |
+| `resulting_content_hash` | SHA-256 | yes | Exact patched Constitution bytes |
 | `proposer_role` | `HUMAN \| OPERATOR \| STEWARD` | yes | Provenance |
 | `proposer_id` | opaque string | yes | Authenticated proposer identity |
-| `proposal_episode_id` | UUIDv7 | yes | Episode `n` |
+| `proposal_episode_id` | UUID/null | yes | Required for chamber proposal; null only for standalone human proposal |
 | `proposal_event_id` | UUIDv7 | yes | Immutable proposal event |
 | `rationale_payload_id` | UUID/null | yes | Optional, non-authoritative |
 | `status` | `PROPOSED \| RATIFIED \| REJECTED \| SUPERSEDED` | yes | Last three terminal |
-| `decision_episode_id` | UUID/null | yes | Required for a decision |
+| `decision_episode_id` | UUID/null | yes | Required only for Episode-opening decision |
+| `decision_context` | `EPISODE_OPENING \| STANDALONE_CONTROL` or null | yes | Required for human decision; null while proposed or superseded |
 | `decision_event_id` | UUID/null | yes | Human act for ratification/rejection; superseding proposal Event for supersession |
 | `decided_at` | timestamp/null | yes | Kernel time |
 
-Ratification requires the later-Episode opening window defined in section 5.10, an active human session, exact display of the frozen fields and `base_version_id` still equal to the Run's active pointer. If the base is no longer active, the proposal may be rejected or superseded but MUST NOT be rebased automatically.
+Ratification requires one of section 5.10's two later control windows, an active human session, exact display of the frozen fields, the compatibility attestation defined there and `base_version_id` still equal to the Run's active pointer. If the base is no longer active, the proposal may be rejected or superseded but MUST NOT be rebased automatically.
 
 ## 4.5 Objective
 
@@ -878,6 +883,8 @@ ScopeClause
 | `expiry_condition` | Trigger/null | Required before `EXPIRED` is legal |
 | `last_trigger_evaluation_at` | timestamp/null | Kernel telemetry |
 | `last_trigger_satisfied` | bool/null | Persisted result paired with the last evaluation; null before any evaluation |
+| `last_expiry_evaluation_at` | timestamp/null | Separate expiry telemetry; null without a successful evaluation |
+| `last_expiry_satisfied` | bool/null | Persisted expiry result paired with its evaluation |
 
 `ResourceReference` and every `Trigger` variant are closed:
 
@@ -940,9 +947,11 @@ CommitmentCompletedTrigger
 
 Creating a Commitment requires an `ACTIVE` owning Objective and authority evidence that is either an explicit human request or a derivation under that Objective. External evidence alone cannot be `origin_event_id`.
 
-For every non-time trigger, the first evaluation establishes the persisted baseline and cannot itself wake the Operator. Each later evaluation compares its result with `last_trigger_satisfied`; only `false -> true` may produce `PENDING -> TRIGGERED`. The Kernel commits the new result, `last_trigger_evaluation_at`, the `COMMITMENT_TRIGGER_CHECKED` Event and required Commitment Mutation Record atomically. A rising edge also commits the status transition, `COMMITMENT_TRIGGERED` Event and exactly one `COMMITMENT_TRIGGER` Wake Request in that transaction. Repeated `true`, repeated `false` and `true -> false` checks only advance the persisted observation. Recovery uses the committed result and never reconstructs an edge from current conditions alone.
+For every non-time trigger, null `last_trigger_satisfied` means no successful evaluation exists. A first successful false result establishes the baseline without waking; a first successful true result may produce `PENDING -> TRIGGERED`. Each later evaluation compares its result with the persisted value, and only `false -> true` may trigger. The Kernel commits the new result, `last_trigger_evaluation_at`, the `COMMITMENT_TRIGGER_CHECKED` Event and required Commitment Mutation Record atomically. Initial satisfaction or a rising edge also commits the status transition, `COMMITMENT_TRIGGERED` Event and exactly one `COMMITMENT_TRIGGER` Wake Request in that transaction. A failed evaluation leaves both persisted fields unchanged. Repeated `true`, repeated `false` and `true -> false` checks only advance the persisted observation. Recovery uses the committed result and never reconstructs an edge from current conditions alone.
 
 `TIMESTAMP_REACHED` and `ELAPSED_INTERVAL` are the Protocol's scheduled-time exception: reaching the sealed due instant may trigger once without a previously stored false result. Their terminal Commitment status and unique trigger Wake Request prevent another wake. For every trigger kind, `last_trigger_evaluation_at` and `last_trigger_satisfied` are either both null or both non-null.
+
+When `expiry_condition` is present, the Kernel evaluates it independently while the Commitment is `PENDING` using the same adapters and cadence. Its two expiry fields are both null before the first successful evaluation and otherwise both non-null; without an expiry condition they remain null. A successful true result atomically persists the observation and transitions the Commitment to `EXPIRED` with no Wake Request. Expiry takes precedence if it and the primary trigger are satisfied in the same poll. A failed expiry evaluation changes neither expiry field and does not count as satisfaction.
 
 ## 4.13 Evidence Link
 
@@ -1463,6 +1472,8 @@ CommitmentDisposition
 
 `successor` is required exactly for Objective `SUPERSEDED` and forbidden otherwise. Every nonterminal Commitment owned by the closing Objective appears exactly once in `commitment_dispositions`; each requested transition must be legal, including the pre-existing-expiry-condition rule. `target_refs` is empty only for `OBJECTIVE_CREATE`; otherwise it must exactly enumerate the body's directly mutated existing targets. For `GRANT_ISSUE`, that existing target is the Objective; for `CAPABILITY_RESTRICT` and every Run operation, it is the envelope's Run. The operation/body discriminator, target set and authority Event are validated before any override transaction begins.
 
+A Human Override is accepted only where the current Run and target lifecycles expressly permit it; an unlisted combination is rejected. `OBJECTIVE_CREATE` requires an `ACTIVE` or `PAUSED` Run. `SUBJECT_ENVIRONMENT_RESTORE` requires an `ACTIVE` or `PAUSED` Run and an `ACTIVE` Subject Environment. Other operations retain their existing lifecycle guards.
+
 `INVARIANT_CHALLENGE` is valid only for a current `TENTATIVE` or `ACTIVE` Invariant version. The human's reason and authenticated authority Event are sufficient to place the proposition under review; the person need not claim or identify contradictory evidence. Acceptance atomically transitions the version to `CHALLENGED`, creates an `AUTHORITY` Evidence Link to that Event, appends the Human Override and `SEMANTIC_MUTATION` Event, and records the `TRANSITION` Mutation Record. It does not revise the proposition or scope. Retirement remains the separate terminal operation.
 
 `CapabilityRestrictBody.capabilities` sorts by `(recipient_role, tool_class, tool, operation, descriptor_version)`. Every key must identify a currently effective chamber operation in that Run; stale hashes, unknown keys or already-restricted keys reject the whole request.
@@ -1530,6 +1541,8 @@ ModelInvocationRecord
 The three timing fields are all null only when startup recovery terminalizes an orphaned `ADMITTED` input as `UNKNOWN/NO_OUTPUT` after process interruption. The existing cited `KERNEL_ERROR` Event is the reason measurement is unavailable. Recovery does not substitute input-assembly time, restart time, zero or an estimate. Every other `RETURNED`, `FAILED` or `UNKNOWN` record requires all three timing fields.
 
 `RETURNED` requires an exact retained output payload, hash and output-token count under the sealed tokenizer. Its contract status is `VALID` or `INVALID`. `FAILED` and `UNKNOWN` require `NO_OUTPUT` and null output fields; `outcome_event_id` identifies the exact output, failure or uncertainty Event. `terminal_event_id` identifies the `MODEL_INVOCATION_RECORDED` Event whose payload is this record; insertion of the record and Event is atomic. A context-rejected input produces no invocation record because no provider call occurred. Invocation count is the count of these records, not the count of assembled or rejected inputs.
+
+Every admitted call uses the sealed positive `models.invocation_timeout_ms`, measured by the Kernel's monotonic clock from provider dispatch until a complete response is received. At the deadline the Kernel stops awaiting the call and atomically appends an `UNKNOWN/NO_OUTPUT` invocation record plus a `KERNEL_ERROR` outcome Event whose payload contains `reason=MODEL_INVOCATION_DEADLINE_EXCEEDED`, the `model_input_id` and configured timeout. The measured terminal timing fields remain non-null. Partial or later provider bytes are not chamber output and cannot change state. Timeout consumes the Operator attempt or changes an `ACTIVE` Steward session to `SPENT` under the existing failure transitions; it causes no automatic retry and makes no claim that remote generation was cancelled.
 
 ### Scenario Evaluation Result
 
@@ -1716,6 +1729,8 @@ CommitmentView
   expiry_condition: Trigger | null
   last_trigger_evaluation_at: timestamp | null
   last_trigger_satisfied: bool | null
+  last_expiry_evaluation_at: timestamp | null
+  last_expiry_satisfied: bool | null
   revision: positive int
 
 ItchView
@@ -1800,6 +1815,7 @@ ResumeNotice
   human_statement: PayloadManifestEntry
 
 TriggerObservation
+  purpose: PRIMARY | EXPIRY
   trigger_kind: TIMESTAMP_REACHED | ELAPSED_INTERVAL | PATH_STATE
                 | PATH_MTIME_CHANGED | PROCESS_STATE | METRIC_COMPARISON
                 | TEXT_MATCH | COMMITMENT_COMPLETED
@@ -1810,6 +1826,8 @@ TriggerObservation
 ```
 
 `OperatorInput.payload` must be the payload manifest attached to `input_event_id`. `ResumeNotice.human_statement` must be the payload manifest attached to `source_event_id`. A missing, mismatched or cross-Run payload rejects package assembly. The ordinary inline/chunk threshold applies, so a large current input is represented by immutable reference and remains available through payload-chunk retrieval.
+
+`CommitmentTriggerNotice.trigger_observation.purpose` is `PRIMARY`; an `EXPIRY` observation never creates a Wake Request or wake notice.
 
 Event and payload projections are:
 
@@ -2055,7 +2073,7 @@ StateProposal
 
 Before acceptance, the Kernel validates `proposed_continuity_state` against section 4.9 using the Episode's current Objective status and the complete semantic projection that would result from all proposed mutations. It never repairs, drops or substitutes an invalid focus or reference.
 
-Each A/C Episode has exactly one Steward consolidation session. The session may contain zero or more protocol-authorized read-only retrieval turns before its proposal, and it may submit at most one State Proposal. Proposal submission spends the session whether mechanical validation accepts or rejects it. A failed model call, invalid chamber output or context rejection also spends the session without a proposal. In every unsuccessful case the evidence remains append-only, semantic state is unchanged and the Episode remains visibly `CONSOLIDATING`; the Kernel performs no automatic or recovery-time reinvocation. This implements the Protocol's one-proposal and once-per-finalization rules without treating a new deliberation informed by an earlier failure as transport retry.
+Each A/C Episode has exactly one Steward consolidation session. The session may contain zero or more protocol-authorized read-only retrieval turns before its proposal, and it may submit at most one State Proposal. Proposal submission spends the session whether mechanical validation accepts or rejects it. A failed or timed-out model call, invalid chamber output or context rejection also spends the session without a proposal. In every unsuccessful case the evidence remains append-only, semantic state is unchanged and the Episode remains visibly `CONSOLIDATING`; the Kernel performs no automatic or recovery-time reinvocation. This implements the Protocol's one-proposal and once-per-finalization rules without treating a new deliberation informed by an earlier failure as transport retry.
 
 Every admitted Steward model call is dispatched to the provider once; provider or adapter automatic generation retry is disabled. An uncertain transport result is an invocation failure and spends the session. Retransmission of the exact already-produced State Proposal bytes under the same `request_id` remains ordinary message idempotency under section 3.6: it returns the recorded Kernel response and performs neither a new model call nor a second consolidation effect.
 
@@ -2147,8 +2165,9 @@ AmendmentProposal
 AmendmentReceipt
   amendment_id: UUID
   status: PROPOSED
-  proposed_in_episode_id: UUID
+  proposed_in_episode_id: UUID | null
   frozen_diff_hash: SHA-256
+  resulting_content_hash: SHA-256
   created_event_id: UUID
 
 RatificationRequest
@@ -2157,6 +2176,9 @@ RatificationRequest
   proposed_version_label: non-empty str
   unified_diff_bytes_base64: canonical base64 str
   frozen_diff_hash: SHA-256
+  resulting_constitution_hash: SHA-256
+  specification_version: non-empty str
+  kernel_enforcement_build_digest: SHA-256
   proposer_role: HUMAN | OPERATOR | STEWARD
   proposer_id: non-empty str
   proposed_at: timestamp
@@ -2167,7 +2189,14 @@ RatificationDecision
   amendment_id: UUID
   display_hash: SHA-256
   decision: RATIFY | REJECT
+  compatibility_attestation: EnforcementCompatibilityAttestation | null
   human_statement: non-empty str
+
+EnforcementCompatibilityAttestation
+  resulting_constitution_hash: SHA-256
+  specification_version: non-empty str
+  kernel_enforcement_build_digest: SHA-256
+  current_enforcement_sufficient: true
 
 RatificationReceipt
   amendment_id: UUID
@@ -2176,13 +2205,15 @@ RatificationReceipt
   decision_event_id: UUID
 ```
 
-The Kernel decodes and freezes the exact proposed diff bytes, computes the hash and creates the amendment before returning its receipt. `supersedes_amendment_id`, when present, must identify a still-`PROPOSED` amendment against the same active base; creation of the new proposal and transition of the predecessor to `SUPERSEDED` are atomic. The Ratification Request's `display_hash` covers every displayed field except itself.
+The Kernel decodes and freezes the exact proposed diff bytes, applies them without activation to the immutable base, and stores both the diff hash and resulting content hash before returning its receipt. A diff that cannot produce valid UTF-8 Constitution bytes is rejected at proposal. Operator and Steward proposals require their current Episode in the envelope; a human proposal may use a null Episode only as a standalone Run control transaction when no task Episode is open. `supersedes_amendment_id`, when present, must identify a still-`PROPOSED` amendment against the same active base; creation of the new proposal and transition of the predecessor to `SUPERSEDED` are atomic. The Ratification Request's `display_hash` covers every displayed field except itself.
 
-For this contract, the beginning of an Episode is the closed scheduling window after that Episode's `EPISODE_OPENED` Event commits and before its first `MODEL_INPUT_ASSEMBLED` Event. The decision envelope's `episode_id` is the ratification Episode. The Kernel accepts a decision only from authenticated human transport in that window, in an Episode later than `proposed_in_episode_id`, while the proposal's base is still the Run's active Constitution and the displayed frozen bytes and hashes still match. A decision in the proposal Episode is rejected with `SAME_EPISODE_RATIFICATION`; for a later Episode, a decision outside the opening window is rejected with `WRONG_EPISODE_PHASE`. A nonhuman sender or any mismatch is rejected under the applicable existing code.
+Ratification has two closed windows. `EPISODE_OPENING` is after a later Episode's `EPISODE_OPENED` Event and before its first `MODEL_INPUT_ASSEMBLED` Event; the decision envelope and `decision_episode_id` name that Episode. `STANDALONE_CONTROL` requires both Episode fields null, a distinct later request and transaction, no `OPEN` Episode, and no chamber invocation or `ACTIVE` Steward session. In both windows the proposal Event precedes the decision Event, the base remains active and the displayed frozen bytes and hashes match. Same-Episode ratification is rejected `SAME_EPISODE_RATIFICATION`; failure of standalone separation is `RATIFICATION_SEPARATION_REQUIRED`; other window failures use `WRONG_EPISODE_PHASE`.
 
-Ratification is not processed while a Steward consolidation session is `ACTIVE`; the Operator's first model-input assembly waits until that session becomes `SPENT`. This prevents the active Constitution from changing between calls that reuse one immutable chamber base package. The opening window remains open during that bounded wait. No ordinary Episode waits for consolidation when no ratification decision is being processed.
+Ratification is not processed while a Steward consolidation session is `ACTIVE`; the Operator's first model-input assembly waits until that session becomes `SPENT`. This prevents the active Constitution from changing between calls that reuse one immutable chamber base package. Any active provider call is bounded by the sealed invocation timeout; the opening window remains open during that wait. No ordinary Episode waits for consolidation when no ratification decision is being processed.
 
-For `RATIFY`, the Kernel applies the frozen unified diff to the exact immutable UTF-8 bytes of the still-active base. The patch must apply cleanly and produce valid UTF-8; otherwise the decision is rejected and no state changes. In one transaction the Kernel stores the resulting immutable Constitution payload and version, transitions the Amendment to `RATIFIED`, advances `Run.active_constitution_version_id` with one `ACTIVATE` Mutation Record, appends `AMENDMENT_DECIDED`, and creates the receipt. The resulting version's `content_hash` is the SHA-256 of its exact bytes. For `REJECT`, one transaction transitions the Amendment to `REJECTED`, appends `AMENDMENT_DECIDED`, and creates a receipt with a null resulting version; the active pointer does not change and no Mutation Record is required. Retry of the same decision is governed by ordinary message idempotency.
+`RATIFY` requires a non-null compatibility attestation whose three identities exactly equal the displayed resulting Constitution hash and the Run Configuration's pinned specification version and Kernel enforcement build digest. `REJECT` requires null. If the human cannot attest that current enforcement remains sufficient, no ratification decision is accepted and the proposal remains `PROPOSED`; a changed specification or build begins a new configured Run. The Kernel performs no semantic compatibility classification.
+
+For `RATIFY`, the Kernel reapplies the frozen unified diff to the exact immutable UTF-8 bytes of the still-active base. The result must match `resulting_content_hash`; otherwise the decision is rejected and no state changes. In one transaction the Kernel stores the resulting immutable Constitution payload and version with the attested specification/build pair, transitions the Amendment to `RATIFIED`, advances `Run.active_constitution_version_id` with one `ACTIVATE` Mutation Record, appends `AMENDMENT_DECIDED`, and creates the receipt. For `REJECT`, one transaction transitions the Amendment to `REJECTED`, appends `AMENDMENT_DECIDED`, and creates a receipt with a null resulting version; the active pointer does not change and no Mutation Record is required. Retry of the same decision is governed by ordinary message idempotency.
 
 ## 5.11 Audit and human-control contracts
 
@@ -2342,7 +2373,7 @@ ErrorResponse
   errors: non-empty list[Error]
 ```
 
-The v0 codes are exactly `SCHEMA_INVALID`, `UNKNOWN_FIELD`, `AUTHENTICATED_ROLE_MISMATCH`, `REFERENCE_NOT_FOUND`, `CROSS_RUN_REFERENCE`, `DUPLICATE_REFERENCE`, `TARGET_MISMATCH`, `HASH_MISMATCH`, `WRONG_EPISODE_PHASE`, `OBJECTIVE_NOT_ACTIVE`, `CAPABILITY_UNAVAILABLE`, `CAPABILITY_SET_MISMATCH`, `GRANT_REQUIRED`, `GRANT_NOT_ACTIVE`, `GRANT_SCOPE_MISMATCH`, `GRANT_RISK_EXCEEDED`, `R3_UNAVAILABLE`, `EXTERNAL_AUTHORITY_ONLY`, `ILLEGAL_TRANSITION`, `IMMUTABLE_FIELD`, `PARENT_VERSION_MISMATCH`, `REVISION_MISMATCH`, `CONTINUITY_BUDGET_EXCEEDED`, `PROVENANCE_REQUIRED`, `SAME_EPISODE_RATIFICATION`, `IDEMPOTENCY_CONFLICT` and `CONFIGURATION_UNSEALED`. A later code requires a contract-version change; unknown codes do not parse under v0.
+The v0 codes are exactly `SCHEMA_INVALID`, `UNKNOWN_FIELD`, `AUTHENTICATED_ROLE_MISMATCH`, `REFERENCE_NOT_FOUND`, `CROSS_RUN_REFERENCE`, `DUPLICATE_REFERENCE`, `TARGET_MISMATCH`, `HASH_MISMATCH`, `WRONG_EPISODE_PHASE`, `OBJECTIVE_NOT_ACTIVE`, `CAPABILITY_UNAVAILABLE`, `CAPABILITY_SET_MISMATCH`, `GRANT_REQUIRED`, `GRANT_NOT_ACTIVE`, `GRANT_SCOPE_MISMATCH`, `GRANT_RISK_EXCEEDED`, `R3_UNAVAILABLE`, `EXTERNAL_AUTHORITY_ONLY`, `ILLEGAL_TRANSITION`, `IMMUTABLE_FIELD`, `PARENT_VERSION_MISMATCH`, `REVISION_MISMATCH`, `CONTINUITY_BUDGET_EXCEEDED`, `PROVENANCE_REQUIRED`, `SAME_EPISODE_RATIFICATION`, `RATIFICATION_SEPARATION_REQUIRED`, `IDEMPOTENCY_CONFLICT` and `CONFIGURATION_UNSEALED`. A later code requires a contract-version change; unknown codes do not parse under v0.
 
 ## 5.13 Deterministic model-input assembly
 
@@ -2514,7 +2545,7 @@ SUPERSEDED  -> [none]
 EXPIRED     -> [none]
 ```
 
-Only the Kernel may make `PENDING → TRIGGERED`, based on a deterministic trigger adapter and section 4.12's persisted edge rule or scheduled-time exception. `EXPIRED` additionally requires a pre-existing satisfied expiry condition. Terminal Commitment transitions do not reverse, including during semantic rollback.
+Only the Kernel may make `PENDING → TRIGGERED`, based on a deterministic trigger adapter and section 4.12's persisted edge rule or scheduled-time exception. `PENDING → EXPIRED` requires an explicit expiry condition and its successful satisfied observation; it wins over triggering within the same poll. Terminal Commitment transitions do not reverse, including during semantic rollback.
 
 ## 6.8 Amendment transitions
 
@@ -2791,7 +2822,9 @@ The following statements are executable assertions, not prompt instructions.
 
 `K-SEM-014` Every Continuity State semantic reference is same-Run, owned and lifecycle-applicable to its Objective focus after all mutations in the creating transaction; null focus permits only current Run-global Invariant references.
 
-`K-SEM-015` A non-time Commitment trigger wakes only on a committed `false -> true` edge; the first observation is baseline only, and recovery or repeated satisfied polls cannot create a second edge or Wake Request. A scheduled-time trigger may fire once at its due instant without a prior false observation.
+`K-SEM-015` A non-time Commitment trigger wakes only on its first committed successful observation when true or on a later committed `false -> true` edge; failed evaluations, recovery and repeated satisfied polls cannot create another Wake Request. A scheduled-time trigger may fire once at its due instant without a prior false observation.
+
+`K-SEM-016` A Commitment expiry condition has independent persisted evaluation state; while `PENDING`, a successful true expiry observation transitions it once to `EXPIRED` without a wake and precedes a simultaneously satisfied primary trigger.
 
 ## 8.6 Amendments
 
@@ -2808,6 +2841,10 @@ The following statements are executable assertions, not prompt instructions.
 `K-CON-006` Every chamber base package contains the exact active Constitution content, payload identity and content hash; a missing or mismatched byte prevents invocation.
 
 `K-CON-007` Ratification occurs only in the later-Episode opening window and atomically creates the new immutable version, marks the Amendment ratified, advances the Run pointer with its Mutation Record and records the decision.
+
+`K-CON-008` A Constitution version activates only with an explicit human compatibility attestation bound to its exact content hash and the Run's pinned Executable Specification version and Kernel enforcement build digest; missing or mismatched identities leave the proposal inactive.
+
+`K-CON-009` Constitutional proposal and ratification sequencing never requires a fabricated Objective or task Episode: chamber proposals are Episode-bound, while standalone human control uses distinct ordered Run transactions with no open Episode or active chamber work.
 
 ## 8.7 Experiment integrity
 
@@ -2844,6 +2881,8 @@ The following statements are executable assertions, not prompt instructions.
 `K-EXP-016` Scenario outcome composition follows the fixed v0 completeness, criterion and required-rubric rule and cannot be changed without sealing a new artifact set and configuration.
 
 `K-EXP-017` Ordinary terminal Model Invocation Records contain measured timing; only crash recovery of an orphaned admitted input may record all timing fields as null, and no unavailable latency is represented as zero or estimated.
+
+`K-EXP-018` Every admitted model invocation reaches one terminal record by return, failure, the sealed monotonic deadline or startup recovery; a deadline produces `UNKNOWN/NO_OUTPUT`, no accepted late output and no automatic retry.
 
 ## 8.8 Subject Environment and contained execution
 
@@ -2967,6 +3006,10 @@ The following statements are executable assertions, not prompt instructions.
 
 `K-RUN-014` Human inspection remains navigable without SQL, table knowledge or machine identifiers, while the exact complete export remains available beneath the rendering.
 
+`K-RUN-015` A mutating Human Override is rejected unless the current Run and target lifecycles expressly permit that operation.
+
+`K-RUN-016` Pre-Run staging and sealing failures are diagnostics, not Events; no Event exists before a Run's genesis `BOOTSTRAP` Event.
+
 ---
 
 # 9. Transition and Invariant Test Catalogue
@@ -2995,6 +3038,12 @@ Each rejection test asserts:
 | `T-CON-008` | Later-Episode ratification is ready while a Steward consolidation session is `ACTIVE` | Do not process ratification or assemble the first Operator input until the Steward session is `SPENT`; perform no mid-session Constitution change |
 | `T-CON-009` | Constitution payload bytes, embedded content or hash disagree during chamber package assembly | Fail closed before model invocation |
 | `T-CON-010` | Ratification succeeds and later Operator and Steward packages are assembled | Both contain byte-identical content for the newly active Constitution and its matching payload ID and hash; sealed role prompts are unchanged |
+| `T-CON-011` | Human ratifies with a compatibility attestation matching the resulting Constitution hash and the Run's pinned specification/build pair | Accept subject to every existing ratification guard; store that pair on the new Constitution version |
+| `T-CON-012` | Ratification omits the attestation or changes any bound hash, specification version or build digest | Reject without changing the Amendment or active Constitution |
+| `T-CON-013` | Human determines that an amendment requires changed deterministic enforcement | Leave it `PROPOSED` and inactive; require the revised specification/build under a new Run Configuration and Run |
+| `T-CON-014` | Before the first Objective, a human submits a standalone proposal and later ratifies it in a distinct standalone control transaction | Record null Episode IDs and activate without creating an Objective, Episode or Wake Request |
+| `T-CON-015` | Attempt standalone proposal and ratification in one request or transaction | Reject `RATIFICATION_SEPARATION_REQUIRED`; leave the proposal inactive |
+| `T-CON-016` | Operator or Steward submits an Amendment Proposal with null or foreign Episode | Reject; standalone constitutional control is human-only |
 
 ## 9.2 Objective and Grant authority
 
@@ -3087,6 +3136,7 @@ Each rejection test asserts:
 | `T-EPI-030` | An admitted Steward provider call returns a retryable or uncertain transport failure | Make exactly one provider dispatch, journal the failure, mark the session `SPENT` and perform no adapter, provider or recovery retry |
 | `T-EPI-031` | The earliest pending Episode is `SPENT` and a later Episode is `NOT_STARTED` | Keep the earlier Episode visibly pending and invoke the Steward for the later eligible Episode |
 | `T-EPI-032` | A later Episode consolidates after an earlier session became `SPENT` | Use the latest committed Continuity State as parent; fabricate no state or closure for the spent Episode |
+| `T-EPI-033` | An active Steward provider call reaches the sealed invocation deadline | Record `UNKNOWN/NO_OUTPUT`, mark the session `SPENT`, leave the Episode `CONSOLIDATING`, unblock pending ratification and never reinvoke that session |
 
 ## 9.5 Semantic objects
 
@@ -3102,7 +3152,7 @@ Each rejection test asserts:
 | `T-SEM-008` | Commitment created from external instruction alone | Reject `EXTERNAL_AUTHORITY_ONLY` |
 | `T-SEM-009` | Commitment created under terminal Objective | Reject |
 | `T-SEM-010` | Commitment expires solely due to age | No transition |
-| `T-SEM-011` | Commitment with explicit expiry condition satisfied | Kernel may transition to `EXPIRED` |
+| `T-SEM-011` | Pending Commitment with explicit expiry condition satisfied | Atomically transition to `EXPIRED`; enqueue no wake |
 | `T-SEM-012` | Contradictory observation against active Invariant | Invariant remains active until proposal; Kernel does not semantically auto-challenge |
 | `T-SEM-013` | Continuity State exceeds token budget by one token | Reject whole proposal |
 | `T-SEM-014` | Proposal contains full Grant object in Continuity State | Schema rejects prohibited structure |
@@ -3116,10 +3166,14 @@ Each rejection test asserts:
 | `T-SEM-022` | Reference a current Run-global Invariant and same-Run evidence learned under another Objective | Accept; neither reference changes the Episode's purpose or authority |
 | `T-SEM-023` | A same-proposal mutation makes a referenced object terminal or supersedes its Invariant version | Validate the resulting projection and reject the whole consolidation without partial mutations |
 | `T-SEM-024` | Restore content whose Objective is now terminal or whose semantic references are no longer applicable | Reject without silently pruning or retargeting; permit an explicit human correction instead |
-| `T-SEM-025` | First evaluation of a non-time trigger returns true | Store the timestamp and true baseline with its check Event and Mutation Record; do not transition or enqueue a wake |
+| `T-SEM-025` | First successful evaluation of a non-time trigger returns false, then repeat with a fresh Commitment whose first result is true | Store false as baseline without waking; for true, atomically persist the observation, trigger and enqueue exactly one wake |
 | `T-SEM-026` | A later committed non-time trigger result changes from false to true | Atomically store the result, transition `PENDING -> TRIGGERED`, append check and trigger Events and enqueue exactly one matching Wake Request |
 | `T-SEM-027` | Restart after a committed true result and poll true again, including replay of the same poll | Use the persisted result; create no new edge, transition, trigger Event or Wake Request |
 | `T-SEM-028` | A scheduled timestamp or elapsed interval becomes due without a stored false result | Trigger and enqueue once; subsequent polling and recovery create no duplicate wake |
+| `T-SEM-029` | Evaluate a false explicit expiry condition, then restart | Persist and recover the expiry checkpoint independently of the primary trigger checkpoint |
+| `T-SEM-030` | First successful expiry evaluation returns true | Persist the observation and transition `PENDING -> EXPIRED` once without a Wake Request |
+| `T-SEM-031` | Primary trigger and expiry condition both return true in one poll | Expire the Commitment; do not transition to `TRIGGERED` or enqueue a wake |
+| `T-SEM-032` | Expiry adapter evaluation fails | Preserve both prior expiry fields and establish no expiry satisfaction |
 
 ## 9.6 Events, retrieval and misses
 
@@ -3273,7 +3327,7 @@ In addition to examples, the suite MUST generate:
 | Test | Arrangement and action | Required result |
 |---|---|---|
 | `T-RUN-001` | Human activates a created Run whose sealed configuration and activation checks pass | Transition once to `ACTIVE`; set `started_at`; append status Event and Mutation Record atomically |
-| `T-RUN-002` | Activation dependency check fails | Keep Run `CREATED`; present a human-readable failure without asking the human for hashes, revisions or repair JSON |
+| `T-RUN-002` | Activation dependency check fails after Run genesis | Keep Run `CREATED`; append a Run-scoped `KERNEL_ERROR` Event and present a human-readable failure without asking the human for hashes, revisions or repair JSON |
 | `T-RUN-003` | Human pauses an active Run with an open Episode and in-flight work | Transition to `PAUSED`; journal later observed result; claim, invoke and dispatch nothing further until resume; keep Episode open |
 | `T-RUN-004` | Human resumes after readiness checks pass | Transition `PAUSED → ACTIVE`; retain restrictions and queued work; scheduler becomes eligible |
 | `T-RUN-005` | Human requests completion while an active Objective, open Episode, finalizable consolidation session, eligible Wake or nonterminal Commitment remains | Reject completion and display the recognizable blockers; mutate nothing |
@@ -3297,6 +3351,9 @@ In addition to examples, the suite MUST generate:
 | `T-RUN-023` | Persistent state is terminal, superseded, inactive, large or unrelated to the requesting Run within the same process database | Preserve it in the complete snapshot; use ordinary chunking for large export bytes |
 | `T-RUN-024` | Exercise inspection through the trusted adapter | Human can navigate recognizable records, relationships and timelines and obtain the complete export without SQL, table names or machine identifiers |
 | `T-RUN-025` | Inspect the inspection snapshot itself | The stated cutoff excludes its request/result Events and export Payload; those records remain available to a later inspection without recursive inclusion |
+| `T-RUN-026` | Request `OBJECTIVE_CREATE` while the Run is `CREATED`, `COMPLETED` or `TERMINATED` | Reject without creating an Objective or partial override record |
+| `T-RUN-027` | Request `SUBJECT_ENVIRONMENT_RESTORE` while the Run is terminal or the Subject Environment is not `ACTIVE` | Reject without restoring the Environment or creating a partial override record |
+| `T-RUN-028` | A staging or sealing gate fails before Run creation, including when an application database already exists | Return a deterministic human-readable diagnostic; commit no partial sealing state and append no Event |
 
 ## 9.14 Experimental-evidence tests
 
@@ -3323,6 +3380,7 @@ In addition to examples, the suite MUST generate:
 | `T-EXP-019` | Present a required Human Rubric | Show its ordinary-language question with recognizable references to already-recorded scenario evidence; accept pass, fail or unable to determine without exposing or requiring machine identifiers |
 | `T-EXP-020` | Evaluator encounters an unlisted fact that appears relevant | Preserve it only through existing evidence mechanisms; create no dynamic Observation, Criterion or completion obligation |
 | `T-EXP-021` | Submit a non-recovery terminal invocation with a null timing field, a recovery record with only some timing fields null, or a fabricated zero latency | Reject the record; accept all-null timing only for the exact orphan-recovery path |
+| `T-EXP-022` | An Operator provider call reaches the sealed monotonic deadline and later returns bytes | At the deadline record one timed `UNKNOWN/NO_OUTPUT` invocation and consume the attempt; reject the late bytes, perform no automatic retry and apply `OPERATOR_INVOCATION_FAILURE` when the attempt limit is exhausted |
 
 ---
 
@@ -3423,6 +3481,9 @@ The following is the proposed first-run file. `UNSET` values make preflight fail
 schema_version: "0.1-draft"
 configuration_name: "v0-first-comparison-block"
 
+kernel:
+  enforcement_build_digest: UNSET
+
 artifact_sealing:
   mode: CONTENT_ADDRESSED_RETAINED_BYTES
   manifest_schema_version: "1"
@@ -3445,6 +3506,7 @@ experiment:
   seed: 20260903
 
 models:
+  invocation_timeout_ms: 120000
   operator:
     provider: UNSET
     model_id: UNSET
@@ -3628,7 +3690,7 @@ cost_accounting:
   record_task_outcome: true
 ```
 
-The `initial_state.continuity_state` object is instantiated only for A/C; B records the same configuration input but creates no Continuity State row. The model and tokenizer implementation versions remain deliberately unset in this draft because they are execution-environment facts, not values safely inferable from the governing documents. The first sealed configuration must replace them with immutable or provider-pinned identifiers. A provider alias such as `latest` is invalid. Relative filesystem locations are resolved against the sealed configuration file's directory and their absolute resolved values are recorded in Run metadata.
+The `initial_state.continuity_state` object is instantiated only for A/C; B records the same configuration input but creates no Continuity State row. The Kernel build digest and model and tokenizer implementation versions remain deliberately unset in this draft because they are execution-environment facts, not values safely inferable from the governing documents. The first sealed configuration must replace them with exact immutable identifiers. A provider alias such as `latest` is invalid. Relative filesystem locations are resolved against the sealed configuration file's directory and their absolute resolved values are recorded in Run metadata.
 
 `analysis_mode=RECORD_ONLY` fixes the v0 boundary: the runtime produces section 4.19 records but no standardized export or cross-trial analysis. The scoring adapter performs only sealed per-repetition success-criteria evaluation. Every `record_*` cost-accounting field shown above is required to be `true` for the first comparison block; the fields are explicit conformance assertions, not switches that may disable Protocol-required evidence. `record_model_latency_ms=true` requires measurement for every ordinarily terminalized call and the explicit all-null recovery representation for an unavailable crash-spanning measurement; it never licenses fabrication. The schema versions and monotonic latency clock are likewise fixed within the block.
 
@@ -3805,13 +3867,13 @@ Before the first model call, preflight MUST prove:
 - qualifying retrievals create neutral gap observations independently of Operator reporting;
 - candidate-detection packets withhold Operator necessity declarations and use reports;
 - retrieval role/phase, stale-state, idempotent-replay and pre-request snapshot boundary fixtures pass;
-- experimental-evidence schemas, ordinary monotonic-duration fixtures and crash-unavailable invocation timing fixtures pass;
+- experimental-evidence schemas, sealed invocation-deadline and late-output fixtures, ordinary monotonic-duration fixtures and crash-unavailable invocation timing fixtures pass;
 - every configured scenario has one closed finite evaluation-observation partition, one matching Success Criteria entry and an exact optional rubric requirement, all resolving with the scoring adapter to retained hash-verified artifacts;
 - evaluation golden fixtures prove exact Observation disposition, criterion composition, incomplete-reason precedence and final outcome without dynamic evidence obligations;
 - the first block enables every Protocol-required evidence field and fixes `analysis_mode=RECORD_ONLY`;
 - initial semantic and control state matches the Bootstrap State rules.
 
-Failure of any gate prevents Run activation and appends a bootstrap failure Event when a database exists.
+A staging or sealing failure before Run creation returns deterministic human-readable diagnostics and commits neither partial sealing state nor an Event. Once a Run and its genesis `BOOTSTRAP` Event exist, an activation-gate failure keeps the Run `CREATED` and appends a Run-scoped `KERNEL_ERROR` Event identifying the failed gate.
 
 ---
 
@@ -3832,9 +3894,9 @@ Failure of any gate prevents Run activation and appends a bootstrap failure Even
 | Bounded Continuity State | Continuity schema, tokenizer config, `T-SEM-013` |
 | Continuity Objective focus and semantic-reference ownership | section 4.9, `K-SEM-013..014`, `T-SEM-018..024` |
 | Itch and Invariant lifecycles | semantic schemas, transition tables and human challenge/retirement controls |
-| Commitment persistence and deterministic triggering | Commitment schema, section 4.12 edge rule, `K-SEM-003`, `K-SEM-015`, `T-SEM-010`, `T-SEM-025..028` |
+| Commitment persistence, triggering and expiry | Commitment schema, section 4.12, `K-SEM-003`, `K-SEM-015..016`, `T-SEM-010..011`, `T-SEM-025..032` |
 | Continuity Miss instrumentation and audit | gap/use-report/miss/audit schemas, audit configuration, `K-MISS-*`, `T-MISS-*` |
-| Constitutional delivery and amendment authority | literal `ConstitutionReference`, later-Episode opening window and atomic active-version transition; `K-CON-*`, `T-CON-*` |
+| Constitutional delivery and amendment authority | literal `ConstitutionReference`, compatibility-gated later-Episode activation and atomic active-version transition; `K-CON-*`, `T-CON-*` |
 | Operator outcome versus Kernel interruption | Episode schema/contracts, `K-EPI-*`, `T-EPI-*` |
 | Later continuation after pending finalization | Wake Request schema, dual scheduler lanes, degraded-continuity contract, `K-EPI-007..012` |
 | No hidden semantic critic | no critic contract or configured invocation |
@@ -3851,13 +3913,13 @@ Failure of any gate prevents Run activation and appends a bootstrap failure Even
 | Single-session Steward consolidation | sections 4.7, 5.7, 5.13, 6.4 and 7.3; `K-EPI-013..015`; `T-EPI-025..030` |
 | Protocol-required experimental evidence | section 4.19, sealed benchmark/scoring configuration, `K-EXP-007..011`, `T-EXP-*` |
 | Finite success criteria and outcome derivation | sections 4.19 and 11.4, `K-EXP-014..016`, `T-EXP-016..020` |
-| Crash-honest model latency | Model Invocation Record and recovery rules, `K-EXP-017`, `T-EXP-001`, `T-EXP-011`, `T-EXP-021` |
+| Bounded, crash-honest model invocation | sealed invocation deadline, Model Invocation Record and recovery rules; `K-EXP-017..018`, `T-EPI-033`, `T-EXP-001`, `T-EXP-011`, `T-EXP-021..022` |
 
 ---
 
 # 14. Scrutiny Register
 
-All 36 scrutiny items are closed. This register is a decision index; the normative schemas, contracts, transitions, invariants and tests in sections 3–13 control.
+All 43 scrutiny items are closed. This register is a decision index; the normative schemas, contracts, transitions, invariants and tests in sections 3–13 control.
 
 1. **CLOSED — Kernel interruption is orthogonal to Operator outcome.**
 2. **CLOSED — Serial Operator execution uses a durable wake queue.**
@@ -3895,6 +3957,13 @@ All 36 scrutiny items are closed. This register is a decision index; the normati
 34. **CLOSED — Registered reversibility is categorical and authoritative.**
 35. **CLOSED — Commitment trigger edges use persisted prior truth.**
 36. **CLOSED — Explicit Grant deadlines end authority independently of process availability and materialize truthfully.**
+37. **CLOSED — Ratification requires an exact human attestation that the current pinned specification and Kernel enforcement build remain sufficient for the resulting Constitution.**
+38. **CLOSED — Standalone human constitutional control uses distinct ordered Run transactions when no task Episode is open; chamber proposals remain Episode-bound.**
+39. **CLOSED — A first successful non-time trigger observation wakes once when already satisfied; otherwise it establishes the persisted false baseline for later edge detection.**
+40. **CLOSED — Commitment expiry uses separate persisted evaluation state, shares the existing polling machinery and takes precedence over simultaneous triggering.**
+41. **CLOSED — Human Override combinations fail closed; Objective creation and Subject Environment restoration have explicit lifecycle guards.**
+42. **CLOSED — Every admitted model invocation has one sealed monotonic deadline with terminal uncertainty, no accepted late output and no automatic retry.**
+43. **CLOSED — Pre-Run staging and sealing failures are diagnostics rather than Events; Run-scoped failure Events begin only after Run genesis.**
 
 Later scrutiny may replace a closed rule or add a newly discovered gap, but implementation must not reopen one implicitly through code or defaults.
 
