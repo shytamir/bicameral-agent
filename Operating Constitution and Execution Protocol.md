@@ -98,11 +98,17 @@ The human is shown at minimum:
 - proposed version;
 - exact frozen diff;
 - proposer;
-- time of proposal.
+- time of proposal;
+- the resulting Constitution hash;
+- the Run's pinned Executable Specification version and Kernel enforcement build digest.
 
 The Kernel does not generate a semantic interpretation of the amendment.
 
 The original rationale remains available as provenance but is not itself authority.
+
+Ratification within the current Run also requires an explicit human compatibility attestation bound to the resulting Constitution hash and the Run's pinned specification version and enforcement build digest. The attestation states that the current deterministic enforcement remains sufficient for the amended text. The Kernel verifies those exact identities but does not classify the amendment semantically.
+
+If the human cannot make that attestation because enforcement must change, the amendment remains `PROPOSED` and inactive. A revised Executable Specification or Kernel enforcement build requires a new Run Configuration and a new Run.
 
 If ratified, the amendment becomes:
 
@@ -1934,7 +1940,9 @@ The following values are engineering parameters rather than constitutional truth
 - Continuity Miss audit randomization seed;
 - model identity and quantization;
 - generation settings;
-- maximum tool runtime.
+- maximum tool runtime;
+- Executable Specification version;
+- Kernel enforcement build digest.
 
 They must all satisfy three rules:
 
