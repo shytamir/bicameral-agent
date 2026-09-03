@@ -1817,6 +1817,8 @@ The implementation must not silently choose increasingly aggressive polling beca
 
 Only a first successful trigger observation that is already satisfied, a later transition from false to satisfied, or a scheduled time event wakes the Operator.
 
+While a Commitment is `PENDING`, an explicit expiry condition is evaluated independently at the same cadence. A satisfied expiry condition transitions it to `EXPIRED` without a wake and takes precedence when the primary trigger is also satisfied in that poll; a failed check does not establish satisfaction.
+
 Ordinary negative polls do not produce full LLM invocations.
 
 They may be journaled compactly where needed for audit.
