@@ -1899,6 +1899,8 @@ Permitted interventions include:
 - revoke Grant;
 - pause or terminate execution.
 
+An intervention is valid only where the current Run and target lifecycles expressly permit it; absence of an explicit allowance requires rejection. Objective creation requires an `ACTIVE` or `PAUSED` Run. Subject Environment restoration requires an `ACTIVE` or `PAUSED` Run and an `ACTIVE` Subject Environment.
+
 Every intervention produces a `HUMAN_OVERRIDE` Journal event where applicable.
 
 The Steward sees relevant interventions as provenance on subsequent consolidation.
