@@ -77,19 +77,23 @@ A proposed amendment must contain:
 
 The Kernel freezes the exact proposed diff and assigns it an amendment identifier.
 
+An Operator or Steward proposal belongs to its current Episode. A human proposal may instead be a standalone Run control transaction when no task Episode is open.
+
 The proposal enters:
 
 `PROPOSED`
 
 A proposed amendment **cannot become active during the Episode in which it was proposed**.
 
-No ordinary operator response, agent statement, tool call, or continuation of the same Episode can ratify it.
+No ordinary operator response, agent statement, tool call, continuation of the same Episode, or standalone proposal transaction can ratify it.
 
 ### Stage 2 — Ratification
 
-At the beginning of a later Episode, the Kernel may present the still-frozen amendment to the human operator for ratification.
+The Kernel may present the still-frozen amendment to the human operator either at the beginning of a later Episode or in a later standalone constitutional-control transaction when no task Episode is open and no chamber invocation or active Steward session exists.
 
 Ratification must be a new, explicit human act.
+
+The proposal Event must precede the decision Event. An Episode-bound proposal cannot be ratified in that Episode; a standalone proposal cannot be ratified in its creating request or transaction. Constitutional control does not create an Objective, task Episode or scheduler lane.
 
 The human is shown at minimum:
 
