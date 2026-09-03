@@ -1815,7 +1815,7 @@ It must be:
 
 The implementation must not silently choose increasingly aggressive polling because a Commitment appears important.
 
-Only a trigger transition from false to satisfied, or a scheduled time event, wakes the Operator.
+Only a first successful trigger observation that is already satisfied, a later transition from false to satisfied, or a scheduled time event wakes the Operator.
 
 Ordinary negative polls do not produce full LLM invocations.
 
