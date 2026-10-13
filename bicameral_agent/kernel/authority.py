@@ -61,6 +61,10 @@ class HumanSession:
                     'event_count': self._k.store._db.execute('SELECT COUNT(*) FROM events WHERE run_id=?',
                                                           (self._k.run_id,)).fetchone()[0]}
 
+    def inspect_snapshot(self):
+        from .inspection import Inspector
+        return Inspector(self._k).open(self)
+
     def emergency_stop(self, *, reason, terminate, alternatives, unresolved_consequences):
         return self._k._emergency(self._cap, reason, terminate, alternatives, unresolved_consequences)
 

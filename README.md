@@ -143,6 +143,12 @@ P07 is accepted under owner delegation within the SCRIPTED envelope. [Forward re
 
 Validation passed 143 tests, all three schema checks and whitespace checks. Eight [restoration tests](tests/test_restoration.py) cover newer obligations and withdrawal preservation, terminal Commitments and retired Invariants, illegal transitions, new contradiction evidence, unresolved objections, changed/stale reviews, invalid old selection/focus, strict parsing and transaction failure/restart. Invalid references reject the entire restoration; no implicit pruning or retargeting occurs. This slice restores semantics only; P08/P10 provide inspection and retention controls.
 
+## P08 acceptance and handoff
+
+P08 is accepted under owner delegation within the authenticated local human-adapter envelope. [Inspection](bicameral_agent/kernel/inspection.py) opens a consistent SQLite read snapshot, exposes bounded table/byte pages including original reports and evaluator records, and streams a versioned JSON-lines export to an explicitly selected new file. Independent verification checks manifest counts, contiguous blob chunks, referenced blobs, byte hashes and completion. Blobs appear once; the live store gains only receipt and opaque copy metadata, never an export body.
+
+Validation passed 150 tests, all three schema checks and whitespace checks. Seven [inspection tests](tests/test_inspection.py) cover snapshot stability during writes, exact payload traversal, human-only access, repeated nonrecursive exports, truncation/tampering, missing external copies, failed destination writes, terminal inspection and removal overriding old snapshot bytes. Copy locations remain caller-supplied and outside the evidence database. P10 supplies durable governed removal and recovery across these known copies.
+
 ## Scope
 
 This is not a claim about consciousness, sentience, personhood, artificial emotion, or human memory. It is not an unrestricted autonomous-agent framework.

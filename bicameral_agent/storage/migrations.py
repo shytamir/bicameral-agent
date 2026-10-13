@@ -135,7 +135,17 @@ OBLIGATION_INDEX = (
         WHERE r.kind='OBJECT' AND json_extract(CAST(b.body AS TEXT),'$.object_type')='COMMITMENT'
           AND NOT EXISTS(SELECT 1 FROM kernel_records n WHERE n.run_id=r.run_id AND n.kind=r.kind AND n.id=r.id AND n.revision>r.revision)""",
 )
-MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX)
+HUMAN_INSPECTION = (
+    """CREATE TABLE inspection_receipts(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES runs(id),
+        snapshot_id TEXT NOT NULL, event_cutoff INTEGER NOT NULL, record_cutoff INTEGER NOT NULL,
+        disposition TEXT NOT NULL CHECK(disposition IN ('INSPECTED','EXPORTED','FAILED')),
+        digest TEXT, byte_length INTEGER, copy_id TEXT, diagnostic TEXT) STRICT""",
+    """CREATE TABLE known_copies(id TEXT NOT NULL, run_id TEXT NOT NULL REFERENCES runs(id),
+        kind TEXT NOT NULL CHECK(kind IN ('EXPORT','BACKUP')), disposition TEXT NOT NULL
+        CHECK(disposition IN ('PENDING','AVAILABLE','REMOVED','UNAVAILABLE')), digest TEXT, byte_length INTEGER,
+        PRIMARY KEY(run_id,id)) STRICT""",
+)
+MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX, HUMAN_INSPECTION)
 
 def checksum(statements):
     return sha256("\n".join(statements).encode()).hexdigest()
