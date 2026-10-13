@@ -175,9 +175,59 @@ A later snapshot includes prior inspection receipts as ordinary metadata, not th
 
 These are required executable acceptance cases for the relevant implementation slices, not claims that tests already exist or pass.
 
-## 9. Recovery checkpoint
+## 9. Bounded consolidation and recovery
 
-The permanently spent one-session design is withdrawn. Bounded consolidation recovery, accounting, crashes and terminal failure disposition must be specified before implementation. External action uncertainty continues to prohibit automatic replay.
+### 9.1 Episode and attempt states
+
+Episode phases are OPEN, CONSOLIDATING, RECOVERY_REQUIRED, CLOSED. Only OPEN admits Operator calls/actions. An execution ending records exactly one Operator outcome or Kernel interruption and moves A/C to CONSOLIDATING; B closes with BASELINE disposition. CLOSED A/C disposition is ACCEPTED, HUMAN_CORRECTED, or SKIPPED. These labels remain distinguishable in evaluation. No phase returns to OPEN.
+
+A ConsolidationAttempt records Episode, consecutive attempt_number, parent state/revision, input/evidence cutoff, normal or recovery base, configured allowance, calls/tokens/duration, terminal reason, and proposal if present. Attempt states are ACTIVE, ACCEPTED, REJECTED, FAILED. At most one is ACTIVE per Run and at most one is ACCEPTED per Episode. A valid proposal closes the Episode atomically with attempt acceptance and semantic commit.
+
+Each attempt permits bounded read-only retrieval continuations and one proposal. Invalid output, rejected proposal, context admission failure, deadline, or transport failure terminalizes that attempt. The next attempt is allowed only while the Run is ACTIVE, the Episode still needs consolidation, no prior accepted commit exists, and the sealed attempt/cumulative budgets remain. It re-reads current parent/control state, receives bounded diagnostic feedback and exact pointers to prior evidence, and uses a new request identity. It is not a hidden provider retry.
+
+Configuration fixes consolidation_attempt_limit, per-attempt call/token/elapsed ceilings, and total consolidation call/token/elapsed ceilings across all attempts. Attempts are durably charged before the first call; a restart cannot reset their counters. A zero remaining allowance leads to RECOVERY_REQUIRED and a visible diagnostic, not a new attempt. A manual correction or new Run cannot be labelled an automatic success of the original attempt.
+
+Before dispatch, reserve the accounted input, maximum output and call deadline against the remaining budgets. Known completion may release unused reservation; unknown output or crash-spanning duration retains the full reservation. Budget charges are recorded separately from measured usage, so conservative reservation never becomes fabricated telemetry. Preflight requires enough allowance for at least one minimal complete attempt.
+
+Wake claim creates the Episode and records its opening before input admission. If even its first Operator input cannot fit, record a context interruption without a model call and proceed to consolidation/recovery for that Episode. No recovery attempt exists without an owning Episode.
+
+### 9.2 Invocation and tool uncertainty
+
+Before a provider call, record its immutable input, role, Episode, attempt if any, budget debit and unique invocation ID. A terminal record is RETURNED, FAILED, or UNKNOWN, with exact valid/invalid output status. Ordinarily measure elapsed time monotonically. Crash-spanning unavailable timing is null with a reason, never zero or an estimate. Provider usage may be unavailable too; retain that absence rather than inventing a cost.
+
+Every call has a configured monotonic deadline. Timeout records UNKNOWN, spends the attempt or ends Operator execution as applicable, and rejects late output. Provider/adapter automatic generation retry is disabled. Only the explicit consolidation controller may start a later attempt. No late or duplicate response can update an ended attempt, replace its output, or commit semantic state.
+
+Tool dispatch has its own identity and durable intent. If terminal outcome is missing after crash, record UNKNOWN and require fixture observation before further consequential work. Do not retry because of an absent acknowledgement. A known nonzero exit, timeout, or unmet postcondition does not by itself prove no effects occurred. The action's observed outcome and memory consolidation outcome are independent records.
+
+### 9.3 Startup and human recovery
+
+Startup verifies database/mutation integrity, configuration/artifact hashes and lifecycle uniqueness before work. Catch up Grant deadlines. Terminalize orphaned invocation records as UNKNOWN without fabricating output or elapsed time. An orphaned OPEN Episode becomes interrupted; an interrupted ACTIVE attempt becomes FAILED and remains charged. If an accepted commit exists, return it; do not retry because its acknowledgement was lost. Otherwise bounded consolidation may resume only through a new eligible attempt. Integrity failure requires human recovery and dispatch remains disabled.
+
+Human pause blocks new calls and dispatches. Already-dispatched results remain evidence; semantic acceptance waits until resume and fresh current-state validation. Termination prohibits later semantic acceptance and new calls. Human changes during an attempt invalidate stale parent/revision assumptions; rejection is explicit and consumes the attempt rather than silently rebasing.
+
+In RECOVERY_REQUIRED the human can:
+
+- submit a typed correction/restoration through the normal reference, authority and budget validator, recording HUMAN_CORRECTED disposition and exact intervention;
+- explicitly SKIP consolidation, closing the Episode without any invented semantic version;
+- terminate while leaving the failure unresolved.
+
+Skipping is not cancellation or fulfilment of any Commitment. It preserves all current obligations and the old handoff. Future opening metadata carries the count and pageable index of skipped Episodes; it never embeds an ever-growing list. Task work may continue after a recorded disposition only while its Objective and Run remain eligible. In held-out evaluation, the experiment's fixed intervention rule governs whether work continues; recovery UI availability does not authorize changing that rule.
+
+### 9.4 Worked recovery traces
+
+| Condition | Required outcome |
+|---|---|
+| Test fixture permits two attempts; first proposal has an unknown field | Reject without mutation; second attempt sees exact bounded diagnostics, may submit a valid new request, and all calls/costs remain recorded |
+| Second attempt also fails | Enter RECOVERY_REQUIRED; no third call or next task; human controls remain available |
+| Process dies after accepted commit, before response | Replay returns the accepted receipt and same IDs; no new attempt |
+| Process dies during an unacknowledged Steward call | Record UNKNOWN/FAILED with unavailable timing where needed; charge that attempt; use at most the remaining allowance |
+| Late response arrives after timeout or termination | Retain diagnostic receipt if needed, but never accept it as a new proposal or semantic commit |
+| Tool changed fixture before process crash | Preserve UNKNOWN dispatch result until observation; never dispatch it again automatically |
+| Semantic base is too large | Build section 7's minimal recovery input, page prior state, and propose a smaller selection within the same bounded allowance |
+| Human skips after exhaustion | Retain old handoff, all evidence and obligations; close as SKIPPED; later context carries a bounded gap notice |
+| Human closes Objective while Steward is generating | Stale proposal cannot create obligations or preserve terminal focus; reject and apply remaining recovery allowance or human disposition |
+
+The two-attempt example is a deterministic test fixture, not an uncalibrated production default. A no-retry condition is representable by an attempt limit of one and requires a distinct declared experimental configuration.
 
 ## 10. Validation strategy
 
@@ -193,4 +243,4 @@ Preflight precedes explicit human sealing. Retain normalized configuration and e
 
 ## 12. Readiness
 
-Readiness is documentary only. Recovery and methodology remain explicit checkpoints. Bounded-input, reference, inspection and visibility traces must become executable tests in their implementation slice; prose does not establish conformance.
+Readiness is documentary only. Experimental methodology remains an explicit checkpoint. Bounded-input, reference, inspection, visibility and recovery traces must become executable tests in their implementation slice; prose does not establish conformance.

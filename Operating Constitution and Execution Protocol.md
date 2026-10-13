@@ -101,7 +101,11 @@ An Episode belongs to one active Objective. Operator work and consolidation are 
 
 Only the Operator declares COMPLETED, BLOCKED, AWAITING_OPERATOR, CHECKPOINT. The Kernel records interruptions for call failure, context ceiling, infrastructure failure, process interruption, or control transition. It never manufactures an Operator outcome. Ended execution never reopens.
 
-A/C invoke the Steward at finalization. B closes with execution evidence and no semantic commit. Rejected proposals cannot partially change state. Uncertain external actions are never automatically replayed. Bounded consolidation recovery and exact dispositions are an outstanding design item; the permanent one-attempt rule is withdrawn.
+A/C invoke the Steward at finalization. B closes with execution evidence and no semantic commit. A consolidation attempt has one fixed input base, bounded evidence-reading calls, and at most one proposal. Rejection or call failure ends that attempt without semantic effects. If the sealed attempt allowance remains, a new attempt may read the recorded errors and propose a correction. Its costs and any changed input are retained. Retransmitting identical message bytes is idempotent transport, not another cognitive attempt.
+
+After the allowance is exhausted, the Episode requires human recovery and no new task starts. The human may inspect, explicitly correct semantic state, close that Episode without consolidation while acknowledging the gap, or terminate the Run. Closure without consolidation retains the latest committed handoff and all missed evidence; it never claims that consolidation succeeded. A later Episode may learn from that evidence through normal retrieval. These interventions are separately recorded and affect experimental interpretation.
+
+Uncertain external actions are never automatically replayed. Observation may establish what actually happened; a subsequent action is a new authorized request. Consolidation retry has no environment tools and cannot replay an action. No failed proposal, lost response, retry, or manual disposition permits a second accepted consolidation for the same Episode.
 
 ## 8. Restoration
 
