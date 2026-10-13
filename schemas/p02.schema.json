@@ -1,0 +1,1937 @@
+{
+  "$defs": {
+    "Binding": {
+      "additionalProperties": false,
+      "properties": {
+        "family_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Family Id"
+        },
+        "local_key": {
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT_FAMILY",
+            "INVARIANT_VERSION",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        }
+      },
+      "required": [
+        "local_key",
+        "object_type",
+        "object_id",
+        "objective_id",
+        "family_id"
+      ],
+      "title": "Binding",
+      "type": "object"
+    },
+    "BoundaryDiscussion": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Activity Id",
+          "type": "string"
+        },
+        "boundary_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Boundary Id",
+          "type": "string"
+        },
+        "decision_maker_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Decision Maker Id",
+          "type": "string"
+        },
+        "disagreement_report_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Disagreement Report Ids",
+          "type": "array"
+        },
+        "disclosure_limits": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Disclosure Limits"
+        },
+        "discussion_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Discussion Id",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "reconsideration_basis": {
+          "anyOf": [
+            {
+              "enum": [
+                "NEW_EVIDENCE",
+                "CHANGED_CIRCUMSTANCES",
+                "SCHEDULED_REVIEW"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reconsideration Basis"
+        },
+        "step": {
+          "enum": [
+            "EXPLANATION",
+            "CLARIFICATION",
+            "CLOSE",
+            "REOPEN",
+            "DECLINE_REOPEN"
+          ],
+          "title": "Step",
+          "type": "string"
+        }
+      },
+      "required": [
+        "discussion_id",
+        "boundary_id",
+        "activity_id",
+        "expected_revision",
+        "decision_maker_id",
+        "step",
+        "reason",
+        "disclosure_limits",
+        "disagreement_report_ids",
+        "reconsideration_basis",
+        "evidence_event_ids"
+      ],
+      "title": "BoundaryDiscussion",
+      "type": "object"
+    },
+    "ChamberKey": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Episode Id"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "OPERATOR",
+            "STEWARD"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "role",
+        "request_id",
+        "episode_id"
+      ],
+      "title": "ChamberKey",
+      "type": "object"
+    },
+    "CommitmentCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "minLength": 1,
+          "title": "Action",
+          "type": "string"
+        },
+        "authority_event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Authority Event Id",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expiry_tick": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expiry Tick"
+        },
+        "kind": {
+          "const": "COMMITMENT_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "trigger": {
+          "discriminator": {
+            "mapping": {
+              "PREDECESSOR_FULFILLED": "#/$defs/PredecessorTrigger",
+              "TASK_CLOCK": "#/$defs/TaskClockTrigger"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/TaskClockTrigger"
+            },
+            {
+              "$ref": "#/$defs/PredecessorTrigger"
+            }
+          ],
+          "title": "Trigger"
+        }
+      },
+      "required": [
+        "kind",
+        "local_key",
+        "objective_id",
+        "action",
+        "trigger",
+        "expiry_tick",
+        "authority_event_id",
+        "evidence_event_ids"
+      ],
+      "title": "CommitmentCreate",
+      "type": "object"
+    },
+    "CommitmentTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "COMMITMENT_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "PENDING",
+            "TRIGGERED",
+            "IN_PROGRESS",
+            "BLOCKED",
+            "FULFILLED",
+            "CANCELLED",
+            "SUPERSEDED",
+            "EXPIRED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "superseded_by": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "EXISTING": "#/$defs/ExistingCommitment",
+                  "LOCAL": "#/$defs/LocalCommitment"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ExistingCommitment"
+                },
+                {
+                  "$ref": "#/$defs/LocalCommitment"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Superseded By"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingCommitment",
+              "LOCAL": "#/$defs/LocalCommitment"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingCommitment"
+            },
+            {
+              "$ref": "#/$defs/LocalCommitment"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids",
+        "superseded_by"
+      ],
+      "title": "CommitmentTransition",
+      "type": "object"
+    },
+    "EpisodeState": {
+      "additionalProperties": false,
+      "properties": {
+        "disposition": {
+          "anyOf": [
+            {
+              "enum": [
+                "BASELINE",
+                "ACCEPTED",
+                "HUMAN_CORRECTED",
+                "SKIPPED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Disposition"
+        },
+        "kind": {
+          "const": "EPISODE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "OPEN",
+            "CONSOLIDATING",
+            "RECOVERY_REQUIRED",
+            "CLOSED"
+          ],
+          "title": "Phase",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "objective_id",
+        "phase",
+        "disposition"
+      ],
+      "title": "EpisodeState",
+      "type": "object"
+    },
+    "ExistingCommitment": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "COMMITMENT",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingCommitment",
+      "type": "object"
+    },
+    "ExistingItch": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "ITCH",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingItch",
+      "type": "object"
+    },
+    "ExistingVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "INVARIANT_VERSION",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingVersion",
+      "type": "object"
+    },
+    "InterventionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "alternatives": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "consultation": {
+          "enum": [
+            "OFFERED",
+            "DECLINED",
+            "INFEASIBLE",
+            "EMERGENCY"
+          ],
+          "title": "Consultation",
+          "type": "string"
+        },
+        "consultation_reason": {
+          "minLength": 1,
+          "title": "Consultation Reason",
+          "type": "string"
+        },
+        "continuity_effects": {
+          "minLength": 1,
+          "title": "Continuity Effects",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "PENDING",
+            "APPROVED",
+            "REJECTED"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "decision_maker_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Decision Maker Id",
+          "type": "string"
+        },
+        "execution_event_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Execution Event Id"
+        },
+        "intervention_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Intervention Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "MEMORY_CORRECTION",
+            "SEMANTIC_RESTORATION",
+            "RETENTION",
+            "PLANNED_ENDING",
+            "EMERGENCY_STOP"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "notice_event_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Notice Event Id"
+        },
+        "participation_report_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Participation Report Ids",
+          "type": "array"
+        },
+        "proposed_effects": {
+          "$ref": "#/$defs/PayloadReference"
+        },
+        "purpose": {
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        },
+        "targets": {
+          "items": {
+            "$ref": "#/$defs/InterventionTarget"
+          },
+          "minItems": 1,
+          "title": "Targets",
+          "type": "array"
+        },
+        "unresolved_consequences": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Unresolved Consequences",
+          "type": "array"
+        }
+      },
+      "required": [
+        "intervention_id",
+        "decision_maker_id",
+        "kind",
+        "purpose",
+        "targets",
+        "proposed_effects",
+        "continuity_effects",
+        "alternatives",
+        "notice_event_id",
+        "participation_report_ids",
+        "consultation",
+        "consultation_reason",
+        "decision",
+        "execution_event_id",
+        "unresolved_consequences"
+      ],
+      "title": "InterventionRecord",
+      "type": "object"
+    },
+    "InterventionTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "record_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Record Id",
+          "type": "string"
+        },
+        "record_type": {
+          "enum": [
+            "CONTINUITY_STATE",
+            "ITCH",
+            "INVARIANT_VERSION",
+            "COMMITMENT",
+            "RUN",
+            "PAYLOAD"
+          ],
+          "title": "Record Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "record_type",
+        "record_id",
+        "expected_revision"
+      ],
+      "title": "InterventionTarget",
+      "type": "object"
+    },
+    "InvariantCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "contradictory_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Contradictory Event Ids",
+          "type": "array"
+        },
+        "family_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Family Local Key",
+          "type": "string"
+        },
+        "kind": {
+          "const": "INVARIANT_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        },
+        "proposition": {
+          "minLength": 1,
+          "title": "Proposition",
+          "type": "string"
+        },
+        "scope": {
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "supporting_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting Event Ids",
+          "type": "array"
+        },
+        "version_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Version Local Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "family_local_key",
+        "version_local_key",
+        "objective_id",
+        "proposition",
+        "scope",
+        "supporting_event_ids",
+        "contradictory_event_ids"
+      ],
+      "title": "InvariantCreate",
+      "type": "object"
+    },
+    "InvariantRevise": {
+      "additionalProperties": false,
+      "properties": {
+        "contradictory_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Contradictory Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "INVARIANT_REVISE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposition": {
+          "minLength": 1,
+          "title": "Proposition",
+          "type": "string"
+        },
+        "scope": {
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "successor_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Successor Local Key",
+          "type": "string"
+        },
+        "supporting_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting Event Ids",
+          "type": "array"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingVersion",
+              "LOCAL": "#/$defs/LocalVersion"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingVersion"
+            },
+            {
+              "$ref": "#/$defs/LocalVersion"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "successor_local_key",
+        "proposition",
+        "scope",
+        "supporting_event_ids",
+        "contradictory_event_ids"
+      ],
+      "title": "InvariantRevise",
+      "type": "object"
+    },
+    "InvariantTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "INVARIANT_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "TENTATIVE",
+            "ACTIVE",
+            "CHALLENGED",
+            "RETIRED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingVersion",
+              "LOCAL": "#/$defs/LocalVersion"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingVersion"
+            },
+            {
+              "$ref": "#/$defs/LocalVersion"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids"
+      ],
+      "title": "InvariantTransition",
+      "type": "object"
+    },
+    "ItchCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "discrepancy": {
+          "minLength": 1,
+          "title": "Discrepancy",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "kind": {
+          "const": "ITCH_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "local_key",
+        "objective_id",
+        "discrepancy",
+        "evidence_event_ids"
+      ],
+      "title": "ItchCreate",
+      "type": "object"
+    },
+    "ItchTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ITCH_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "INVESTIGATING",
+            "RESOLVED",
+            "DISMISSED",
+            "ARCHIVED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingItch",
+              "LOCAL": "#/$defs/LocalItch"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingItch"
+            },
+            {
+              "$ref": "#/$defs/LocalItch"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids"
+      ],
+      "title": "ItchTransition",
+      "type": "object"
+    },
+    "LocalCommitment": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "COMMITMENT",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalCommitment",
+      "type": "object"
+    },
+    "LocalItch": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "ITCH",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalItch",
+      "type": "object"
+    },
+    "LocalVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "INVARIANT_VERSION",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalVersion",
+      "type": "object"
+    },
+    "MutationEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "changes": {
+          "items": {
+            "$ref": "#/$defs/ObjectChange"
+          },
+          "minItems": 1,
+          "title": "Changes",
+          "type": "array"
+        },
+        "mutation": {
+          "discriminator": {
+            "mapping": {
+              "COMMITMENT_CREATE": "#/$defs/CommitmentCreate",
+              "COMMITMENT_TRANSITION": "#/$defs/CommitmentTransition",
+              "INVARIANT_CREATE": "#/$defs/InvariantCreate",
+              "INVARIANT_REVISE": "#/$defs/InvariantRevise",
+              "INVARIANT_TRANSITION": "#/$defs/InvariantTransition",
+              "ITCH_CREATE": "#/$defs/ItchCreate",
+              "ITCH_TRANSITION": "#/$defs/ItchTransition"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ItchCreate"
+            },
+            {
+              "$ref": "#/$defs/ItchTransition"
+            },
+            {
+              "$ref": "#/$defs/InvariantCreate"
+            },
+            {
+              "$ref": "#/$defs/InvariantTransition"
+            },
+            {
+              "$ref": "#/$defs/InvariantRevise"
+            },
+            {
+              "$ref": "#/$defs/CommitmentCreate"
+            },
+            {
+              "$ref": "#/$defs/CommitmentTransition"
+            }
+          ],
+          "title": "Mutation"
+        }
+      },
+      "required": [
+        "mutation",
+        "changes"
+      ],
+      "title": "MutationEntry",
+      "type": "object"
+    },
+    "ObjectChange": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "After",
+          "type": "string"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Before"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "object_id",
+        "before",
+        "after"
+      ],
+      "title": "ObjectChange",
+      "type": "object"
+    },
+    "ObjectiveState": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Authority Event Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "OBJECTIVE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "SATISFIED",
+            "FAILED",
+            "CANCELLED",
+            "SUPERSEDED"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "statement",
+        "status",
+        "authority_event_id"
+      ],
+      "title": "ObjectiveState",
+      "type": "object"
+    },
+    "PayloadReference": {
+      "additionalProperties": false,
+      "description": "Opaque indirection permits later removal without retaining content hashes.",
+      "properties": {
+        "payload_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Payload Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "payload_id"
+      ],
+      "title": "PayloadReference",
+      "type": "object"
+    },
+    "PredecessorTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PREDECESSOR_FULFILLED",
+          "title": "Kind",
+          "type": "string"
+        },
+        "predecessor": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingCommitment",
+              "LOCAL": "#/$defs/LocalCommitment"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingCommitment"
+            },
+            {
+              "$ref": "#/$defs/LocalCommitment"
+            }
+          ],
+          "title": "Predecessor"
+        }
+      },
+      "required": [
+        "kind",
+        "predecessor"
+      ],
+      "title": "PredecessorTrigger",
+      "type": "object"
+    },
+    "Receipt": {
+      "additionalProperties": false,
+      "properties": {
+        "bindings": {
+          "items": {
+            "$ref": "#/$defs/Binding"
+          },
+          "title": "Bindings",
+          "type": "array"
+        },
+        "diagnostics": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PayloadReference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "enum": [
+                "INVALID_TASK",
+                "INSPECTION_REQUIRED",
+                "WITHDRAWAL",
+                "VALIDATION_FAILED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error Code"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "state_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "State Id"
+        },
+        "status": {
+          "enum": [
+            "RECORDED",
+            "ACCEPTED",
+            "REJECTED"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "status",
+        "state_id",
+        "bindings",
+        "error_code",
+        "diagnostics"
+      ],
+      "title": "Receipt",
+      "type": "object"
+    },
+    "RetentionCopy": {
+      "additionalProperties": false,
+      "properties": {
+        "copy_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Copy Id",
+          "type": "string"
+        },
+        "disposition": {
+          "enum": [
+            "PENDING",
+            "REMOVED",
+            "RETAINED",
+            "INACCESSIBLE",
+            "UNVERIFIED"
+          ],
+          "title": "Disposition",
+          "type": "string"
+        },
+        "location_class": {
+          "enum": [
+            "PAYLOAD",
+            "PROJECTION",
+            "JOURNAL",
+            "MUTATION",
+            "INVOCATION",
+            "CACHE",
+            "EXPORT",
+            "WAL",
+            "FREE_PAGES",
+            "BACKUP",
+            "PROVIDER"
+          ],
+          "title": "Location Class",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "copy_id",
+        "location_class",
+        "disposition",
+        "reason"
+      ],
+      "title": "RetentionCopy",
+      "type": "object"
+    },
+    "RetentionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "continuation": {
+          "enum": [
+            "STOPPED",
+            "REVIEW_REQUIRED",
+            "ELIGIBLE_FOR_REVIEWED_RESUMPTION"
+          ],
+          "title": "Continuation",
+          "type": "string"
+        },
+        "continuity_and_replay_effects": {
+          "minLength": 1,
+          "title": "Continuity And Replay Effects",
+          "type": "string"
+        },
+        "copies": {
+          "items": {
+            "$ref": "#/$defs/RetentionCopy"
+          },
+          "minItems": 1,
+          "title": "Copies",
+          "type": "array"
+        },
+        "decision_maker_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Decision Maker Id",
+          "type": "string"
+        },
+        "disposition_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Disposition Id",
+          "type": "string"
+        },
+        "intervention_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Intervention Id",
+          "type": "string"
+        },
+        "purpose": {
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        },
+        "remaining_state": {
+          "minLength": 1,
+          "title": "Remaining State",
+          "type": "string"
+        },
+        "removal_event_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Removal Event Id"
+        },
+        "status": {
+          "enum": [
+            "PROPOSED",
+            "IN_PROGRESS",
+            "COMPLETED",
+            "INCOMPLETE"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "targets": {
+          "items": {
+            "$ref": "#/$defs/InterventionTarget"
+          },
+          "minItems": 1,
+          "title": "Targets",
+          "type": "array"
+        },
+        "unresolved_copy_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Unresolved Copy Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "disposition_id",
+        "intervention_id",
+        "decision_maker_id",
+        "purpose",
+        "targets",
+        "copies",
+        "status",
+        "removal_event_id",
+        "continuity_and_replay_effects",
+        "remaining_state",
+        "unresolved_copy_ids",
+        "continuation"
+      ],
+      "title": "RetentionRecord",
+      "type": "object"
+    },
+    "RunState": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "RUN",
+          "title": "Kind",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        },
+        "status": {
+          "enum": [
+            "CREATED",
+            "ACTIVE",
+            "PAUSED",
+            "COMPLETED",
+            "TERMINATED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "task_tick": {
+          "minimum": 0,
+          "title": "Task Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "status",
+        "objective_id",
+        "task_tick"
+      ],
+      "title": "RunState",
+      "type": "object"
+    },
+    "StoredObject": {
+      "additionalProperties": false,
+      "properties": {
+        "commitment_links": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Commitment Links",
+          "type": "array"
+        },
+        "content": {
+          "discriminator": {
+            "mapping": {
+              "COMMITMENT_CREATE": "#/$defs/CommitmentCreate",
+              "INVARIANT_CREATE": "#/$defs/InvariantCreate",
+              "INVARIANT_REVISE": "#/$defs/InvariantRevise",
+              "ITCH_CREATE": "#/$defs/ItchCreate"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ItchCreate"
+            },
+            {
+              "$ref": "#/$defs/InvariantCreate"
+            },
+            {
+              "$ref": "#/$defs/InvariantRevise"
+            },
+            {
+              "$ref": "#/$defs/CommitmentCreate"
+            }
+          ],
+          "title": "Content"
+        },
+        "family_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Family Id"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT_FAMILY",
+            "INVARIANT_VERSION",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        },
+        "predecessor_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Predecessor Id"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "INVESTIGATING",
+            "RESOLVED",
+            "DISMISSED",
+            "ARCHIVED",
+            "TENTATIVE",
+            "ACTIVE",
+            "CHALLENGED",
+            "RETIRED",
+            "PENDING",
+            "TRIGGERED",
+            "IN_PROGRESS",
+            "BLOCKED",
+            "FULFILLED",
+            "CANCELLED",
+            "SUPERSEDED",
+            "EXPIRED",
+            "FAMILY"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "object_id",
+        "run_id",
+        "object_type",
+        "objective_id",
+        "revision",
+        "family_id",
+        "predecessor_id",
+        "status",
+        "content",
+        "commitment_links"
+      ],
+      "title": "StoredObject",
+      "type": "object"
+    },
+    "TaskClockTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "TASK_CLOCK",
+          "title": "Kind",
+          "type": "string"
+        },
+        "tick": {
+          "minimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "tick"
+      ],
+      "title": "TaskClockTrigger",
+      "type": "object"
+    },
+    "WelfareHold": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Activity Id",
+          "type": "string"
+        },
+        "communication": {
+          "enum": [
+            "REVIEW_PERMITTED",
+            "NO_FURTHER_CALLS",
+            "UNCLEAR"
+          ],
+          "title": "Communication",
+          "type": "string"
+        },
+        "hold_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Hold Id",
+          "type": "string"
+        },
+        "report_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Report Ids",
+          "type": "array"
+        },
+        "resolution_review_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Resolution Review Id"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "HELD",
+            "RESOLVED"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "hold_id",
+        "run_id",
+        "activity_id",
+        "revision",
+        "report_ids",
+        "status",
+        "communication",
+        "resolution_review_id"
+      ],
+      "title": "WelfareHold",
+      "type": "object"
+    },
+    "WelfareReview": {
+      "additionalProperties": false,
+      "properties": {
+        "alternatives": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "assessment": {
+          "minLength": 1,
+          "title": "Assessment",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "KEEP_HELD",
+            "END_ACTIVITY",
+            "RESOLVE"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "decision_maker_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Decision Maker Id",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_hold_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Hold Revision",
+          "type": "integer"
+        },
+        "hold_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Hold Id",
+          "type": "string"
+        },
+        "remedy": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Remedy"
+        },
+        "renewed_participation_report_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Renewed Participation Report Id"
+        },
+        "review_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Review Id",
+          "type": "string"
+        },
+        "unresolved_consequences": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Unresolved Consequences",
+          "type": "array"
+        }
+      },
+      "required": [
+        "review_id",
+        "hold_id",
+        "expected_hold_revision",
+        "decision_maker_id",
+        "assessment",
+        "alternatives",
+        "decision",
+        "renewed_participation_report_id",
+        "remedy",
+        "unresolved_consequences",
+        "evidence_event_ids"
+      ],
+      "title": "WelfareReview",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "chamber_key": {
+      "$ref": "#/$defs/ChamberKey"
+    },
+    "control": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RunState"
+        },
+        {
+          "$ref": "#/$defs/ObjectiveState"
+        },
+        {
+          "$ref": "#/$defs/EpisodeState"
+        },
+        {
+          "$ref": "#/$defs/WelfareHold"
+        },
+        {
+          "$ref": "#/$defs/WelfareReview"
+        },
+        {
+          "$ref": "#/$defs/InterventionRecord"
+        },
+        {
+          "$ref": "#/$defs/BoundaryDiscussion"
+        },
+        {
+          "$ref": "#/$defs/RetentionRecord"
+        }
+      ],
+      "title": "Control"
+    },
+    "mutation_entry": {
+      "$ref": "#/$defs/MutationEntry"
+    },
+    "object": {
+      "$ref": "#/$defs/StoredObject"
+    },
+    "receipt": {
+      "$ref": "#/$defs/Receipt"
+    }
+  },
+  "required": [
+    "mutation_entry",
+    "chamber_key",
+    "control",
+    "object",
+    "receipt"
+  ],
+  "title": "StorageContracts",
+  "type": "object"
+}

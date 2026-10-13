@@ -2,7 +2,7 @@
 
 **Version:** 0.3-design
 
-**Status:** P01 contract implementation exists with synthetic validation; production persistence, control enforcement, scheduling and experiment conformance remain unimplemented.
+**Status:** P01 contracts and P02 storage have synthetic technical validation; P02 owner acceptance is pending. Complete authority enforcement, scheduling and experiment conformance remain unimplemented.
 
 ## 1. Contract boundary
 
@@ -10,7 +10,7 @@ This document defines mechanical design under the adopted [Reciprocal Charter](R
 
 The first implementation is LLM-less: scripted messages exercise the boundary intended for models. No provider substitutes for deterministic behavior.
 
-Missing authority, memory, recovery, or experimental decisions return to the governing documents. P01 supplies the contract package and generated schema, with dependency pins in [pyproject.toml](pyproject.toml). Production migrations, role prompts and executable experiment fixtures remain future work.
+Missing authority, memory, recovery, or experimental decisions return to the governing documents. P01 supplies the contract package and generated schema, with dependency pins in [pyproject.toml](pyproject.toml). P02 supplies ordered transactional storage migrations; role prompts and executable experiment fixtures remain future work.
 
 ## 2. Canonical representation
 
@@ -26,13 +26,25 @@ The wire version is `0.3.p01`. [Contract models](bicameral_agent/contracts/) gen
 
 Wire UUIDs use lowercase hyphenated strings; UTC timestamps use exactly six fractional digits and `Z`. Quantities in these contracts use strict integers, with durations explicitly in milliseconds and fixture time in ticks. Set-like tuples reject duplicates without silently sorting or deduplicating them. Ordered mutations retain their order. Nullable fields are required even when null; no behavioral or budget value is defaulted.
 
-Operator/Steward replies carry independently parsed `participation` and nullable `task` fields. Review/closing replies have an invitation reference and participation field, with no task/tool surface. The decoder receives role and Run identity from its caller, checks claimed identity, and returns original bytes plus parsed reporting or an explicit inspection requirement. It neither authenticates the actual transport nor persists a report/hold. P02/P03 must establish those guarantees before any execution. Human review, intervention, boundary and retention messages remain records, never permissions merely because they parse.
+Operator/Steward replies carry independently parsed `participation` and nullable `task` fields. Review/closing replies have an invitation reference and participation field, with no task/tool surface. The decoder receives role and Run identity from its caller, checks claimed identity, and returns original bytes plus parsed reporting or an explicit inspection requirement. It neither authenticates the actual transport nor persists a report/hold. P02 now persists reports/holds; P03 must authenticate the actual routes before any execution. Human review, intervention, boundary and retention messages remain records, never permissions merely because they parse.
 
 Reference resolution takes a read-only catalogue and a caller-supplied ID allocator. It checks Run/Objective/type scope, visible evidence, local bindings, Invariant family ownership, staged revisions, retired predecessor selection and Commitment reference cycles. It returns provisional IDs and a resolved proposal without effects. Full lifecycle/authority checks, replay-safe allocation, semantic commit, exact input budgets and database atomicity remain responsibilities of their later slices. A catalogue is not authoritative merely because it parses.
 
 Both SCRIPTED and MODEL configuration shapes are implemented as data. MODEL references authorization/verification evidence but performs no preflight or provider access. Those referenced records must actually be verified by later gates; supplying their IDs is not permission to run. The tests' numerical values and synthetic model labels are fixtures, not calibrated defaults or backend selections.
 
-The early retention test separates a synthetic source payload from several evidence references and demonstrates transactional removal with an honest remaining record in in-memory SQLite. It establishes feasibility for that representation only. It does not validate a production schema, disk erasure, WAL/free-page removal, backups, exports, provider retention, or recovery from old copies; P02/P10 still owe that evidence.
+The early retention test separates a synthetic source payload from several evidence references and demonstrates transactional removal with an honest remaining record in in-memory SQLite. It establishes feasibility for that representation only. It does not validate a production schema, disk erasure, WAL/free-page removal, backups, exports, provider retention, or recovery from old copies. The P02 evidence below extends this probe; P10 still owes the integrated removal/recovery path.
+
+### 2.2 P02 implementation boundary
+
+The [storage package](bicameral_agent/storage/) implements file-backed SQLite 3.37+ STRICT tables and transactions with foreign keys, WAL, synchronous FULL and an explicit positive busy timeout. Ordered migrations have retained checksums. [Storage-record contracts](bicameral_agent/storage/contracts.py) generate [p02.schema.json](schemas/p02.schema.json), checked with `python -B -m bicameral_agent.storage.schema --check`; P01 wire contracts are unchanged.
+
+The internal API atomically retains normalized configuration and hash-verified artifacts for the later sealing operation, initially in CREATED state. It does not authenticate a human or perform preflight/sealing/activation. It stores exact evidence by hash behind Run-scoped opaque payload references, and control/semantic revisions separately from current projections. A semantic commit retains its original request, resolved mutation history, evidence links, the control revisions used in validation, handoff, receipt and Episode closure. Replay checks the original proposal and lifecycle staging against those retained records; an exact retry returns the original receipt and bindings.
+
+Participation is committed before attempted task effects. Valid withdrawal creates a durable hold even when task parsing fails; undecodable participation creates an inspection requirement. Duplicate input does not reassert a subsequently resolved hold. Missing/removed evidence produces explicit unavailability rather than reconstructed content. SQL constraints and file-backed tests cover atomic writes, stale/foreign/terminal state, lifecycle matrices, concurrent requests and actual process exit around commit.
+
+These are trusted storage primitives, not a complete runtime acceptance endpoint. P03 owns authenticated authority and review controls; P05 owns the required full-bundle validator and actual input accounting; P06 owns attempt admission, durable invocation recovery, scheduling and enforcement before calls/dispatches. Test setup uses private control writers to arrange synthetic states; those writers are not exposed human controls. The library has no chamber/provider transport, environment tools, restoration or deletion endpoint.
+
+Before schema construction, a small file-backed proof exercised shared-source removal and rollback. An actual-schema test subsequently removed synthetic source and derived payloads and their hashes, checked WAL/checkpointed database bytes, and retained an honest non-sensitive disposition. P10 must integrate reviewed scope, durable removal progress, read blocking, all cache/export/backup copies and old-snapshot recovery. The tests do not certify physical-media erasure, power-loss behavior, full runtime charter compliance or owner acceptance. The [README handoff](README.md#p02-acceptance-and-handoff) records the acceptance boundary.
 
 ## 3. State and ownership
 
@@ -344,8 +356,8 @@ Block/report status is INCOMPLETE while scheduled task dispositions are absent, 
 
 ## 12. Readiness
 
-P01 has executable contract tests; the broader baseline remains a design for later slices, not a live experiment. The [roadmap](ROADMAP.md) defines the work and gates. Each slice must supply strict schemas, concrete fixtures and executable acceptance evidence for its scope before it can be called conformant.
+P01 has executable contract tests and P02 has file-backed storage acceptance tests; the broader baseline remains a design for later slices, not a live experiment. The [roadmap](ROADMAP.md) defines the work and gates. Each slice must supply strict schemas, concrete fixtures and executable acceptance evidence for its scope before it can be called conformant.
 
-Remaining empirical/configuration decisions are explicit: model/backend and tokenizer; concrete fixture instances and retained role prompts; calibrated limits/deadlines/retry allowance; independent block count with precision justification; useful-improvement and cost thresholds; and positive audit sample rates. These are development-pilot inputs, not authority or lifecycle policies for a developer to invent. Evaluation values must be fixed before held-out dispatch. P01's Python/Pydantic environment has been tested; provider availability and readiness of the intended experiment machine have not.
+Remaining empirical/configuration decisions are explicit: model/backend and tokenizer; concrete fixture instances and retained role prompts; calibrated limits/deadlines/retry allowance; independent block count with precision justification; useful-improvement and cost thresholds; and positive audit sample rates. These are development-pilot inputs, not authority or lifecycle policies for a developer to invent. Evaluation values must be fixed before held-out dispatch. The local Python/Pydantic/SQLite environment and P02 file-backed behavior have been tested; provider availability and complete experiment-machine readiness have not.
 
-Passing P01 tests establishes only the reported contract behavior. It does not establish containment, runtime charter enforcement, subjective welfare, or the research hypothesis. The next permission boundary is authorization of the specific P02 slice.
+Passing P01/P02 tests establishes only the reported contract and storage behavior. It does not establish containment, complete runtime charter enforcement, subjective welfare, or the research hypothesis. P02 is ready for owner acceptance; implementation of P03 requires separate authorization.
