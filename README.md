@@ -26,19 +26,19 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 - [Experiment Architecture](Experiment%20Architecture.md) defines the hypothesis, system components, memory structures, evaluation arms, measurements, and failure criteria.
 - [Operating Constitution and Execution Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) defines lawful behavior, human authority, Objectives, Grants, Episodes, action-risk boundaries, evidence treatment, and semantic-state lifecycles.
-- [Executable Specification](Executable%20Specification.md) is the frozen implementation contract: canonical schemas, machine messages, deterministic invariants and tests, transaction semantics, and the first comparison-block configuration.
+- [Executable Specification](Executable%20Specification.md) is the implementation design under revision: contracts, deterministic properties, transaction semantics, and comparison configuration.
 - [AGENTS.md](AGENTS.md) gives repository-specific working rules, document authority, change discipline, verification expectations, and Git guard rails.
 
 ## Current management state
 
-The project is **pre-implementation and ready for v0a implementation planning**.
+The project is **pre-implementation and undergoing design revision**.
 
 - The Architecture and Operating Constitution and Execution Protocol remain the design and governance baseline.
-- Scrutiny of the Executable Specification is complete. Its 43 register items are closed, and the resulting document is authorized and frozen as the implementation contract.
+- The prior specification freeze is reopened. The 43 scrutiny entries record earlier decisions; they are not evidence of executable conformance or experimental validity.
 - No supervisor, persistence layer, chamber adapter, tool runtime, or benchmark harness has been implemented.
 - No experimental result has been produced, and none should be inferred from the completeness of the documents.
 
-The next work is epic/story planning and roadmapping for the Executable Specification's **v0a LLM-less first implementation cut**. That cut should establish the schemas, authority checks, lifecycle transitions, append-only evidence, atomic Episode consolidation, rollback constraints, and their executable tests before any LLM is connected.
+The current work revises bounded context, memory channels, experimental comparisons, ordinary contract flows, recovery, and first-cut scope. The [roadmap](ROADMAP.md) retains the earlier inventory pending that revision. Implementation and live experiments require separate authorization. The first implementation remains LLM-less.
 
 Deferred features—including vector retrieval, model routing, semantic Commitment triggers, multi-Objective concurrency, R3 operations, and elaborate UI—should be added only when the experiment demonstrates a need.
 

@@ -1,7 +1,7 @@
 # Persistent Agent Continuity Experiment
-## Executable Specification — First Draft
+## Executable Specification — Reopened Design
 
-**Status:** pre-implementation draft for scrutiny
+**Status:** pre-implementation design under revision; prior freeze reopened
 
 **Specification version:** `0.1-draft`
 **Governing documents:** *Experiment Architecture* and *Operating Constitution and Execution Protocol*
@@ -10,7 +10,7 @@
 
 # 1. Purpose and Status
 
-This document translates the Architecture and Operating Constitution and Execution Protocol into four coupled implementation artifacts: the canonical data model, machine contracts, deterministic invariants and tests, and first comparison-block configuration. A conforming implementation should require no invented authority, persistence or lifecycle policy.
+This document is being revised following a static design review. The existing contracts remain the recorded design until explicitly replaced, but they are not an implementation-ready contract. The revision addresses total context growth, alternative memory channels, experimental units, same-proposal object references, inspection export growth, recovery, and excessive first-cut scope. No runtime conformance or experimental result has been demonstrated.
 
 This specification is subordinate to the governing documents. Any conflict, or any implementation question that would change what the process may believe, remember, promise or do, returns for protocol decision.
 
@@ -3919,7 +3919,7 @@ A staging or sealing failure before Run creation returns deterministic human-rea
 
 # 14. Scrutiny Register
 
-All 43 scrutiny items are closed. This register is a decision index; the normative schemas, contracts, transitions, invariants and tests in sections 3–13 control.
+The following 43 entries are the historical decision index from the previous review. Their original CLOSED labels mean a decision was recorded, not that it survived execution or experimental validation. The design is now reopened; revised governing text supersedes these historical decisions explicitly.
 
 1. **CLOSED — Kernel interruption is orthogonal to Operator outcome.**
 2. **CLOSED — Serial Operator execution uses a durable wake queue.**
@@ -3965,7 +3965,7 @@ All 43 scrutiny items are closed. This register is a decision index; the normati
 42. **CLOSED — Every admitted model invocation has one sealed monotonic deadline with terminal uncertainty, no accepted late output and no automatic retry.**
 43. **CLOSED — Pre-Run staging and sealing failures are diagnostics rather than Events; Run-scoped failure Events begin only after Run genesis.**
 
-Later scrutiny may replace a closed rule or add a newly discovered gap, but implementation must not reopen one implicitly through code or defaults.
+Revision must change the relevant governing text and contracts together. Implementation must not fill a policy gap silently.
 
 ---
 
@@ -3993,7 +3993,7 @@ The first useful implementation failure should therefore be a violated invariant
 
 # 16. Completion Criterion for This Layer
 
-This executable-specification layer is ready to yield to implementation when:
+The previous readiness checklist is retained below as review input. It has not been demonstrated by executable evidence:
 
 - every governed object has one canonical representation and owner;
 - every chamber boundary accepts one closed structured contract;
@@ -4007,4 +4007,4 @@ This executable-specification layer is ready to yield to implementation when:
 - protocol-required experimental evidence and per-scenario outcomes have exact immutable records;
 - the scrutiny register contains no unresolved item.
 
-At that point, further clarification should occur through schemas, failing tests and small protocol amendments. Another architectural essay would add less information than an executable counterexample.
+Readiness will be reassessed against a smaller authorized slice and worked end-to-end examples. Documentary completeness alone does not establish readiness.
