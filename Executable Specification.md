@@ -2,7 +2,7 @@
 
 **Version:** 0.3-design
 
-**Status:** revised design baseline for bounded slice planning; no code or runtime conformance exists.
+**Status:** P01 contract implementation exists with synthetic validation; production persistence, control enforcement, scheduling and experiment conformance remain unimplemented.
 
 ## 1. Contract boundary
 
@@ -10,7 +10,7 @@ This document defines mechanical design under the adopted [Reciprocal Charter](R
 
 The first implementation is LLM-less: scripted messages exercise the boundary intended for models. No provider substitutes for deterministic behavior.
 
-Missing authority, memory, recovery, or experimental decisions return to the governing documents. Schema files, migrations, dependency versions, prompts and fixtures do not yet exist.
+Missing authority, memory, recovery, or experimental decisions return to the governing documents. P01 supplies the contract package and generated schema, with dependency pins in [pyproject.toml](pyproject.toml). Production migrations, role prompts and executable experiment fixtures remain future work.
 
 ## 2. Canonical representation
 
@@ -19,6 +19,20 @@ Strict parsing rejects unknown fields, duplicate JSON member names, invalid disc
 Durable IDs are Kernel-assigned opaque UUIDs. Timestamps are Kernel-observed UTC with microsecond precision; durations use a monotonic clock. Clock corrections cannot reverse terminality. Canonical JSON uses UTF-8, sorted keys, no insignificant whitespace, and no non-finite numbers. SHA-256 identifies retained bytes. Exact quantities use integers or explicitly formatted decimal strings.
 
 An envelope contains contract_version, request_id, run_id, episode_id if applicable, authenticated role, message_type and typed body. Idempotency is scoped by Run, role, request ID: exact repeats return recorded responses, subject to section 6.2's removal rules; different bytes reject without effects. Text cannot authenticate a sender.
+
+### 2.1 P01 implementation boundary
+
+The wire version is `0.3.p01`. [Contract models](bicameral_agent/contracts/) generate [p01.schema.json](schemas/p01.schema.json); `python -B -m bicameral_agent.contracts.schema --check` detects drift. Pydantic shape validation, cross-field checks and catalogue-based reference resolution are distinct checks. The generated schema alone cannot authenticate, resolve references, enforce lifecycle transitions or evaluate meaning.
+
+Wire UUIDs use lowercase hyphenated strings; UTC timestamps use exactly six fractional digits and `Z`. Quantities in these contracts use strict integers, with durations explicitly in milliseconds and fixture time in ticks. Set-like tuples reject duplicates without silently sorting or deduplicating them. Ordered mutations retain their order. Nullable fields are required even when null; no behavioral or budget value is defaulted.
+
+Operator/Steward replies carry independently parsed `participation` and nullable `task` fields. Review/closing replies have an invitation reference and participation field, with no task/tool surface. The decoder receives role and Run identity from its caller, checks claimed identity, and returns original bytes plus parsed reporting or an explicit inspection requirement. It neither authenticates the actual transport nor persists a report/hold. P02/P03 must establish those guarantees before any execution. Human review, intervention, boundary and retention messages remain records, never permissions merely because they parse.
+
+Reference resolution takes a read-only catalogue and a caller-supplied ID allocator. It checks Run/Objective/type scope, visible evidence, local bindings, Invariant family ownership, staged revisions, retired predecessor selection and Commitment reference cycles. It returns provisional IDs and a resolved proposal without effects. Full lifecycle/authority checks, replay-safe allocation, semantic commit, exact input budgets and database atomicity remain responsibilities of their later slices. A catalogue is not authoritative merely because it parses.
+
+Both SCRIPTED and MODEL configuration shapes are implemented as data. MODEL references authorization/verification evidence but performs no preflight or provider access. Those referenced records must actually be verified by later gates; supplying their IDs is not permission to run. The tests' numerical values and synthetic model labels are fixtures, not calibrated defaults or backend selections.
+
+The early retention test separates a synthetic source payload from several evidence references and demonstrates transactional removal with an honest remaining record in in-memory SQLite. It establishes feasibility for that representation only. It does not validate a production schema, disk erasure, WAL/free-page removal, backups, exports, provider retention, or recovery from old copies; P02/P10 still owe that evidence.
 
 ## 3. State and ownership
 
@@ -330,8 +344,8 @@ Block/report status is INCOMPLETE while scheduled task dispositions are absent, 
 
 ## 12. Readiness
 
-This baseline is ready for bounded implementation-slice planning, not a live experiment. The [roadmap](ROADMAP.md) defines the work and gates. Each slice must supply strict schemas, concrete fixtures and executable acceptance evidence for its scope before it can be called conformant.
+P01 has executable contract tests; the broader baseline remains a design for later slices, not a live experiment. The [roadmap](ROADMAP.md) defines the work and gates. Each slice must supply strict schemas, concrete fixtures and executable acceptance evidence for its scope before it can be called conformant.
 
-Remaining empirical/configuration decisions are explicit: model/backend and tokenizer; concrete fixture instances and retained role prompts; calibrated limits/deadlines/retry allowance; independent block count with precision justification; useful-improvement and cost thresholds; and positive audit sample rates. These are development-pilot inputs, not authority or lifecycle policies for a developer to invent. Evaluation values must be fixed before held-out dispatch. Dependency and provider availability also require current verification during implementation; none has been tested here.
+Remaining empirical/configuration decisions are explicit: model/backend and tokenizer; concrete fixture instances and retained role prompts; calibrated limits/deadlines/retry allowance; independent block count with precision justification; useful-improvement and cost thresholds; and positive audit sample rates. These are development-pilot inputs, not authority or lifecycle policies for a developer to invent. Evaluation values must be fixed before held-out dispatch. P01's Python/Pydantic environment has been tested; provider availability and readiness of the intended experiment machine have not.
 
-The design contains no claim that its tests have run, that containment exists, or that the research hypothesis has succeeded. The first permission boundary remains authorization of a specific LLM-less slice.
+Passing P01 tests establishes only the reported contract behavior. It does not establish containment, runtime charter enforcement, subjective welfare, or the research hypothesis. The next permission boundary is authorization of the specific P02 slice.

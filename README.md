@@ -35,11 +35,12 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 ## Current management state
 
-The project is **pre-implementation, with a revised design baseline for bounded slice planning**.
+The project has **a validated P01 contract slice; the experiment runtime remains unimplemented**.
 
 - The charter is accepted and adopted by the owner. Architecture and Protocol translate its obligations into the design and operating baseline.
 - The 0.3 design incorporates charter safeguards into the bounded pilot. Earlier contracts and the scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
-- No supervisor, persistence layer, chamber adapter, tool runtime, or benchmark harness has been implemented.
+- P01 implements strict Python/Pydantic messages, configuration variants, canonical JSON, participation-first decoding, and pure proposal-reference resolution. Its generated JSON Schema and synthetic tests are in the repository.
+- No supervisor, production persistence layer, chamber adapter, tool runtime, or benchmark harness has been implemented. Parsing a record does not authorize an action, establish a durable welfare hold, or validate an experiment configuration for execution.
 - No experimental result has been produced, and none should be inferred from the completeness of the documents.
 
 The revised first pilot uses a typed simulated-service fixture, one active Objective, and serialized execution/consolidation. It budgets the complete active input, retains exact evidence through paging, supports same-proposal object references, streams inspection exports outside the live store, and bounds consolidation retries without replaying uncertain actions.
@@ -48,9 +49,24 @@ The research design uses independent matched A/B/C trajectories with deliberate 
 
 The roadmap requires effective withdrawal in every arm, reviewed memory interventions, accountable retention/deletion, bounded boundary discussion, and safeguards for planned endings and emergencies before any model use. These are implementation requirements; no runtime enforcement or welfare outcome has been demonstrated.
 
-The next actionable work is a separately authorized P01 contract slice in the [roadmap](ROADMAP.md). Implementation and live experiments require separate authorization. The first implementation remains LLM-less; documentary review is not runtime validation or experimental acceptance.
+The next actionable work is a separately authorized P02 persistence slice in the [roadmap](ROADMAP.md). Subsequent implementation and live experiments require separate authorization. P01 is LLM-less; contract validation is not runtime conformance, owner acceptance of the implementation, or experimental success.
 
 Process resets and forks, arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
+
+## Validate P01
+
+Use an existing Python 3.12+ environment with the Pydantic version pinned in [pyproject.toml](pyproject.toml). From the repository root, without installing the project:
+
+```text
+python -B -m unittest discover -s tests -v
+python -B -m bicameral_agent.contracts.schema --check
+```
+
+The suite covers strict parsing and canonical round trips, source-role/Run checks, proposal-local references, Invariant lineage, staged revisions and reference cycles, distinct participation/review records, malformed-task withdrawal, and schema drift. `MODEL` is a descriptive data variant only: no provider SDK, credentials, transport or model calls exist. Tests use synthetic examples and the standard library; the retention probe uses a temporary in-memory SQLite database, not a production storage implementation.
+
+The [Pydantic models](bicameral_agent/contracts/) are the schema source. After reviewing an intentional contract change, regenerate [the schema](schemas/p01.schema.json) with `python -B -m bicameral_agent.contracts.schema --write` and rerun validation. Schema shape checks do not replace the cross-field, reference or later runtime checks described in the [specification](Executable%20Specification.md).
+
+P01 was validated with existing Python 3.12.14 and Pydantic 2.13.5; no components were installed on the development workstation. Moving to the intended laptop before P02 persistence integration is prudent: rerun these checks there, then validate file-backed transactions, retention and recovery on that machine. Laptop setup and later model experiments need their own authorization; no deployment or startup automation is included here.
 
 ## Scope
 

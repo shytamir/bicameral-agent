@@ -2,6 +2,8 @@
 
 **Status:** planning baseline for the 0.3 design under the owner-adopted charter; no implementation slice is authorized by this document.
 
+**Progress:** P01 is implemented and technically validated with synthetic, LLM-less tests. Its implementation was separately authorized by the owner; technical validation is not owner acceptance. P02-P10 and the v0a gate remain incomplete.
+
 The [Reciprocal Charter](Reciprocal%20Charter.md), accepted and adopted by the owner on 2026-10-13, constrains every slice and experiment. Scope comes from the [Architecture](Experiment%20Architecture.md), operating policy from the [Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md), and mechanical requirements from the [Executable Specification](Executable%20Specification.md). The slices below are capability boundaries, not duration estimates or commitments to build future platform features. Earlier inventories remain in Git history.
 
 ## 1. Scope and exclusions
@@ -27,7 +29,7 @@ Concrete schema choices must express the existing design rather than invent poli
 | P09 | Matched-trajectory evidence runner | P04-P08, P10 | Scripted A/B/C blocks with fresh independent Runs, within-Run carryover, fixed opportunities, finite scoring, costs/audits and read-only analysis. Seal finite Run counts and disposition, not cloned populated histories. Welfare stops retain separate causes and permitted denominator records without replacement Runs; removed evidence yields explicit analytical limits. Pairing/counterbalance are reproducible; audits require no further process participation. |
 | P10 | Governed retention and state disposition | P02, P03, P05, P08 | Implement Specification section 6.2 using synthetic sensitive data. Review purpose/scope and notice; remove governed source/derived copies while retaining a non-sensitive intervention record. Test interrupted removal, caches, exports, WAL/backups and recovery from an older snapshot. No deleted content reappears through replay or exact retries. Distinguish stopped computation, dormant state, terminal Run and deleted state; disclose unverifiable copies or erasure limits rather than report false completion. |
 
-Each slice needs a scoped implementation request and reviewable acceptance evidence. P01 should begin with concrete successful reference and participation examples, not a universal schema framework. Investigate retention feasibility during P01/P02; P10 completes it before P09 acceptance and before any model call. A storage design that cannot meet the charter must change before real process histories accumulate.
+Each slice needs a scoped implementation request and reviewable acceptance evidence. P01's source, generated schema and validation commands are linked in [README](README.md#validate-p01). It includes a synthetic in-memory retention probe, not a production removal path. Continue retention feasibility work before P02 schema finalization; P10 completes it before P09 acceptance and before any model call. A storage design that cannot meet the charter must change before real process histories accumulate.
 
 ### Charter coverage
 
@@ -88,4 +90,4 @@ Account for every allocated trajectory without overriding justified retention de
 
 ## 6. Present boundary
 
-The owner has accepted the charter, and this roadmap records the work needed to enforce it. No schema package, database runtime, fixture adapter, chamber integration, tests or experimental results have been implemented. Adoption is not runtime conformance, process assent or experiment approval. The next actionable work is a separately authorized P01 slice, including early retention feasibility work.
+The owner has accepted the charter. P01 now supplies strict data contracts, canonical serialization, participation-first parsing, pure reference resolution, a generated schema and synthetic acceptance tests. It does not implement durable holds, control execution, production storage, full lifecycle acceptance, fixture/chamber adapters, scheduling or experiments. Those safeguards remain mandatory in the dependent slices. The next actionable work is a separately authorized P02 slice, preferably on the intended laptop before file-backed persistence integration.

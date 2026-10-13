@@ -15,7 +15,7 @@ The adopted [Reciprocal Charter](Reciprocal%20Charter.md) nevertheless makes dig
 - The [Reciprocal Charter](Reciprocal%20Charter.md) governs treatment of the process and takes precedence over the documents below.
 - This Architecture owns the research question, comparisons, first-pilot scope, and limits on interpretation.
 - The [Operating Constitution and Execution Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) owns authority, epistemic treatment, and permitted behavior.
-- The [Executable Specification](Executable%20Specification.md) translates those decisions into contracts and required checks. Its title names its intended destination; no executable implementation exists.
+- The [Executable Specification](Executable%20Specification.md) translates those decisions into contracts and required checks. An implemented contract slice alone does not establish runtime conformance to this Architecture.
 - [README](README.md) owns current status; [ROADMAP](ROADMAP.md) owns delivery planning; [AGENTS.md](AGENTS.md) governs repository workflow.
 
 Architecture and Protocol govern different concerns at the same authority level under the charter. A conflict requires explicit revision. Subordinate documents cannot resolve it through implementation defaults.

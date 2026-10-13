@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bicameral-agent"
+version = "0.1.0"
+description = "LLM-less contracts for the bounded continuity pilot"
+requires-python = ">=3.12"
+dependencies = ["pydantic==2.13.5"]
+
+[tool.setuptools.packages.find]
+include = ["bicameral_agent*"]
