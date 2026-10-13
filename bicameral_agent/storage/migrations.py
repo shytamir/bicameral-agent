@@ -151,7 +151,33 @@ RETENTION_LINEAGE = (
     """CREATE TABLE payload_lineage(run_id TEXT NOT NULL,payload_id TEXT NOT NULL,
         PRIMARY KEY(run_id,payload_id), FOREIGN KEY(run_id,payload_id) REFERENCES payloads(run_id,id)) STRICT""",
 )
-MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX, HUMAN_INSPECTION, RETENTION_LINEAGE)
+COMPARISONS = (
+    """CREATE TABLE study_suspensions(plan_id TEXT PRIMARY KEY,report_id TEXT NOT NULL REFERENCES reports(id)) STRICT""",
+    """CREATE TABLE comparison_plans(id TEXT PRIMARY KEY,run_id TEXT NOT NULL,plan_payload_id TEXT NOT NULL,
+        analysis_payload_id TEXT NOT NULL,runtime_payload_id TEXT NOT NULL,FOREIGN KEY(run_id,plan_payload_id) REFERENCES payloads(run_id,id),
+        FOREIGN KEY(run_id,runtime_payload_id) REFERENCES payloads(run_id,id),
+        FOREIGN KEY(run_id,analysis_payload_id) REFERENCES payloads(run_id,id)) STRICT""",
+    """CREATE TABLE allocations(plan_id TEXT NOT NULL REFERENCES comparison_plans(id),block_id TEXT NOT NULL,
+        arm TEXT NOT NULL CHECK(arm IN ('A','B','C')),run_id TEXT NOT NULL UNIQUE REFERENCES runs(id),
+        seed INTEGER NOT NULL,position INTEGER NOT NULL,objective_id TEXT,grant_id TEXT,stop_cause TEXT,
+        PRIMARY KEY(plan_id,block_id,arm)) STRICT""",
+    """CREATE TABLE assigned_tasks(run_id TEXT NOT NULL REFERENCES runs(id),task_id TEXT NOT NULL,
+        ordinal INTEGER NOT NULL,phase TEXT NOT NULL,is_primary INTEGER NOT NULL CHECK(is_primary IN (0,1)),
+        PRIMARY KEY(run_id,task_id)) STRICT""",
+    """CREATE TABLE task_results(run_id TEXT NOT NULL,task_id TEXT NOT NULL,
+        outcome TEXT NOT NULL CHECK(outcome IN ('PASS','FAIL','INCOMPLETE','NOT_ATTEMPTED')),cause TEXT NOT NULL,
+        assisted INTEGER NOT NULL CHECK(assisted IN (0,1)),evidence_event_id TEXT,
+        PRIMARY KEY(run_id,task_id),FOREIGN KEY(run_id,task_id) REFERENCES assigned_tasks(run_id,task_id)) STRICT""",
+    """CREATE TABLE audit_assignments(id TEXT PRIMARY KEY,run_id TEXT NOT NULL REFERENCES runs(id),target_id TEXT NOT NULL,
+        stratum TEXT NOT NULL,probability TEXT NOT NULL,draw TEXT,packet_payload_id TEXT,
+        label TEXT CHECK(label IN ('SUPPORTED','UNSUPPORTED','INDETERMINATE')),judgment_payload_id TEXT,
+        UNIQUE(run_id,target_id,stratum), FOREIGN KEY(run_id,packet_payload_id) REFERENCES payloads(run_id,id),
+        FOREIGN KEY(run_id,judgment_payload_id) REFERENCES payloads(run_id,id)) STRICT""",
+    """CREATE TRIGGER task_result_immutable BEFORE UPDATE ON task_results BEGIN SELECT RAISE(ABORT,'fixed primary accounting'); END""",
+    """CREATE TRIGGER task_result_no_delete BEFORE DELETE ON task_results BEGIN SELECT RAISE(ABORT,'fixed primary accounting'); END""",
+    """CREATE TRIGGER allocation_no_delete BEFORE DELETE ON allocations BEGIN SELECT RAISE(ABORT,'no replacement allocation'); END""",
+)
+MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX, HUMAN_INSPECTION, RETENTION_LINEAGE, COMPARISONS)
 
 def checksum(statements):
     return sha256("\n".join(statements).encode()).hexdigest()

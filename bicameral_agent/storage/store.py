@@ -4,7 +4,7 @@ No transport authentication, human control adapter, scheduler, provider or fixtu
 execution lives here. P03 supplies authority decisions; P05 supplies the required
 bundle validator; P06 supplies attempt accounting. All examples are scripted.
 """
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path
@@ -231,7 +231,7 @@ class Store:
             if type(artifacts[name]) is not bytes or sha256(artifacts[name]).hexdigest() != digest:
                 raise ValueError("artifact bytes do not match declared hash")
         run_id, configuration_id = identifier(), identifier()
-        with self._transaction("configuration"):
+        with (nullcontext() if self._db.in_transaction else self._transaction("configuration")):
             self._write("INSERT INTO runs VALUES(?,?,?)", (run_id, config.arm, configuration_id))
             stored = self._payload(run_id, canonical_bytes(config))
             # The temporary selector is never visible outside this deferred-FK transaction.

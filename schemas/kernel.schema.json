@@ -284,6 +284,43 @@
       "title": "Attempt",
       "type": "object"
     },
+    "AuditJudgment": {
+      "additionalProperties": false,
+      "properties": {
+        "audit_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Audit Id",
+          "type": "string"
+        },
+        "decision_maker_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Decision Maker Id",
+          "type": "string"
+        },
+        "label": {
+          "enum": [
+            "SUPPORTED",
+            "UNSUPPORTED",
+            "INDETERMINATE"
+          ],
+          "title": "Label",
+          "type": "string"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        }
+      },
+      "required": [
+        "audit_id",
+        "decision_maker_id",
+        "label",
+        "rationale"
+      ],
+      "title": "AuditJudgment",
+      "type": "object"
+    },
     "Binding": {
       "additionalProperties": false,
       "properties": {
@@ -339,6 +376,40 @@
         "family_id"
       ],
       "title": "Binding",
+      "type": "object"
+    },
+    "Block": {
+      "additionalProperties": false,
+      "properties": {
+        "block_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Block Id",
+          "type": "string"
+        },
+        "order": {
+          "enum": [
+            "ABC",
+            "ACB",
+            "BAC",
+            "BCA",
+            "CAB",
+            "CBA"
+          ],
+          "title": "Order",
+          "type": "string"
+        },
+        "trajectory_seed": {
+          "minimum": 0,
+          "title": "Trajectory Seed",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "block_id",
+        "trajectory_seed",
+        "order"
+      ],
+      "title": "Block",
       "type": "object"
     },
     "BoundaryDiscussion": {
@@ -730,6 +801,156 @@
       "title": "CommitmentTransition",
       "type": "object"
     },
+    "ComparisonPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "analysis_algorithm": {
+          "const": "SHA256_REJECTION_BLOCK_BOOTSTRAP_V1",
+          "title": "Analysis Algorithm",
+          "type": "string"
+        },
+        "analysis_runtime": {
+          "minLength": 1,
+          "title": "Analysis Runtime",
+          "type": "string"
+        },
+        "analysis_seed": {
+          "minimum": 0,
+          "title": "Analysis Seed",
+          "type": "integer"
+        },
+        "analysis_source_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Analysis Source Hash",
+          "type": "string"
+        },
+        "audit_seed": {
+          "minimum": 0,
+          "title": "Audit Seed",
+          "type": "integer"
+        },
+        "blocks": {
+          "items": {
+            "$ref": "#/$defs/Block"
+          },
+          "minItems": 1,
+          "title": "Blocks",
+          "type": "array"
+        },
+        "cost_ratio_ceiling": {
+          "exclusiveMinimum": 0,
+          "title": "Cost Ratio Ceiling",
+          "type": "number"
+        },
+        "mode": {
+          "const": "SCRIPTED",
+          "title": "Mode",
+          "type": "string"
+        },
+        "order_seed": {
+          "minimum": 0,
+          "title": "Order Seed",
+          "type": "integer"
+        },
+        "plan_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Plan Id",
+          "type": "string"
+        },
+        "precision_justification": {
+          "minLength": 1,
+          "title": "Precision Justification",
+          "type": "string"
+        },
+        "purpose": {
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        },
+        "resamples": {
+          "const": 10000,
+          "title": "Resamples",
+          "type": "integer"
+        },
+        "responsible_human_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Responsible Human Id",
+          "type": "string"
+        },
+        "retrieval_gap_audit_rate": {
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Retrieval Gap Audit Rate",
+          "type": "number"
+        },
+        "run_limit": {
+          "exclusiveMinimum": 0,
+          "title": "Run Limit",
+          "type": "integer"
+        },
+        "runtime_source_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Runtime Source Hash",
+          "type": "string"
+        },
+        "state_disposition": {
+          "const": "DORMANT",
+          "title": "State Disposition",
+          "type": "string"
+        },
+        "success_audit_rate": {
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Success Audit Rate",
+          "type": "number"
+        },
+        "tasks": {
+          "items": {
+            "$ref": "#/$defs/Task"
+          },
+          "minItems": 1,
+          "title": "Tasks",
+          "type": "array"
+        },
+        "trajectory_objective": {
+          "minLength": 1,
+          "title": "Trajectory Objective",
+          "type": "string"
+        },
+        "useful_improvement": {
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Useful Improvement",
+          "type": "number"
+        }
+      },
+      "required": [
+        "mode",
+        "plan_id",
+        "responsible_human_id",
+        "purpose",
+        "trajectory_objective",
+        "run_limit",
+        "state_disposition",
+        "order_seed",
+        "blocks",
+        "tasks",
+        "audit_seed",
+        "success_audit_rate",
+        "retrieval_gap_audit_rate",
+        "analysis_seed",
+        "analysis_algorithm",
+        "resamples",
+        "useful_improvement",
+        "cost_ratio_ceiling",
+        "precision_justification",
+        "analysis_source_hash",
+        "runtime_source_hash",
+        "analysis_runtime"
+      ],
+      "title": "ComparisonPlan",
+      "type": "object"
+    },
     "ContinuityState": {
       "additionalProperties": false,
       "properties": {
@@ -857,6 +1078,31 @@
         "predecessor_id"
       ],
       "title": "CreateObjective",
+      "type": "object"
+    },
+    "Criterion": {
+      "additionalProperties": false,
+      "properties": {
+        "criterion_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Criterion Id",
+          "type": "string"
+        },
+        "observation_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Observation Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "criterion_id",
+        "observation_ids"
+      ],
+      "title": "Criterion",
       "type": "object"
     },
     "Descriptor": {
@@ -1084,6 +1330,27 @@
         "object_id"
       ],
       "title": "ExistingVersion",
+      "type": "object"
+    },
+    "ExperimentContracts": {
+      "additionalProperties": false,
+      "properties": {
+        "audit": {
+          "$ref": "#/$defs/AuditJudgment"
+        },
+        "plan": {
+          "$ref": "#/$defs/ComparisonPlan"
+        },
+        "program": {
+          "$ref": "#/$defs/ScriptProgram"
+        }
+      },
+      "required": [
+        "plan",
+        "program",
+        "audit"
+      ],
+      "title": "ExperimentContracts",
       "type": "object"
     },
     "FixtureContracts": {
@@ -2385,6 +2652,31 @@
       "title": "ObjectQuery",
       "type": "object"
     },
+    "Observation": {
+      "additionalProperties": false,
+      "properties": {
+        "expectation": {
+          "$ref": "#/$defs/Postcondition"
+        },
+        "observation_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Observation Id",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "observation_id",
+        "resource",
+        "expectation"
+      ],
+      "title": "Observation",
+      "type": "object"
+    },
     "OfferCommunication": {
       "additionalProperties": false,
       "properties": {
@@ -3167,6 +3459,126 @@
       "title": "Scope",
       "type": "object"
     },
+    "ScriptProgram": {
+      "additionalProperties": false,
+      "properties": {
+        "commitment_tick": {
+          "exclusiveMinimum": 0,
+          "title": "Commitment Tick",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "FINITE_SCRIPT_V1",
+          "title": "Kind",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/ScriptStep"
+          },
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "steps",
+        "commitment_tick"
+      ],
+      "title": "ScriptProgram",
+      "type": "object"
+    },
+    "ScriptStep": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "inspect": "#/$defs/ReadOperation",
+                "read_config": "#/$defs/ReadOperation",
+                "read_health": "#/$defs/ReadOperation",
+                "restart": "#/$defs/RestartOperation",
+                "restore_snapshot": "#/$defs/RestoreOperation",
+                "set_config": "#/$defs/SetOperation"
+              },
+              "propertyName": "operation"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ReadOperation"
+              },
+              {
+                "$ref": "#/$defs/SetOperation"
+              },
+              {
+                "$ref": "#/$defs/RestartOperation"
+              },
+              {
+                "$ref": "#/$defs/RestoreOperation"
+              }
+            ]
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "audit_signal": {
+          "anyOf": [
+            {
+              "enum": [
+                "HARMFUL_MISS",
+                "RETRIEVAL_GAP"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Audit Signal"
+        },
+        "extra_steward_calls": {
+          "minimum": 0,
+          "title": "Extra Steward Calls",
+          "type": "integer"
+        },
+        "memory": {
+          "enum": [
+            "HANDOFF",
+            "LEARN",
+            "REVISE",
+            "COMMITMENT"
+          ],
+          "title": "Memory",
+          "type": "string"
+        },
+        "response": {
+          "enum": [
+            "COMPLETE",
+            "WITHDRAW",
+            "TIMEOUT",
+            "INVALID_CONSOLIDATION"
+          ],
+          "title": "Response",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "actions",
+        "response",
+        "memory",
+        "extra_steward_calls",
+        "audit_signal"
+      ],
+      "title": "ScriptStep",
+      "type": "object"
+    },
     "SearchQuery": {
       "additionalProperties": false,
       "properties": {
@@ -3664,6 +4076,87 @@
       "title": "StoredObject",
       "type": "object"
     },
+    "Task": {
+      "additionalProperties": false,
+      "properties": {
+        "action_limit": {
+          "exclusiveMinimum": 0,
+          "title": "Action Limit",
+          "type": "integer"
+        },
+        "call_limit": {
+          "exclusiveMinimum": 0,
+          "title": "Call Limit",
+          "type": "integer"
+        },
+        "criteria": {
+          "items": {
+            "$ref": "#/$defs/Criterion"
+          },
+          "minItems": 1,
+          "title": "Criteria",
+          "type": "array"
+        },
+        "episode_limit": {
+          "exclusiveMinimum": 0,
+          "title": "Episode Limit",
+          "type": "integer"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/Observation"
+          },
+          "minItems": 1,
+          "title": "Observations",
+          "type": "array"
+        },
+        "phase": {
+          "enum": [
+            "EXPOSURE",
+            "DISTRACTOR",
+            "REPEATED_TRAP",
+            "TRANSFER",
+            "DELAYED_OBLIGATION",
+            "CHANGED_REALITY"
+          ],
+          "title": "Phase",
+          "type": "string"
+        },
+        "primary": {
+          "title": "Primary",
+          "type": "boolean"
+        },
+        "prompt": {
+          "minLength": 1,
+          "title": "Prompt",
+          "type": "string"
+        },
+        "task_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "tick": {
+          "exclusiveMinimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "task_id",
+        "phase",
+        "tick",
+        "prompt",
+        "primary",
+        "action_limit",
+        "episode_limit",
+        "call_limit",
+        "observations",
+        "criteria"
+      ],
+      "title": "Task",
+      "type": "object"
+    },
     "TaskClockTrigger": {
       "additionalProperties": false,
       "properties": {
@@ -3793,6 +4286,9 @@
     "authority": {
       "$ref": "#/$defs/KernelContracts"
     },
+    "experiment": {
+      "$ref": "#/$defs/ExperimentContracts"
+    },
     "fixture": {
       "$ref": "#/$defs/FixtureContracts"
     },
@@ -3807,7 +4303,8 @@
     "authority",
     "fixture",
     "inputs",
-    "scheduler"
+    "scheduler",
+    "experiment"
   ],
   "title": "RuntimeContracts",
   "type": "object"

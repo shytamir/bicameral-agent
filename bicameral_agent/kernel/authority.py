@@ -549,6 +549,8 @@ class Kernel:
 
     def participation_gate(self, *, communication=False):
         self.store.retention_guard(self.run_id, execution=True)
+        if not communication and self.store._db.execute('SELECT 1 FROM allocations a JOIN study_suspensions s ON s.plan_id=a.plan_id WHERE a.run_id=?', (self.run_id,)).fetchone():
+            raise ValueError('study charter concern suspends optional task work')
         if self.store.problems or self.store._poisoned:
             raise ValueError('storage unavailable')
         if any(not r['reviewed'] for _, r in self.records.latest('EMERGENCY')):

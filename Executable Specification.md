@@ -2,7 +2,7 @@
 
 **Version:** 0.3-design
 
-**Status:** P01-P08 and P10 have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. P09 and integrated deterministic experiment conformance remain in progress.
+**Status:** P01-P10 and integrated v0a have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. Model development and held-out experiments retain the separate v0b/v0c gates.
 
 ## 1. Contract boundary
 
@@ -10,7 +10,7 @@ This document defines mechanical design under the adopted [Reciprocal Charter](R
 
 The first implementation is LLM-less: scripted messages exercise the boundary intended for models. No provider substitutes for deterministic behavior.
 
-Missing authority, memory, recovery, or experimental decisions return to the governing documents. P01 supplies the contract package and generated schema, with dependency pins in [pyproject.toml](pyproject.toml). P02 supplies ordered transactional storage migrations; role prompts and executable experiment fixtures remain future work.
+Missing authority, memory, recovery, or experimental decisions return to the governing documents. P01 supplies the contract package and generated schema, with dependency pins in [pyproject.toml](pyproject.toml). P02 supplies ordered transactional storage migrations; P03-P10 supply the governed runtime and executable scripted fixtures. Model-specific prompts and empirical calibration remain later work.
 
 ## 2. Canonical representation
 
@@ -314,7 +314,7 @@ Configuration mode is a closed SCRIPTED or MODEL variant. SCRIPTED pins fixture 
 
 MODEL preflight additionally requires passed scripted charter traces, explicit experiment authorization, and reviewed backend data retention, deletion limits and absence of hidden conversation carryover. Development calls have the same ethical gate as evaluation. Unresolved retention or participation capability gaps block model use; documentation adoption alone cannot satisfy the gate.
 
-Preflight precedes explicit human sealing. Retain normalized configuration and exact referenced bytes with verified hashes. Changes require a new configuration. Paths and labels are selectors only; after sealing resolve behavior from retained content. No model, fixture or budget is silently defaulted. Concrete artifacts still need implementation and development-pilot calibration before an evaluation configuration can be sealed.
+Preflight precedes explicit human sealing. Retain normalized configuration and exact referenced bytes with verified hashes. Changes require a new configuration. Paths and labels are selectors only; after sealing resolve behavior from retained content. No model, fixture or budget is silently defaulted. The implemented scripted artifacts are conformance fixtures; model-specific artifacts and development-pilot calibration are required before a model evaluation configuration can be sealed.
 
 ### 11.1 Plan, block, and Run identities
 
@@ -356,8 +356,8 @@ Block/report status is INCOMPLETE while scheduled task dispositions are absent, 
 
 ## 12. Readiness
 
-P01 has executable contract tests and P02 has file-backed storage acceptance tests; the broader baseline remains a design for later slices, not a live experiment. The [roadmap](ROADMAP.md) defines the work and gates. Each slice must supply strict schemas, concrete fixtures and executable acceptance evidence for its scope before it can be called conformant.
+P01-P10 and integrated v0a have executable acceptance evidence: 175 tests, real file-backed SQLite, generated-schema checks, exact retained runtime/analysis source and matched scripted fixtures. The [handoff](README.md#p09-and-v0a-acceptance-and-handoff) records the scope and remaining empirical gates. No live model experiment has run.
 
 Remaining empirical/configuration decisions are explicit: model/backend and tokenizer; concrete fixture instances and retained role prompts; calibrated limits/deadlines/retry allowance; independent block count with precision justification; useful-improvement and cost thresholds; and positive audit sample rates. These are development-pilot inputs, not authority or lifecycle policies for a developer to invent. Evaluation values must be fixed before held-out dispatch. The local Python/Pydantic/SQLite environment and P02 file-backed behavior have been tested; provider availability and complete experiment-machine readiness have not.
 
-Passing the required P01/P02 validations satisfies definition of done within the documented contract and storage envelope under Protocol section 9. P02 acceptance and handoff are complete under the owner's explicit delegation. This evidence does not establish containment, complete runtime charter enforcement, subjective welfare, or the research hypothesis. P03 local authority controls are accepted; the owner has authorized implementing and pushing the remaining roadmap slices after technical validation.
+Passing the required validations satisfies definition of done within each documented operational envelope under Protocol section 9. Engineering acceptance and handoff are complete under the owner's delegation for P01-P10/v0a. Scripted evidence establishes the tested local behavior; it does not establish provider containment, subjective welfare or the research hypothesis. The Kernel rejects MODEL execution until a separately authorized integration supplies and validates those capabilities.

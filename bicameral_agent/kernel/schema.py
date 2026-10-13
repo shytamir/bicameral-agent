@@ -6,6 +6,7 @@ from .models import KernelContracts
 from .fixture import FixtureContracts
 from .inputs import InputContracts
 from .scheduler import SchedulerContracts
+from ..experiment.models import ExperimentContracts
 from ..contracts.base import Contract
 
 
@@ -14,6 +15,7 @@ class RuntimeContracts(Contract):
     fixture: FixtureContracts
     inputs: InputContracts
     scheduler: SchedulerContracts
+    experiment: ExperimentContracts
 
 
 def schema_bytes():

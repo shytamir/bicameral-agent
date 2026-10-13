@@ -35,22 +35,22 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 ## Current management state
 
-The project has **accepted P01/P02 contracts and storage plus P03 authority, P04 fixture execution and P05 bounded inputs/retrieval within the documented scripted envelope**. Scheduling and the experiment runner remain in subsequent slices.
+The project has **accepted P01-P10 and integrated v0a conformance within the documented SCRIPTED operational envelope**. The implementation roadmap is complete. Development and held-out model experiments remain subject to their explicit configuration, review and authorization gates.
 
 - The charter is accepted and adopted by the owner. Architecture and Protocol translate its obligations into the design and operating baseline.
 - The 0.3 design incorporates charter safeguards into the bounded pilot. Earlier contracts and the scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
 - P01 implements strict Python/Pydantic messages, configuration variants, canonical JSON, participation-first decoding, and pure proposal-reference resolution. Its generated JSON Schema and synthetic tests are in the repository.
 - P02 implements file-backed SQLite evidence retention, ordered transactional migrations, semantic/control history, atomic proposal commits, durable report/hold recording, exact retry receipts and integrity/replay checks. Its storage schema, file-backed acceptance tests and removal-feasibility proofs are in the repository.
 - P03 adds authenticated local human/chamber sessions, explicit preflight and sealing, current-state confirmation, Run/Objective/Grant controls, reviewed memory correction, participation gates, bounded communication admission and emergency/recovery controls. The bootstrap owns credentials and private Python objects; this is a local capability boundary, not isolation from arbitrary Python in that process.
-- No experimental result has been produced, and none should be inferred from the completeness of the documents.
+- P04-P10 add finite fixture execution, bounded inputs, serialized scheduling, reviewed forward restoration, human inspection/export, governed removal and a matched-trajectory evidence runner. Scripted conformance results are available; no empirical model result has been produced.
 
 The revised first pilot uses a typed simulated-service fixture, one active Objective, and serialized execution/consolidation. It budgets the complete active input, retains exact evidence through paging, supports same-proposal object references, streams inspection exports outside the live store, and bounds consolidation retries without replaying uncertain actions.
 
 The research design uses independent matched A/B/C trajectories with deliberate within-Run learning, held-out transfer, recorded costs and explicit failure/intervention treatment. A versus C is the primary comparison for structured Itch/Invariant machinery. Numerical budgets, concrete prompts/fixtures, models, sample size and practical benefit/cost thresholds still require development calibration before evaluation is sealed.
 
-The roadmap requires effective withdrawal in every arm, reviewed memory interventions, accountable retention/deletion, bounded boundary discussion, and safeguards for planned endings and emergencies before any model use. The storage tests demonstrate the scoped P02 mechanisms; complete runtime charter enforcement and any welfare outcome remain unestablished.
+The scripted suite exercises withdrawal in every arm/role, reviewed memory interventions, retention/deletion, bounded boundary discussion, planned endings and emergencies. These checks establish observable behavior within the local envelope; model/backend behavior and subjective welfare remain unestablished.
 
-P02 acceptance and handoff are complete under the owner's explicit delegation, using the technical evidence and operational envelope recorded below. The owner has authorized completing and pushing the remaining implementation slices in the [roadmap](ROADMAP.md). The next slice is P06 serialized Episodes and bounded consolidation; model experiments retain their documented configuration and evidence requirements. P01/P02 are LLM-less; their validation establishes the documented contract and storage behavior.
+Acceptance and handoff for all implementation slices are recorded below under the owner's delegation and Protocol section 9. The next research gate is v0b: select and verify a model/backend/tokenizer, review its retention and stateless transport, obtain explicit experiment authorization, and calibrate the empirical configuration. v0c requires a separately sealed and authorized held-out study. The current Kernel accepts SCRIPTED Runs only.
 
 Process resets and forks, arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
 
@@ -62,6 +62,8 @@ Use an existing Python 3.12+ environment with SQLite 3.37+ (STRICT tables) with 
 python -B -m unittest discover -s tests -v
 python -B -m bicameral_agent.contracts.schema --check
 python -B -m bicameral_agent.storage.schema --check
+python -B -m bicameral_agent.kernel.schema --check
+python -B -m pip check
 ```
 
 The suite covers strict parsing and canonical round trips, source-role/Run checks, proposal-local references, Invariant lineage, staged revisions and reference cycles, distinct participation/review records, malformed-task withdrawal, and schema drift. `MODEL` is a descriptive data variant only: no provider SDK, credentials, transport or model calls exist. Tests use synthetic examples and the standard library. P01 retains its in-memory feasibility probe; P02 uses temporary real database files, independent connections, and subprocess crashes. No real process history or model calls are used.
@@ -92,7 +94,7 @@ The [storage library](bicameral_agent/storage/) and [P02 schema](schemas/p02.sch
 
 Validation on 2026-10-13 passed 86 unittest tests, both schema checks, `pip check`, local document-link/anchor checks and `git diff --check`. The validation suite includes all 105 semantic lifecycle source/destination pairs against an independent Protocol-derived expectation matrix. Source-role provenance, absent/foreign/terminal state, stale parents/revisions, invisible evidence, arm exclusions, malformed participation and full-bundle rejection also have negative tests. P01 and P02 generated-schema checks remain separate.
 
-Integration boundaries for the next developer:
+Historical integration boundaries at P02 acceptance (later completion is recorded in the subsequent handoffs):
 
 - `Store.retain_configuration` supplies the atomic retention step for future sealing and creates only CREATED state. P03 must authenticate human controls, perform preflight/current-state confirmation, and enforce the full Run/Objective/Grant and review matrices.
 - `receive_chamber` durably records authenticated-route input and participation before task effects. A rejected task receipt does not reject or erase its participation report. P03/P06 must apply holds and inspection requirements to all calls/dispatches and recover interrupted invocations; a failed report write blocks the current store instance.
@@ -158,6 +160,22 @@ An independently retained [removal journal](bicameral_agent/storage/retention.py
 Validation passed 160 tests, all three schema checks and whitespace checks. Ten [retention tests](tests/test_retention.py) cover semantic/invocation/cache derivatives, duplicate bytes, exports, backups, source-hash/file scans, strict scope, stale effects, wrong destinations, an actual process exit after the decision, interrupted copy cleanup, terminal maintenance inspection, dormancy, old-reader blocking, shared copies and old-snapshot recovery. Existing per-write fault tests now restore the same synthetic fixture with its current journal to include provenance writes accurately.
 
 Limits are explicit: these checks establish logical removal in tested SQLite/files, not physical-media erasure or discovery of unregistered copies. No provider exists in this envelope. Known unresolved copies remain listed and incomplete. Maintenance inspection remains available; execution and semantic replay cannot reconstruct removed evidence. P09 must preserve permitted allocation/outcome metadata and report analytical loss rather than manufacture results.
+
+## P09 and v0a acceptance and handoff
+
+P09 and integrated v0a are accepted under owner delegation within the SCRIPTED envelope. The [evidence runner](bicameral_agent/experiment/runner.py) atomically allocates fresh A/B/C Runs in sealed block order, retains exact runtime/analysis source, requires separately accepted human trajectory authority, and carries state across exposure, distraction, repeated traps, transfer, delayed obligations and changed reality. Common task time is independent of additional Steward calls. Finite criteria inspect fixture state independently of narrated success; task/trajectory limits are cumulative and checked before calls. Partial restarts do not repeat task effects.
+
+Every allocated task keeps its denominator. Withdrawal, shared charter concerns, recovery exhaustion, infrastructure errors, task errors, limits and assistance have distinct dispositions; primary results cannot be replaced or rewritten by later diagnostic work. Mandatory failed-task/harmful-miss audits and positive-rate samples use the specified SHA-256 draw. Missing audits keep reports provisional; completed indeterminate judgments remain visible. Audits require no chamber calls. The [read-only analysis](bicameral_agent/experiment/analysis.py) resamples complete matched blocks 10,000 times, checks sealed source/runtime, reports paired effects and costs, and withholds a positive conclusion for missing costs, unavailable evidence or indeterminate audits.
+
+Validation passed 175 tests, all three generated-schema checks, dependency checks and whitespace checks. Twelve [experiment tests](tests/test_experiment.py) include three matched blocks with 63 task dispositions, failed/recovered/welfare cases, two transfer tasks per Run, exact counterbalance/bootstrap fixtures, additional Steward cost without shifted opportunities, scoring errors, evaluator isolation, study suspension and removal without lost accounting. Three [integrated v0a tests](tests/test_conformance.py) combine all-arm/all-role withdrawal, full queues, invalid task output and restart; reviewed restoration with two exports; and same-tick rearming stopped by the original trajectory allowance. The remaining slice suites provide large-history, atomicity, timeout, review, retention and subprocess-crash coverage.
+
+To produce a separately inspectable synthetic report and temporary evidence database, choose a new output directory:
+
+```text
+python -B -m bicameral_agent.experiment.demo --output .local-conformance/example
+```
+
+The example runs three blocks (nine fresh Runs, seven tasks each), introduces withdrawal and exhausted recovery, completes audit work with explicitly synthetic indeterminate judgments, and leaves state dormant. `report.json` is labelled SCRIPTED. Preserve each evidence database's current `.removals.sqlite` journal independently of backups. Generated evidence under `.local-conformance/` is ignored and must not be committed. No provider dependency, model credential, network execution or live experiment is included. The synthetic prompts, thresholds, seeds and budgets are test fixtures requiring development calibration before model use.
 
 ## Scope
 

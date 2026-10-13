@@ -57,6 +57,8 @@ class Inspection:
                 sql, params = 'SELECT * FROM runs WHERE id=?', (kernel.run_id,)
             elif 'run_id' in columns:
                 sql, params = f'SELECT * FROM "{name}" WHERE run_id=?', (kernel.run_id,)
+            elif name == 'study_suspensions':
+                sql, params = 'SELECT * FROM study_suspensions WHERE plan_id IN (SELECT plan_id FROM allocations WHERE run_id=?)', (kernel.run_id,)
             elif name == 'migrations':
                 sql, params = 'SELECT * FROM migrations', ()
             else:
@@ -79,7 +81,7 @@ class Inspection:
 
     def manifest(self):
         self._check()
-        return {'format': 'BICAMERAL_EXPORT_1', 'run_id': self.k.run_id, 'snapshot_id': self.id,
+        return {'format': 'BICAMERAL_EXPORT_1', 'scope': 'RUN', 'run_id': self.k.run_id, 'snapshot_id': self.id,
             'event_cutoff': self.event_cutoff, 'record_cutoff': self.record_cutoff,
             'tables': {name: self.db.execute('SELECT COUNT(*) FROM (' + sql + ')', params).fetchone()[0]
                        for name, (sql, params) in self.tables.items()}}
