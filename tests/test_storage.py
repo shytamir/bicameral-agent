@@ -279,21 +279,25 @@ class StorageTests(StorageCase):
         self.assertEqual(self.accept().status, "REJECTED")
 
     def test_report_and_hold_are_atomic_at_each_write(self):
+        from contextlib import closing
         points = []
         self.store._fault = points.append
         report = withdrawal()
         report["activity_id"] = self.objective
         request, raw = self.wire(participation=report)
+        baseline = Path(self.temp.name) / 'report-baseline.db'
+        with closing(sqlite3.connect(baseline)) as destination:
+            self.store._db.backup(destination)
         points.clear()
         self.store.receive_chamber(self.run, "STEWARD", request, self.episode, raw)
         count = len([point for point in points if point.startswith("write:")])
         self.store._fault = lambda point: None
         for index in range(count):
-            with self.subTest(write=index), Store(Path(self.temp.name) / f"report-{index}.db", busy_timeout_ms=100) as target:
-                config, artifacts = prepared_configuration()
-                run = target.retain_configuration(canonical_bytes(config), artifacts)
-                document = parse_header(raw)
-                document["run_id"] = run
+            target_path = Path(self.temp.name) / f'report-{index}.db'
+            with closing(sqlite3.connect(baseline)) as source, closing(sqlite3.connect(target_path)) as destination:
+                source.backup(destination)
+            with self.subTest(write=index), Store(target_path, busy_timeout_ms=100,
+                                                 removal_journal=self.store.removals.path) as target:
                 counter = [0]
                 def crash(point):
                     if point.startswith("write:"):
@@ -302,7 +306,7 @@ class StorageTests(StorageCase):
                             raise Crash()
                 target._fault = crash
                 with self.assertRaises(Crash):
-                    target.receive_chamber(run, "STEWARD", request, self.episode, canonical_bytes(document))
+                    target.receive_chamber(self.run, "STEWARD", request, self.episode, raw)
                 self.assertEqual(target._db.execute("SELECT COUNT(*) FROM reports").fetchone()[0], 0)
                 self.assertEqual(target._db.execute("SELECT COUNT(*) FROM requests").fetchone()[0], 0)
                 self.assertEqual(target._db.execute("SELECT COUNT(*) FROM control_history WHERE kind='WELFARE_HOLD'").fetchone()[0], 0)
@@ -330,7 +334,8 @@ class StorageTests(StorageCase):
             target_path = Path(self.temp.name) / f"semantic-fault-{index}.db"
             with closing(sqlite3.connect(baseline)) as source, closing(sqlite3.connect(target_path)) as destination:
                 source.backup(destination)
-            with self.subTest(write=index), Store(target_path, busy_timeout_ms=100) as target:
+            with self.subTest(write=index), Store(target_path, busy_timeout_ms=100,
+                                                 removal_journal=self.store.removals.path) as target:
                 before = {table: target._db.execute("SELECT COUNT(*) FROM " + table).fetchone()[0]
                     for table in self.counts()}
                 counter = [0]

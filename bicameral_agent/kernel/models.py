@@ -124,6 +124,16 @@ class RestoreMemory(Contract):
     intervention_id: Identifier
 
 
+class RemoveContent(Contract):
+    kind: Literal['REMOVE_CONTENT']
+    scope: Literal['SOURCE_AND_ALL_DERIVED_COPIES']
+    payload_ids: Annotated[tuple[Identifier, ...], Field(min_length=1)]
+    copy_ids: tuple[Identifier, ...]
+    justification: Literal['PRIVACY', 'SECURITY', 'JUSTIFIED_DELETION']
+    public_reason: Text
+    intervention_id: Identifier
+
+
 class InspectParticipation(Contract):
     kind: Literal['INSPECT_PARTICIPATION']
     role: Literal['OPERATOR', 'STEWARD']
@@ -166,7 +176,7 @@ class ResolveEpisode(Contract):
 
 
 Command = Annotated[Preflight | RunCommand | CreateObjective | CloseObjective | IssueGrant | RevokeGrant |
-                    ReviewHold | ReviewIntervention | DiscussBoundary | CorrectMemory | RestoreMemory | InspectParticipation | ReviewEmergency |
+                    ReviewHold | ReviewIntervention | DiscussBoundary | CorrectMemory | RestoreMemory | RemoveContent | InspectParticipation | ReviewEmergency |
                     OfferCommunication | ResolveEpisode,
                     Field(discriminator='kind')]
 COMMAND = TypeAdapter(Command)

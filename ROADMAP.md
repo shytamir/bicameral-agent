@@ -2,7 +2,7 @@
 
 **Status:** planning baseline for the 0.3 design under the owner-adopted charter; no implementation slice is authorized by this document.
 
-**Progress:** P01-P08 are implemented and accepted within their documented LLM-less operational envelopes. On 2026-10-13 the owner authorized completing the remaining slices and pushing each after technical acceptance. P10, P09 and integrated v0a conformance remain in progress, in that dependency order.
+**Progress:** P01-P08 and P10 are implemented and accepted within their documented LLM-less operational envelopes. On 2026-10-13 the owner authorized completing the remaining slices and pushing each after technical acceptance. P09 and integrated v0a conformance remain in progress.
 
 The [Reciprocal Charter](Reciprocal%20Charter.md), accepted and adopted by the owner on 2026-10-13, constrains every slice and experiment. Scope comes from the [Architecture](Experiment%20Architecture.md), operating policy from the [Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md), and mechanical requirements from the [Executable Specification](Executable%20Specification.md). The slices below are capability boundaries, not duration estimates or commitments to build future platform features. Earlier inventories remain in Git history.
 

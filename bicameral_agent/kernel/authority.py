@@ -55,6 +55,9 @@ class HumanSession:
 
     def inspect(self):
         self._k._human(self._cap)
+        if self._k._maintenance:
+            return {'run_id': self._k.run_id, 'dispositions': self._k.store.removals.all(self._k.run_id),
+                    'execution': 'STOPPED', 'diagnostics': list(self._k.store.problems)}
         with self._k.store._snapshot():
             return {'run_id': self._k.run_id, 'run': self._k.run()[1].model_dump(mode='json'),
                     'diagnostics': list(self._k.store.problems),
@@ -78,15 +81,20 @@ class ChamberSession:
 
 
 class Kernel:
-    def __init__(self, store, run_id, *, human_credential, chamber_credentials):
+    def __init__(self, store, run_id, *, human_credential, chamber_credentials, maintenance=False):
         if (type(human_credential) is not bytes or len(human_credential) < 32 or
                 set(chamber_credentials) != {'OPERATOR', 'STEWARD'} or
                 any(type(v) is not bytes or len(v) < 32 for v in chamber_credentials.values()) or
                 len(set(chamber_credentials.values()) | {human_credential}) != 3):
             raise ValueError('bootstrap requires distinct explicit credentials of at least 32 bytes')
         self.store, self.run_id = store, run_id
-        self.config = store.configuration(run_id)
-        if self.config.mode != 'SCRIPTED':
+        self._maintenance = maintenance
+        decisions = store.removals.all(run_id)
+        if maintenance and not decisions:
+            raise ValueError('maintenance mode requires a current removal decision')
+        self.config = None if maintenance else store.configuration(run_id)
+        self.responsible_human_id = decisions[0]['decision_maker_id'] if maintenance else self.config.responsible_human_id
+        if not maintenance and self.config.mode != 'SCRIPTED':
             raise ValueError('MODEL transport is outside the scripted Kernel envelope')
         if store._head(run_id) is not None:
             raise ValueError('P02 probe histories require explicit migration; cannot silently adopt them')
@@ -97,6 +105,8 @@ class Kernel:
         self._human_cap = object()
         self._chamber_caps = {role: object() for role in chamber_credentials}
         self._tickets = {}
+        if maintenance:
+            return
         self.registry = parse(ToolRegistry, self.artifact('tools'))
         operations = [d.operation for d in self.registry.operations]
         if len(operations) != len(set(operations)) or any(len(d.resources) != len(set(d.resources)) for d in self.registry.operations):
@@ -115,7 +125,7 @@ class Kernel:
         return self.store.read_payload(self.run_id, row[0])
 
     def human(self, decision_maker_id, credential):
-        if (decision_maker_id != self.config.responsible_human_id or type(credential) is not bytes or
+        if (decision_maker_id != self.responsible_human_id or type(credential) is not bytes or
                 not compare_digest(sha256(credential).digest(), self._human_credential)):
             raise PermissionError('human authentication failed')
         return HumanSession(self, self._human_cap)
@@ -152,6 +162,8 @@ class Kernel:
 
     def _preview(self, cap, raw):
         self._human(cap)
+        if self._maintenance:
+            raise ValueError('removed evidence permits inspection/disposition only; execution cannot resume')
         command = COMMAND.validate_json(canonical_bytes(load_json(raw)), strict=True)
         if len(raw) > self.config.budgets.wake_bytes:
             raise ValueError('control byte limit; record longer evidence separately')
@@ -162,6 +174,10 @@ class Kernel:
             objective = self.store.control(self.run_id, run.objective_id)[1].statement if run.objective_id else 'None'
             text = f'Run: {run.status}. Current Objective: {objective}.\n'
             text += canonical_bytes(command).decode('utf-8')
+            if command.kind == 'REMOVE_CONTENT':
+                from .retention import Retention
+                text += '\nAffected source/derived closure and copies: ' + canonical_bytes(Retention(self).describe(command)).decode()
+                text += '\nExecution remains stopped after removal; continuity/replay may be unavailable. Physical-media erasure is not verifiable.'
             for field in ('grant_id', 'objective_id'):
                 target = getattr(command, field, None)
                 if target:
@@ -177,6 +193,9 @@ class Kernel:
         if token not in self._tickets:
             raise ValueError('unknown confirmation; display and confirm current state')
         command, stamp = self._tickets[token]
+        if command.kind == 'REMOVE_CONTENT':
+            from .retention import Retention
+            return Retention(self).confirm(cap, command, stamp, token)
         with self.store._transaction('human-control'):
             prior = self.records.get('CONTROL_RECEIPT', token)
             if prior is not None:
@@ -529,6 +548,7 @@ class Kernel:
                          expected=self.records.revision('INTERVENTION_REVIEW', key))
 
     def participation_gate(self, *, communication=False):
+        self.store.retention_guard(self.run_id, execution=True)
         if self.store.problems or self.store._poisoned:
             raise ValueError('storage unavailable')
         if any(not r['reviewed'] for _, r in self.records.latest('EMERGENCY')):

@@ -39,7 +39,7 @@ def observed_at():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 class Store:
-    def __init__(self, path, *, busy_timeout_ms, fault=None):
+    def __init__(self, path, *, busy_timeout_ms, fault=None, removal_journal=None):
         if type(busy_timeout_ms) is not int or busy_timeout_ms <= 0:
             raise ValueError("busy timeout must be an explicit positive integer")
         if str(path) == ":memory:":
@@ -50,6 +50,9 @@ class Store:
         self._fault = fault or (lambda point: None)
         self._poisoned = False
         self.problems = []
+        self._read_dependencies = None
+        from .retention import RemovalJournal
+        self.removals = RemovalJournal(removal_journal or str(self.path) + '.removals.sqlite')
         self._db = sqlite3.connect(self.path, isolation_level=None, timeout=busy_timeout_ms / 1000)
         self._db.row_factory = sqlite3.Row
         try:
@@ -60,13 +63,22 @@ class Store:
             self._db.execute(f"PRAGMA busy_timeout={busy_timeout_ms}")
             self._db.execute("PRAGMA secure_delete=ON")
             self._migrate()
+            binding = self._db.execute('SELECT journal_id FROM journal_binding').fetchone()
+            if binding is None:
+                self._db.execute('INSERT INTO journal_binding VALUES(1,?)', (self.removals.identity,))
+            elif binding[0] != self.removals.identity:
+                raise StorageError('current removal journal is missing or belongs to a different store; use governed recovery')
+            from .retention import scrub_database
+            scrub_database(self)
             self.verify()
         except BaseException:
             self._db.close()
+            self.removals.close()
             raise
 
     def close(self):
         self._db.close()
+        self.removals.close()
 
     def __enter__(self):
         return self
@@ -84,6 +96,7 @@ class Store:
         if self.problems or self._poisoned:
             raise StorageError("storage blocked; inspect diagnostics before recovery")
         self._db.execute("BEGIN IMMEDIATE")
+        self._read_dependencies = {}
         try:
             yield
             self._fault(label + ".before_commit")
@@ -91,6 +104,8 @@ class Store:
         except BaseException:
             self._db.rollback()
             raise
+        finally:
+            self._read_dependencies = None
         self._fault(label + ".after_commit")
 
     @contextmanager
@@ -121,6 +136,7 @@ class Store:
                 raise StorageError("migration foreign-key failure")
 
     def _payload(self, run_id, body, *, sources=()):
+        self.retention_guard(run_id, execution=True)
         if type(body) is not bytes:
             raise TypeError("retained payload must be exact bytes")
         digest = sha256(body).hexdigest()
@@ -136,10 +152,39 @@ class Store:
         self._write("INSERT INTO payloads VALUES(?,?,?,'RETAINED')", (payload_id, run_id, blob_id))
         for source in sorted(set(sources)):
             self.read_payload(run_id, source)
+        dependencies = set(sources) | (self._read_dependencies or {}).get(run_id, set()) | self._referenced_payloads(run_id, body)
+        dependencies.discard(payload_id)
+        for source in sorted(dependencies):
             self._write('INSERT INTO derived_payloads VALUES(?,?,?)', (run_id, source, payload_id))
+        self._write('INSERT INTO payload_lineage VALUES(?,?)', (run_id, payload_id))
         return payload_id
 
+    def _referenced_payloads(self, run_id, body):
+        try:
+            value = load_json(body)
+        except (ValueError, UnicodeError):
+            return set()
+        identities = set()
+        def visit(item):
+            if isinstance(item, dict):
+                for key, child in item.items():
+                    visit(child)
+            elif isinstance(item, list):
+                for child in item:
+                    visit(child)
+            elif isinstance(item, str) and len(item) == 36 and item != run_id:
+                identities.add(item)
+        visit(value)
+        if not identities:
+            return set()
+        encoded = canonical_bytes(sorted(identities)).decode()
+        result = {r[0] for r in self._db.execute('SELECT id FROM payloads WHERE run_id=? AND id IN (SELECT value FROM json_each(?))', (run_id, encoded))}
+        for table in ('events', 'kernel_records', 'control_history', 'states', 'object_history'):
+            result.update(r[0] for r in self._db.execute(f'SELECT payload_id FROM {table} WHERE run_id=? AND id IN (SELECT value FROM json_each(?))', (run_id, encoded)))
+        return result
+
     def read_payload(self, run_id, payload_id):
+        self.retention_guard(run_id, payload_id=payload_id)
         row = self._db.execute(
             "SELECT p.disposition,b.body,b.digest FROM payloads p LEFT JOIN blobs b ON b.id=p.blob_id WHERE p.run_id=? AND p.id=?",
             (run_id, payload_id)).fetchone()
@@ -149,7 +194,17 @@ class Store:
             raise EvidenceUnavailable("REMOVED: payload bytes and digest are unavailable")
         if row["body"] is None or sha256(row["body"]).hexdigest() != row["digest"]:
             raise StorageError("payload integrity failure")
+        if self._read_dependencies is not None:
+            self._read_dependencies.setdefault(run_id, set()).add(payload_id)
         return row["body"]
+
+    def retention_guard(self, run_id, *, payload_id=None, execution=False):
+        decisions = self.removals.all(run_id)
+        if decisions and (execution or payload_id is not None and any(payload_id in d['payload_ids'] for d in decisions)):
+            raise EvidenceUnavailable('REMOVED_OR_REMOVAL_PENDING: current governed disposition blocks this operation')
+
+    def retention_epoch(self, run_id):
+        return tuple(d['id'] for d in self.removals.all(run_id))
 
     @staticmethod
     def _declared_artifacts(config):
@@ -556,6 +611,8 @@ class Store:
                 if sha256(blob["body"]).hexdigest() != blob["digest"]:
                     raise StorageError("blob hash mismatch")
             for run in self._db.execute("SELECT * FROM runs"):
+                if self.removals.all(run['id']):
+                    continue  # Structural checks above remain; governed loss is separately inspectable.
                 config = self.configuration(run["id"])
                 if config.arm != run["arm"]:
                     raise StorageError("Run arm differs from retained configuration")

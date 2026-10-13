@@ -2064,6 +2064,7 @@
               "ISSUE_GRANT": "#/$defs/IssueGrant",
               "OFFER_COMMUNICATION": "#/$defs/OfferCommunication",
               "PREFLIGHT": "#/$defs/Preflight",
+              "REMOVE_CONTENT": "#/$defs/RemoveContent",
               "RESOLVE_EPISODE": "#/$defs/ResolveEpisode",
               "RESTORE_MEMORY": "#/$defs/RestoreMemory",
               "REVIEW_EMERGENCY": "#/$defs/ReviewEmergency",
@@ -2107,6 +2108,9 @@
             },
             {
               "$ref": "#/$defs/RestoreMemory"
+            },
+            {
+              "$ref": "#/$defs/RemoveContent"
             },
             {
               "$ref": "#/$defs/InspectParticipation"
@@ -2757,6 +2761,68 @@
         "resource"
       ],
       "title": "ReadOperation",
+      "type": "object"
+    },
+    "RemoveContent": {
+      "additionalProperties": false,
+      "properties": {
+        "copy_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Copy Ids",
+          "type": "array"
+        },
+        "intervention_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Intervention Id",
+          "type": "string"
+        },
+        "justification": {
+          "enum": [
+            "PRIVACY",
+            "SECURITY",
+            "JUSTIFIED_DELETION"
+          ],
+          "title": "Justification",
+          "type": "string"
+        },
+        "kind": {
+          "const": "REMOVE_CONTENT",
+          "title": "Kind",
+          "type": "string"
+        },
+        "payload_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Payload Ids",
+          "type": "array"
+        },
+        "public_reason": {
+          "minLength": 1,
+          "title": "Public Reason",
+          "type": "string"
+        },
+        "scope": {
+          "const": "SOURCE_AND_ALL_DERIVED_COPIES",
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "scope",
+        "payload_ids",
+        "copy_ids",
+        "justification",
+        "public_reason",
+        "intervention_id"
+      ],
+      "title": "RemoveContent",
       "type": "object"
     },
     "ResolveEpisode": {

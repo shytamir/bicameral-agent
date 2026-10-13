@@ -145,7 +145,13 @@ HUMAN_INSPECTION = (
         CHECK(disposition IN ('PENDING','AVAILABLE','REMOVED','UNAVAILABLE')), digest TEXT, byte_length INTEGER,
         PRIMARY KEY(run_id,id)) STRICT""",
 )
-MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX, HUMAN_INSPECTION)
+RETENTION_LINEAGE = (
+    'ALTER TABLE known_copies ADD COLUMN file_identity TEXT',
+    """CREATE TABLE journal_binding(singleton INTEGER PRIMARY KEY CHECK(singleton=1),journal_id TEXT NOT NULL) STRICT""",
+    """CREATE TABLE payload_lineage(run_id TEXT NOT NULL,payload_id TEXT NOT NULL,
+        PRIMARY KEY(run_id,payload_id), FOREIGN KEY(run_id,payload_id) REFERENCES payloads(run_id,id)) STRICT""",
+)
+MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX, HUMAN_INSPECTION, RETENTION_LINEAGE)
 
 def checksum(statements):
     return sha256("\n".join(statements).encode()).hexdigest()

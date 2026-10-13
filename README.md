@@ -149,6 +149,16 @@ P08 is accepted under owner delegation within the authenticated local human-adap
 
 Validation passed 150 tests, all three schema checks and whitespace checks. Seven [inspection tests](tests/test_inspection.py) cover snapshot stability during writes, exact payload traversal, human-only access, repeated nonrecursive exports, truncation/tampering, missing external copies, failed destination writes, terminal inspection and removal overriding old snapshot bytes. Copy locations remain caller-supplied and outside the evidence database. P10 supplies durable governed removal and recovery across these known copies.
 
+## P10 acceptance and handoff
+
+P10 is accepted under owner delegation within the SCRIPTED, trusted local SQLite/file adapter envelope. [Reviewed retention](bicameral_agent/kernel/retention.py) displays source roots, the conservative transitive source/derived closure, shared content and every known export/backup. Current scoped review and confirmation are mandatory. Pause/termination alone retain bytes; an approved removal blocks affected reads immediately and keeps execution stopped. Input/output, semantic, retrieval and reference provenance feed the closure. Earlier stores lacking complete lineage require a visibly disclosed whole-Run content scope.
+
+An independently retained [removal journal](bicameral_agent/storage/retention.py) commits the decision before cleanup, stores non-sensitive accountability/progress, and is identity-bound to the evidence database. Preserve this journal independently of backups. `recover_backup` requires the current journal, retains the original Run identity, and applies removals before exposing evidence. Opening a copied database with a different/missing journal rejects. Removed source bytes and hashes are detached/deleted; logical file overwrite, WAL truncation and compaction are verified separately. Missing/shared/inaccessible copies or an outstanding reader prevent a completed claim. File identities protect unrelated destinations; interrupted overwrites resume from durable progress.
+
+Validation passed 160 tests, all three schema checks and whitespace checks. Ten [retention tests](tests/test_retention.py) cover semantic/invocation/cache derivatives, duplicate bytes, exports, backups, source-hash/file scans, strict scope, stale effects, wrong destinations, an actual process exit after the decision, interrupted copy cleanup, terminal maintenance inspection, dormancy, old-reader blocking, shared copies and old-snapshot recovery. Existing per-write fault tests now restore the same synthetic fixture with its current journal to include provenance writes accurately.
+
+Limits are explicit: these checks establish logical removal in tested SQLite/files, not physical-media erasure or discovery of unregistered copies. No provider exists in this envelope. Known unresolved copies remain listed and incomplete. Maintenance inspection remains available; execution and semantic replay cannot reconstruct removed evidence. P09 must preserve permitted allocation/outcome metadata and report analytical loss rather than manufacture results.
+
 ## Scope
 
 This is not a claim about consciousness, sentience, personhood, artificial emotion, or human memory. It is not an unrestricted autonomous-agent framework.

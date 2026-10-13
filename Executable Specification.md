@@ -2,7 +2,7 @@
 
 **Version:** 0.3-design
 
-**Status:** P01-P08 have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. Integrated retention and experiment conformance remain in subsequent authorized slices.
+**Status:** P01-P08 and P10 have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. P09 and integrated deterministic experiment conformance remain in progress.
 
 ## 1. Contract boundary
 

@@ -41,6 +41,7 @@ def file_digest(path):
 class Inspection:
     def __init__(self, kernel):
         self.k, self.id, self.closed = kernel, identifier(), False
+        self.retention_epoch = kernel.store.retention_epoch(kernel.run_id)
         self.db = sqlite3.connect(kernel.store.path.resolve().as_uri() + '?mode=ro', uri=True, isolation_level=None)
         self.db.row_factory = sqlite3.Row
         self.db.execute('BEGIN')
@@ -73,9 +74,8 @@ class Inspection:
             raise ValueError('inspection snapshot closed')
         # P10 may invalidate a previously opened snapshot; old SQLite pages are
         # never an exemption from a current removal decision.
-        guard = getattr(self.k.store, 'retention_guard', None)
-        if guard:
-            guard(self.k.run_id)
+        if self.retention_epoch != self.k.store.retention_epoch(self.k.run_id):
+            raise EvidenceUnavailable('REMOVAL_CHANGED: reopen inspection for current dispositions')
 
     def manifest(self):
         self._check()
@@ -127,7 +127,7 @@ class Inspection:
             raise FileExistsError('export never overwrites an existing file')
         copy_id = identifier()
         with self.k.store._transaction('export-intent'):
-            self.k.store._write("INSERT INTO known_copies VALUES(?,?,'EXPORT','PENDING',NULL,NULL)", (copy_id, self.k.run_id))
+            self.k.store._write("INSERT INTO known_copies VALUES(?,?,'EXPORT','PENDING',NULL,NULL,NULL)", (copy_id, self.k.run_id))
         digest, length = sha256(), 0
         try:
             with path.open('xb') as stream:
@@ -162,8 +162,9 @@ class Inspection:
             self._receipt('FAILED', copy_id=copy_id, diagnostic='EXPORT_FAILED_OR_INCOMPLETE')
             raise
         with self.k.store._transaction('export-complete'):
-            self.k.store._write("UPDATE known_copies SET disposition='AVAILABLE',digest=?,byte_length=? WHERE run_id=? AND id=?",
-                (digest.hexdigest(), length, self.k.run_id, copy_id))
+            stat = path.stat()
+            self.k.store._write("UPDATE known_copies SET disposition='AVAILABLE',digest=?,byte_length=?,file_identity=? WHERE run_id=? AND id=?",
+                (digest.hexdigest(), length, canonical_bytes([stat.st_dev, stat.st_ino]).decode(), self.k.run_id, copy_id))
             self._write_receipt('EXPORTED', digest=digest.hexdigest(), length=length, copy_id=copy_id)
         return {'copy_id': copy_id, 'digest': digest.hexdigest(), 'byte_length': length}
 
