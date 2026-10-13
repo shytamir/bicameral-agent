@@ -29,7 +29,7 @@ An envelope contains contract_version, request_id, run_id, episode_id if applica
 | Objective | Immutable statement, authority Event, lifecycle, lineage; human control |
 | Grant | Objective, operations/resources, expiry/limit, use count, lifecycle; human issuance/revocation, Kernel consumption/expiry |
 | Episode | Objective, wake, opening state/cutoff, execution end, consolidation disposition |
-| Event | Same-Run sequence, actor, source classes, time, exact payload and object references; append-only |
+| Event | Same-Run sequence, actor, source classes, visibility scope, time, exact payload and object references; append-only |
 | Semantic revision | Object identity/type, parent/revision, content, lifecycle, evidence; accepted proposal |
 | Mutation | Transaction, before/after content and hashes, proposer/authority, supporting Events; append-only |
 | Action | Immutable request, decision, dispatch intent, terminal result |
@@ -120,9 +120,60 @@ Agent-visible and evaluator-only evidence use distinct access scopes. Event, sea
 - Attempt a notes field, arbitrary file write, or evaluator lookup through search and then by payload ID: reject each channel, including indirect access.
 - Store/retrieve an ordinary self-summary in B: permit it and charge its output and retrieval cost.
 
-## 8. Proposal identity and inspection checkpoint
+## 8. Proposal references, transactions, and inspection
 
-Same-proposal creation/reference resolution and inspection retention are being revised. The requirement to store a complete database export inside that database is withdrawn. Inspection must provide complete reachable evidence without copying prior exports recursively.
+### 8.1 Reference union
+
+Mutable-object references in proposed semantic content and mutations use exactly one of these closed shapes:
+
+```json
+{"kind":"EXISTING","object_type":"ITCH","object_id":"11111111-1111-4111-8111-111111111111"}
+```
+
+```json
+{"kind":"LOCAL","object_type":"ITCH","local_key":"new-itch"}
+```
+
+The UUID above illustrates format, not a real record. A reference's object_type must match the target field's allowed type. Existing references must resolve in the authenticated Run. A local_key is a nonempty proposal-local string, limited to 64 ASCII letters/digits/hyphens/underscores; it cannot stand in for a Run, Objective, Grant, Constitution, or evidence Event. Evidence references always identify already-recorded same-Run Events visible to that chamber.
+
+Every create mutation declares its local_key. Invariant family creation declares separate family_local_key and version_local_key; Invariant revision declares successor_local_key. Each key binds exactly one typed result. Duplicate bindings reject, even if their contents match. References may point forward to later creates in the same proposal; unresolved keys and wrong types reject the entire proposal.
+
+A StateProposal contains expected_parent_state_id, ordered mutations, complete proposed Continuity State/active selection, and supporting Event IDs. Mutation kinds are ITCH_CREATE, ITCH_TRANSITION, INVARIANT_CREATE, INVARIANT_TRANSITION, INVARIANT_REVISE, COMMITMENT_CREATE, and COMMITMENT_TRANSITION. They carry the object-specific content in section 3, evidence, typed targets, and expected_revision for changes to existing or previously staged objects. New Itches start OPEN, Invariants TENTATIVE, and Commitments PENDING, at revision 1. No create supplies a durable ID.
+
+Multiple changes to an object in one proposal are permitted only as an ordered sequence of legal edges. Each expected_revision must match the staged revision at that point. Later transitions may refer to a preceding local create. Evidence must justify the requested transitions; this does not authorize semantic interpretation by the Kernel. Commitment dependency and supersession references cannot form cycles, including through existing objects. Revision replaces only the named current Invariant version and preserves its family ownership.
+
+### 8.2 Acceptance algorithm
+
+1. Record exact proposal bytes and receipt; parse the closed variant contracts and check role, attempt, Run, Objective and evidence visibility.
+2. In a write transaction, re-read the expected semantic parent and affected object revisions. A control change since assembly may make the proposal stale; do not retarget it.
+3. Build the typed local binding map and allocate Kernel IDs. Rejected allocations have no authoritative record and are never returned as accepted objects.
+4. Resolve references and simulate the ordered mutations against a staged projection. Validate ownership, lifecycle, immutable fields, evidence, dependency cycles and current control constraints at every edge.
+5. Resolve the complete handoff and selected references against the final projection. Its focus must equal the Episode's still-active Objective, or be null after closure; null focus has no task-specific next steps or owned object selection. Cross-Objective facts may remain as evidence. Render and enforce the entire active budget.
+6. Commit revisions, links, mutation ledger, handoff, acceptance receipt and Episode closure together. The receipt contains the local-key-to-ID/type map and new state ID. On failure, roll back all proposed effects and record bounded errors with a cursor to the complete diagnostics.
+
+Exact retries return the retained acceptance or rejection response. They neither reallocate accepted objects nor start another model call. A corrected proposal is a new request under the bounded attempt rules in section 9. Unknown IDs, duplicate keys, stale parents, illegal edges, oversized bundles and invisible evidence cannot be repaired silently by the Kernel.
+
+### 8.3 Human inspection and export
+
+Authenticated human inspection fixes a consistent database snapshot/cutoff and offers pageable views of all retained control, semantic, evidence and evaluator records, including terminal and superseded ones. Inspection does not depend on a chamber context fitting. A browser/view adapter may filter presentation, but complete traversal and exact payload bytes remain available through explicit pages.
+
+An optional export streams the snapshot to a human-selected destination outside the live database and payload store. The export includes a versioned manifest, cutoff, tables/records, and referenced immutable blobs once by hash. A recipient can verify completeness and bytes without recursive export expansion. The live store retains only an inspection receipt: cutoff, export hash, byte length, disposition and an opaque artifact locator if retained. It never ingests the export body as a Payload, Event payload, tool result or model input.
+
+A later snapshot includes prior inspection receipts as ordinary metadata, not the bodies of earlier exports. Those exports are derived artifacts rather than additional source evidence; their retained bytes can be opened independently. Missing external export bytes are reported as unavailable and do not fabricate evidence or invalidate the underlying retained source records. Failed exports retain failure diagnostics and cannot receive a success receipt. Export destination access belongs to the human control adapter, never an agent tool.
+
+### 8.4 Worked conformance traces
+
+| Initial state | Request/sequence | Required observable result |
+|---|---|---|
+| Active Objective O, semantic parent S, discrepancy Events E1/E2 | Create Itch with key new-itch; select LOCAL ITCH new-itch in the same handoff | One new Itch and one handoff commit together; receipt resolves new-itch; stored selection uses that durable ID |
+| Current Invariant version V1 is selected | Revise V1, bind successor key v2, replace selection with LOCAL INVARIANT_VERSION v2 | V1 retires and V2 begins TENTATIVE in one commit; family stays the same; handoff names V2 |
+| Same as above | Leave V1 selected, reference an unbound key, or supply a foreign evidence Event | Entire proposal rejects; V1, parent S, and all other projections remain unchanged |
+| Triggered Commitment C; dispatch/start and completion evidence exists | Stage TRIGGERED to IN_PROGRESS at revision n, then FULFILLED at n+1 | Both legal edges and their evidence are ledgered atomically; terminal C cannot later reopen |
+| Proposal was accepted before client disconnected | Resubmit identical bytes and request ID | Return the same IDs/receipt; no duplicate revisions or closure |
+| Source database unchanged except inspection receipts | Perform two complete exports | Second contains source bytes once plus receipt metadata, not the first export body; live-store growth is bounded receipt metadata per inspection |
+| Multi-mutation proposal with a late failing constraint | Inject failure after each write statement | No partial state, ID mapping, acceptance or closure survives; rejection evidence remains distinct |
+
+These are required executable acceptance cases for the relevant implementation slices, not claims that tests already exist or pass.
 
 ## 9. Recovery checkpoint
 
@@ -142,4 +193,4 @@ Preflight precedes explicit human sealing. Retain normalized configuration and e
 
 ## 12. Readiness
 
-Readiness is documentary only. Proposal identity, inspection, recovery and methodology remain explicit checkpoints. Bounded-input and visibility traces must become executable tests in their implementation slice; prose does not establish conformance.
+Readiness is documentary only. Recovery and methodology remain explicit checkpoints. Bounded-input, reference, inspection and visibility traces must become executable tests in their implementation slice; prose does not establish conformance.

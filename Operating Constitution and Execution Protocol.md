@@ -65,7 +65,11 @@ Interventions are recorded and counted. Unlogged database editing is outside ord
 
 The Operator cannot commit governed semantic state. The Steward proposes; the Kernel validates structure, references, lifecycle, authority provenance and budgets, then commits accepted effects atomically.
 
+A proposal may name its newly created objects through transaction-local handles. These handles convey no authority or durable identity; the Kernel assigns IDs and resolves them only within that proposal. The whole resolved change set must be lawful, including references in the proposed handoff.
+
 The Journal retains exact messages, outputs, errors and change evidence. References and deterministic paging may keep input small without deleting or summarizing source evidence. Inspection remains possible as history grows.
+
+Human inspection uses consistent, pageable views and optional streamed exports. An export is a derived artifact outside the live evidence store; that store retains its cutoff, hash and receipt, not the export's bytes. Prior exports remain independently inspectable where retained and are never recursively embedded in a new snapshot.
 
 Continuity State is orientation, not authority. It distinguishes observations, inferences, assumptions, unresolved claims, and contradictions. Facts may survive an Objective; next steps and semantic references must apply to the current focus.
 
