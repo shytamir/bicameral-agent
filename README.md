@@ -10,7 +10,7 @@ The intended comparison is empirical:
 - **Arm B — Retrieval-First Baseline:** persistent Event Journal and retrieval without semantic consolidation;
 - **Arm C — Handoff-Only Ablation:** bounded Continuity State and Commitments without Itch-to-Invariant learning.
 
-If the simpler baselines perform as well as the full architecture at comparable cost, the central hypothesis fails.
+If simpler baselines perform as well at comparable cost, that counts against the proposed benefit of the full architecture in the tested setting.
 
 ## System outline
 
@@ -18,7 +18,7 @@ The process separates cognition from authority:
 
 - The **Operator** interprets objectives, reasons about tasks, uses permitted tools, and observes results. It cannot commit governed semantic state.
 - The **Steward** consolidates experience into proposed Continuity State, Itch, Invariant, and Commitment transitions. It has no machine-execution tools.
-- The deterministic **State Kernel** schedules Episodes, assembles bounded contexts, journals evidence, validates authority and transitions, commits atomic state changes, and provides auditable rollback.
+- The deterministic **State Kernel** schedules Episodes, assembles bounded contexts, journals evidence, validates authority and transitions, commits atomic state changes, and provides forward semantic restoration.
 
 The chambers decide meaning. The Kernel decides authority and persistence.
 
@@ -26,19 +26,24 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 - [Experiment Architecture](Experiment%20Architecture.md) defines the hypothesis, system components, memory structures, evaluation arms, measurements, and failure criteria.
 - [Operating Constitution and Execution Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) defines lawful behavior, human authority, Objectives, Grants, Episodes, action-risk boundaries, evidence treatment, and semantic-state lifecycles.
-- [Executable Specification](Executable%20Specification.md) is the implementation design under revision: contracts, deterministic properties, transaction semantics, and comparison configuration.
+- [Executable Specification](Executable%20Specification.md) defines the 0.2 pilot contracts, input budgets, transactions, recovery, worked acceptance traces, and experimental evidence.
+- [Roadmap](ROADMAP.md) defines nine bounded LLM-less slices and separate development/evaluation gates.
 - [AGENTS.md](AGENTS.md) gives repository-specific working rules, document authority, change discipline, verification expectations, and Git guard rails.
 
 ## Current management state
 
-The project is **pre-implementation and undergoing design revision**.
+The project is **pre-implementation, with a revised design baseline for bounded slice planning**.
 
 - The Architecture and Operating Constitution and Execution Protocol remain the design and governance baseline.
 - The 0.2 design replaces the prior broad v0 contract. The earlier contract and scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
 - No supervisor, persistence layer, chamber adapter, tool runtime, or benchmark harness has been implemented.
 - No experimental result has been produced, and none should be inferred from the completeness of the documents.
 
-The current work revises bounded context, memory channels, experimental comparisons, ordinary contract flows, recovery, and first-cut scope. The first pilot uses a typed simulated-service fixture, one active Objective, and serialized execution/consolidation. The [roadmap](ROADMAP.md) retains the earlier inventory pending reconciliation. Implementation and live experiments require separate authorization. The first implementation remains LLM-less.
+The revised first pilot uses a typed simulated-service fixture, one active Objective, and serialized execution/consolidation. It budgets the complete active input, retains exact evidence through paging, supports same-proposal object references, streams inspection exports outside the live store, and bounds consolidation retries without replaying uncertain actions.
+
+The research design uses independent matched A/B/C trajectories with deliberate within-Run learning, held-out transfer, recorded costs and explicit failure/intervention treatment. A versus C is the primary comparison for structured Itch/Invariant machinery. Numerical budgets, concrete prompts/fixtures, models, sample size and practical benefit/cost thresholds still require development calibration before evaluation is sealed.
+
+The next actionable work is a separately authorized P01 contract slice in the [roadmap](ROADMAP.md). Implementation and live experiments require separate authorization. The first implementation remains LLM-less; documentary review is not runtime validation or experimental acceptance.
 
 Arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
 

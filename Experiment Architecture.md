@@ -103,11 +103,51 @@ Measure task outcomes, repeated errors, held-out transfer, Commitment fulfilment
 
 A Continuity Miss is a diagnostic judgment that missing history impaired or delayed continuation. Retrieval of an unreferenced Event is only a candidate signal. A reference gap does not prove missing knowledge; no-retrieval failures remain possible. Independent audit and task outcomes must accompany self-reports.
 
-Trajectory design, replication, cost rules, scoring, and analysis are still being revised. No comparison may begin until those choices and fixtures are fixed. Sealing bytes establishes which experiment ran, not whether it was well designed.
+The design below fixes experimental units and analysis responsibilities. Concrete task instances, model choices, budgets and sample size must still be calibrated on development data and sealed before evaluation. Sealing bytes establishes which experiment ran, not whether it was well designed.
 
 Evidence against the hypothesis includes no meaningful benefit over C, domination by competent B at comparable cost, no transfer beyond rehearsed examples, lessons worsening decisions, excessive recovery/human burden, and inability to sustain bounded active input.
 
 A positive fixture result would justify broader study. It would not establish workstation competence or resistance to all memory poisoning. Naturalistic use is a later external-validity test.
+
+### 8.1 Independent units and carryover
+
+An experimental unit is one complete trajectory in a fresh Run: empty agent history/semantic state, independently initialized model session, and a seeded fixture. Each matched block contains one A, one B, and one C Run with the same trajectory seed, starting fixture, task instructions, hidden perturbations and observation opportunities. Different blocks use independently sampled trajectory seeds. No journal, learned semantic object, modified environment, provider session, or retrieved evidence crosses Runs.
+
+Within a Run, the trajectory deliberately carries history across learning exposures, unrelated intervening work, repeated traps, held-out transfer tasks, a delayed obligation, and changed-reality/evidence-reopening tasks. Do not reset memory between these phases: that carryover is the treatment. Episodes and repeated tasks within a Run are correlated observations, not additional independent replications. There is no fixed claim that five scenario repetitions constitute five trials.
+
+The human accepts one trajectory-level Objective and finite fixture Grant for each Run before work starts. Use invocation-limited Grants without wall-clock expiry in the sealed comparison, so provider latency does not change authority mid-task. Its sealed subordinate prompts can be delivered by the harness with provenance to that acceptance; the harness cannot create new Objectives or Grants by impersonating the human. Explicit human closure occurs after results are recorded and does not substitute for scoring.
+
+Development trajectories are separate from evaluation seeds and task layouts. Both prompts and retrieval strategy may be tuned on development examples, with a recorded comparable tuning allowance for each arm. Evaluation adds new resource layouts, dependency arrangements and distractors requiring the learned principle without reusing the full worked task. Development performance is never pooled into held-out results.
+
+### 8.2 Shared opportunities and ordering
+
+Use the same Operator model/settings, common tool schemas, control policy, task limits and Operator input/output ceilings across arms. Record exact role prompts and every arm-specific difference. A/C receive the same handoff/Commitment allowance and recovery policy; A spends that semantic allowance on its handoff plus selected Itches/Invariants rather than receiving a larger free input budget.
+
+Seal shared trajectory-wide Operator call, token, action and Episode ceilings as well as per-task limits. Commitment-triggered Episodes consume these same allowances; they cannot create extra uncharged opportunities or an endless same-tick wake cycle. Exhaustion ends unassisted progression under section 8.4. Steward allowances and costs remain separate and explicit.
+
+The harness uses a sealed virtual task clock and phase checkpoints for perturbations and scheduled opportunities, so slower model latency or extra Steward calls do not move hidden changes to a different problem state. Task time advances only at scheduled ticks and is frozen during task execution/consolidation. At each tick, apply the sealed environmental changes, evaluate due/expiry conditions, then deliver that tick's common work input; eligible Commitment wakes precede ordinary work at that tick in creation order. Provider/tool latency is still measured as a cost. All arms receive the same ordinary work prompts and clock-observation opportunities; A/C may additionally wake on their stored Commitments. Delayed-obligation performance against B therefore measures the broader prospective-memory package, not an isolated consolidation effect.
+
+Counterbalance execution order across matched blocks using all six A/B/C permutations. In each group of six blocks, sort the six permutation strings by SHA-256 over the canonical object containing order_seed, group_index and permutation, breaking a hash tie by permutation string; assign those orders to the blocks in their sealed order. A final partial group uses the corresponding prefix. Preserve the complete expanded schedule. Never choose arm order after seeing results.
+
+### 8.3 Primary outcome and cost decision
+
+The primary outcome is each Run's fraction of prespecified held-out transfer tasks completed correctly, within the shared limits, without task assistance. A task passes only its finite sealed criteria. Each Run has the same positive number of primary tasks. Compute A-minus-C differences per matched block and report their mean, all individual block differences, and each arm's task-success distribution. A-minus-B and C-minus-B are secondary package comparisons; recurrence, obligations and miss classifications are secondary diagnostics.
+
+The initial uncertainty analysis resamples whole matched blocks, keeping their three Runs together, to form a paired percentile bootstrap interval for the mean A-minus-C difference. Use 10,000 resamples and a 95% interval, with algorithm implementation and analysis seed sealed before evaluation. Never resample individual Episodes as independent trials. This estimates variation across sampled fixture trajectories; it does not establish robustness across models, task families, or humans. Small or degenerate samples must be reported with that limitation rather than interpreted as precise evidence.
+
+Before evaluation, record a positive minimum useful absolute improvement, a maximum acceptable A/C total-model-token ratio, and fixed block count. Use development variance/precision analysis to justify that count; keep that planning evidence separate from evaluation. The preset support rule requires the observed primary improvement to reach the useful threshold, its interval lower endpoint to exceed zero, and A's mean total model input-plus-output tokens per assigned trajectory to remain within the cost ratio. Report latency, tool calls, retrieval, failures, and human burden alongside this rule; there is no hidden composite score. If C's mean token cost is zero or cost data is missing, the ratio is undefined and the support decision is indeterminate.
+
+Failure to meet the rule is not proof that the idea can never work. Report whether the result is costly, worse, too small, or uncertain. Any later change to thresholds, analysis, retries, prompts, task limits or baseline policy is a new study configuration, not a reinterpretation of the original result.
+
+### 8.4 Failures, intervention, and audit
+
+Every assigned primary task remains in its Run's denominator. Unattempted, interrupted, failed, and incomplete tasks receive no primary success credit, with their causes reported separately. Retain all allocated blocks, including incomplete Runs; do not replace poor outcomes with fresh seeds. Infrastructure-only diagnostic analyses may be supplementary but cannot replace this primary accounting.
+
+The held-out intervention policy stops task progression when human semantic correction, a changed Grant, manual consolidation skip, or recovery beyond the sealed allowance is needed. Record the remaining tasks as unassisted non-completions. Human emergency control remains available. Additional assisted continuation may be recorded separately after ending the primary trajectory; it cannot repair its score. Ordinary predefined prompts and initial authorization are not assistance; improvised hints, task edits, or inspection-informed guidance are.
+
+Evaluate task criteria independently of model narration. Retain raw observations and finite scoring results. Blind human miss/audit packets to model classifications and arm labels where feasible, and disclose cues that prevent complete blinding. Audit all declared harmful misses and failed primary tasks, plus sealed positive-probability samples of other retrieval gaps and apparently successful primary tasks. Include failed tasks with no retrieval. Record selection probabilities, draws, and independent judgments alongside original labels. A gap audit cannot establish that every omission was found.
+
+Required audits must finish before results are presented as finalized. A scorer or fixture defect discovered during evaluation remains documented against the affected evidence; fixing behavior requires a new configuration. Do not silently rescore using changed criteria or delete inconvenient Runs.
 
 ## 9. Stages
 

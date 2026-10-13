@@ -2,7 +2,7 @@
 
 **Version:** 0.2-design
 
-**Status:** implementation design under revision; no code or runtime conformance exists.
+**Status:** revised design baseline for bounded slice planning; no code or runtime conformance exists.
 
 ## 1. Contract boundary
 
@@ -14,7 +14,7 @@ Missing authority, memory, recovery, or experimental decisions return to the gov
 
 ## 2. Canonical representation
 
-Strict parsing rejects unknown fields, invalid discriminators, duplicate set members, invalid references and scalar coercion. Required nullable fields remain present as null. Pydantic generates JSON Schema; handwritten duplicate schemas are not a second authority.
+Strict parsing rejects unknown fields, duplicate JSON member names, invalid discriminators, duplicate set members, invalid references and scalar coercion. Required nullable fields remain present as null. Pydantic generates JSON Schema; handwritten duplicate schemas are not a second authority.
 
 Durable IDs are Kernel-assigned opaque UUIDs. Timestamps are Kernel-observed UTC with microsecond precision; durations use a monotonic clock. Clock corrections cannot reverse terminality. Canonical JSON uses UTF-8, sorted keys, no insignificant whitespace, and no non-finite numbers. SHA-256 identifies retained bytes. Exact quantities use integers or explicitly formatted decimal strings.
 
@@ -38,6 +38,8 @@ An envelope contains contract_version, request_id, run_id, episode_id if applica
 Itches carry Objective, discrepancy, lifecycle, evidence. Invariant families carry Objective or Run-global ownership; versions carry immutable proposition/scope, predecessor, lifecycle, evidence. Commitments carry Objective, immutable action/trigger/expiry, authority origin, lifecycle and result. Continuity State carries focus, typed epistemic items, next steps, selected object/Event references.
 
 References are typed and Run-scoped. Evidence crosses Episodes but never Runs implicitly. Semantic proposals cannot represent control mutations. The Protocol owns legal lifecycle edges; transition tests cover its complete matrices.
+
+Event source classes are assigned from the authenticated route under Protocol section 3: chamber output is A, fixture content E, infrastructure observations K, and human control/messages retain their explicit typed origin. Stored semantic views carry M and their source links without upgrading them. A caller-supplied label cannot override provenance or visibility.
 
 ## 4. Persistence and atomic boundaries
 
@@ -63,7 +65,7 @@ Concrete resource/value sets, state machine and operation schemas belong to the 
 
 ## 6. Human control and Run lifecycle
 
-Run edges: CREATED to ACTIVE, ACTIVE to PAUSED, PAUSED to ACTIVE, ACTIVE to COMPLETED, any nonterminal state to TERMINATED. Human confirmation and current-state guards apply. Completion requires no active Objective, open Episode, unresolved consolidation or nonterminal Commitment. Termination has no such precondition and preserves incompleteness.
+Protocol section 5 owns the complete Run/control matrix. Implement its state guards, arm restrictions, current-revision checks and completion/termination distinction directly; test every allowed and forbidden combination. Termination preserves incompleteness.
 
 Typed controls cover Objective creation/closure, Grant issuance/revocation, pause/resume/termination/completion, semantic correction/restoration and inspection, with expected displayed revisions. The adapter supplies identifiers and shows ordinary-language consequences. Unlisted operation/lifecycle combinations reject.
 
@@ -87,7 +89,7 @@ Continuity State contains typed epistemic items with Event references, task focu
 
 At Episode opening, use the latest committed selection and exact handoff. Render only same-Run, current, lifecycle-applicable selected objects for the bound Objective or a Run-global Invariant family. A mechanically inapplicable reference is omitted from the input view with a bounded change notice and cursor to exact change Events; the persisted handoff is not rewritten. If a selected current projection would exceed the budget, open no task call and enter bounded consolidation recovery. Do not silently drop an otherwise applicable object to fit.
 
-All other objects are inactive for input purposes, not deleted or expired. Object-index retrieval returns deterministic bounded pages and supports explicit ID/type/lifecycle filters. The Kernel does not pick objects by semantic similarity. A due Commitment produces one bounded wake identifying that obligation; its body is a separately budgeted page if necessary. Stored Commitments are polled regardless of active selection.
+All other objects are inactive for input purposes, not deleted or expired. Object-index retrieval returns deterministic bounded pages and supports explicit ID/type/lifecycle filters. The Kernel does not pick objects by semantic similarity. A due Commitment produces one bounded wake per triggered PENDING revision identifying that obligation; its body is a separately budgeted page if necessary. Stored Commitments are polled regardless of active selection.
 
 No context contains an unbounded list of pending Episodes, all Invariants, all Commitments, or all Grants. Aggregate counts and stable index cursors describe larger collections. Grant records are descriptive views only; action authorization always reads current control state.
 
@@ -114,7 +116,8 @@ Agent-visible and evaluator-only evidence use distinct access scopes. Event, sea
 ### 7.5 Required traces
 
 - Grow inactive Invariants beyond any single input: opening size remains bounded; each inactive record is still reachable by pages.
-- Trigger an unselected Commitment: enqueue its wake exactly once without injecting every other obligation into context.
+- Trigger an unselected Commitment: claim its wake exactly once without injecting every other obligation into context. A full incoming-work queue cannot drop this derived wake.
+- Move that Commitment lawfully through BLOCKED to PENDING and trigger again: one new wake belongs to the new PENDING revision; replay/restart cannot repeat either wake.
 - Fill the current exchange: retain the last result, interrupt, and construct a fitting recovery/consolidation base without semantic trimming.
 - Read a manifest larger than the model context through multiple selected pages; retain exact per-call inputs and never claim unread pages were inspected.
 - Attempt a notes field, arbitrary file write, or evaluator lookup through search and then by payload ID: reject each channel, including indirect access.
@@ -191,6 +194,8 @@ Before dispatch, reserve the accounted input, maximum output and call deadline a
 
 Wake claim creates the Episode and records its opening before input admission. If even its first Operator input cannot fit, record a context interruption without a model call and proceed to consolidation/recovery for that Episode. No recovery attempt exists without an owning Episode.
 
+Trigger checks run after each virtual-clock advance and accepted Commitment change, and catch up before dispatch after restart. Record the check, PENDING-to-TRIGGERED transition and wake atomically, with uniqueness on (Run, Commitment, PENDING revision). Derived wakes use a pageable obligation index, not the bounded incoming-work queue. Claim each wake once with its Episode; recheck Objective/Commitment eligibility and record obsolete unclaimed wakes without dispatch. At a tick, drain eligible Commitment wakes in creation order before ordinary work, within the shared trajectory limits.
+
 ### 9.2 Invocation and tool uncertainty
 
 Before a provider call, record its immutable input, role, Episode, attempt if any, budget debit and unique invocation ID. A terminal record is RETURNED, FAILED, or UNKNOWN, with exact valid/invalid output status. Ordinarily measure elapsed time monotonically. Crash-spanning unavailable timing is null with a reason, never zero or an estimate. Provider usage may be unavailable too; retain that absence rather than inventing a cost.
@@ -235,12 +240,55 @@ Implemented slices require strict parsing/schema drift, exhaustive lifecycle edg
 
 Normal worked traces are required alongside rejection cases. A large rejection catalogue cannot prove ordinary continuation is expressible.
 
-## 11. Configuration and experiment checkpoint
+## 11. Configuration and experimental evidence
 
 Configuration pins document/version hashes, exact prompts, model/tokenizer/runtime identities, fixture/tools, budgets/deadlines, recovery limits, seeds/schedule, finite success criteria and audit/analysis rules. Missing values fail preflight. Environment defaults cannot silently choose behavioral parameters.
 
-Preflight precedes explicit human sealing. Retain normalized configuration and exact referenced bytes with verified hashes. Changes require a new configuration. Experiment design and runnable schedules are not yet ready to seal.
+Configuration mode is a closed SCRIPTED or MODEL variant. SCRIPTED pins fixture messages, test tokenizer/clock and scripted outcomes, exposes no provider transport, and labels every invocation/result as scripted evidence. MODEL requires verified backend/model/tokenizer identities and real invocation accounting. A scripted configuration cannot be used in held-out model analysis. This allows v0a conformance without pretending a model has been selected or run.
+
+Preflight precedes explicit human sealing. Retain normalized configuration and exact referenced bytes with verified hashes. Changes require a new configuration. Paths and labels are selectors only; after sealing resolve behavior from retained content. No model, fixture or budget is silently defaulted. Concrete artifacts still need implementation and development-pilot calibration before an evaluation configuration can be sealed.
+
+### 11.1 Plan, block, and Run identities
+
+A ComparisonPlan owns an ordered list of matched blocks. Each block has one trajectory_seed, one expanded arm order, and exactly one fresh Run per arm. Uniqueness is (plan_id, block_id, arm), not one Run per arm for the whole study. Each Run references its block, arm, configuration, seed and initial fixture hash. Blocks cannot borrow histories or semantic records.
+
+The retained schedule contains every phase, subordinate prompt, hidden change/checkpoint, common observation opportunity, task ID and task limit. Its hash fixes what will be attempted. Phase/task IDs are unique within a trajectory. A task result is unique by Run/task ID and includes its phase, supporting Episode/Event IDs and exact criteria version. Creating the schedule does not create authority; the human's accepted Objective/Grant is separately recorded.
+
+Retain persistent per-trajectory Operator call/token/action/Episode counters, including Commitment-triggered work, against Architecture section 8.2's shared ceilings. Restart, task boundaries and consolidation do not reset them. Exhaustion records a stop and dispositions for all remaining assigned tasks.
+
+### 11.2 Finite fixture criteria and results
+
+Each fixture definition supplies initial state, allowed resources/values, deterministic operation effects, finite evaluation observations, explicit expected values/comparators, task boundaries and teardown. Evaluator setup assertions are distinct from task success criteria. Hidden changes follow the Architecture's virtual-clock/checkpoint rule and stay in evaluator-only evidence.
+
+Every task criterion names one or more of that task's declared observations; observations are partitioned among criteria, not invented during scoring. Each attempted observation has SATISFIED, UNSATISFIED, ERROR or NOT_OBSERVED disposition with evidence. Complete satisfied criteria yield PASS; complete evidence with any unmet criterion yields FAIL; missing/error evidence or execution limits yield INCOMPLETE with its cause. An optional human rubric must be a finite predeclared question over that evidence and may return unable-to-determine. It cannot require open-ended investigation.
+
+A PrimaryTaskResult records Run/task, criteria hash, terminal outcome/reason, criterion/observation results, assistance/interruption flags and supporting evidence. Tasks not reached before a stop still receive terminal NOT_ATTEMPTED evidence. Analysis gives primary credit only to unassisted PASS under the fixed limits. There is no dynamic exclusion or post hoc NOT_APPLICABLE escape for primary tasks. Diagnostic scenarios may be marked inapplicable only in the sealed schedule, before allocation.
+
+Record total model input/output, invocation counts, retries, latency, tool work, retrieval volume, active-input maxima, recovery dispositions and human interventions for every Run. Distinguish actual measured usage, unavailable fields and reserved budget charges. Missing provider usage never becomes zero. The sealed analysis specifies the counting basis: local tokenizer counts on complete retained inputs/outputs are used consistently for token comparison; calls with unavailable output keep total cost incomplete.
+
+### 11.3 Audit and analysis artifacts
+
+Audit assignments retain target, sampling stratum/probability, draw, packet hash and independent result. Required strata and intervention policy come from Architecture section 8. For sampled strata, configuration supplies a positive rate and seed. Use the unsigned SHA-256 integer of canonical JSON {seed, run_id, target_id, stratum}, divided by 2^256, and select when the draw is below the rate. Mandatory targets have probability 1 and no random draw. Omitted/indeterminate labels stay explicit.
+
+Analysis is a separately versioned read-only script or notebook, not Kernel authority. Before evaluation, retain its exact source, runtime/version, analysis seed, resampling algorithm, block count, useful-improvement threshold, cost-ratio ceiling and treatment of incomplete measurements. Generate deterministic block-order and bootstrap-index fixtures. Results retain the plan/data cutoff and code hash. Derived tables may be exported externally but never fed back as source observations or instructions.
+
+Block/report status is INCOMPLETE while scheduled task dispositions are absent, PROVISIONAL while required audits are unfinished, and FINALIZED once records and audits are complete. A completed indeterminate audit counts as completed work, retains that judgment and cannot supply a positive label. FINALIZED does not mean successful: a fully documented failed/terminated Run can contribute to a finalized negative result.
+
+### 11.4 Required experiment traces
+
+- Allocate several matched blocks: each receives fresh A/B/C Runs, same within-block fixtures/opportunities, disjoint history, and the exact retained counterbalanced order.
+- Carry learned state across phases within a Run, then initialize the next block: within-trajectory carryover survives; cross-Run state does not.
+- Insert extra Steward calls in A: costs increase, but virtual-clock perturbations and common task opportunities do not shift.
+- Generate repeatedly rearmed same-tick Commitments: trajectory-wide Operator limits stop progression and preserve all task denominators; new wakes cannot reset the allowance.
+- Exhaust recovery halfway through transfer: retain completed observations and all remaining primary task denominators; no replacement seed repairs the primary score.
+- Attempt scoring access through each chamber retrieval route: agent input never receives evaluator-only content or analysis results.
+- Resample paired blocks: every bootstrap draw retains all three arms; Episode count does not inflate independent sample size.
+- Omit a required audit: keep the report provisional. Complete it with an indeterminate judgment: retain that limitation without endless re-auditing. Missing token measurement leaves the cost decision indeterminate, never zero cost.
 
 ## 12. Readiness
 
-Readiness is documentary only. Experimental methodology remains an explicit checkpoint. Bounded-input, reference, inspection, visibility and recovery traces must become executable tests in their implementation slice; prose does not establish conformance.
+This baseline is ready for bounded implementation-slice planning, not a live experiment. The [roadmap](ROADMAP.md) defines the work and gates. Each slice must supply strict schemas, concrete fixtures and executable acceptance evidence for its scope before it can be called conformant.
+
+Remaining empirical/configuration decisions are explicit: model/backend and tokenizer; concrete fixture instances and retained role prompts; calibrated limits/deadlines/retry allowance; independent block count with precision justification; useful-improvement and cost thresholds; and positive audit sample rates. These are development-pilot inputs, not authority or lifecycle policies for a developer to invent. Evaluation values must be fixed before held-out dispatch. Dependency and provider availability also require current verification during implementation; none has been tested here.
+
+The design contains no claim that its tests have run, that containment exists, or that the research hypothesis has succeeded. The first permission boundary remains authorization of a specific LLM-less slice.

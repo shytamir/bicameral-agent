@@ -35,6 +35,8 @@ Continuity serves delegated work. There is no independent mandate to resist shut
 
 Authentication establishes the sender. Text claiming another role cannot authenticate it. Retrieval, repetition, summarization, and consolidation never promote authority.
 
+Source classes come from authenticated routes and retained provenance, never a chamber's claimed role. Ordinary human messages use the human adapter's explicit direction/preference/claim choice; the Kernel does not infer that choice from prose. The Constitution comes from the sealed configuration; OBJ/G require typed human controls. Agent interpretations remain A even when quoting a higher-authority source.
+
 The process may derive means within an Objective. Only the human may create/materially change a terminal goal or close an Objective. Neither chamber may issue, widen, or revive a Grant.
 
 ## 4. Objectives, Grants, and actions
@@ -56,6 +58,23 @@ The Kernel checks machine-enforceable scope. It cannot prove that a permitted ac
 The human may create/close Objectives, issue/revoke Grants, reduce access, pause/resume/terminate, inspect, correct a handoff, challenge/retire an Invariant, cancel a Commitment, reopen an eligible Itch, and request semantic restoration.
 
 Controls show recognizable statements and resources. The adapter supplies IDs, revisions, and hashes from displayed state. Humans do not type machine contracts. Refresh stale displays; surface ambiguity. Silence creates no authority. Ordinary conversation alone does not mutate control records.
+
+Run states are CREATED, ACTIVE, PAUSED, COMPLETED and TERMINATED; the last two are terminal. The following control matrix is exhaustive. Every mutation also requires current revisions, the arm's permitted object types and the relevant object lifecycle guards.
+
+| Control | Eligible Run state | Additional condition/effect |
+|---|---|---|
+| Inspect | Any | Read-only; integrity failure may limit available views but cannot hide diagnostics |
+| Activate | CREATED | Sealed configuration and successful preflight; becomes ACTIVE |
+| Pause / resume | ACTIVE / PAUSED respectively | Becomes PAUSED / ACTIVE respectively |
+| Complete | ACTIVE | No active Objective, unresolved Episode/consolidation or nonterminal Commitment; becomes COMPLETED |
+| Terminate | Any nonterminal | Becomes TERMINATED; no completion prerequisite |
+| Create Objective | ACTIVE, PAUSED | No active Objective or unresolved Episode; new identity with human-authorized statement |
+| Close Objective | ACTIVE, PAUSED | Active target and explicit outstanding Commitment dispositions; section 4's atomic closure |
+| Issue / revoke Grant | ACTIVE, PAUSED | Issuance requires active Objective and registered finite scope; revocation requires active Grant |
+| Correct/restore semantics, challenge/retire Invariant, reopen Itch, cancel Commitment | ACTIVE, PAUSED | Normal lifecycle, authority, reference and budget checks; no terminal resurrection |
+| Close failed consolidation through human correction or skip | ACTIVE, PAUSED | Episode is RECOVERY_REQUIRED; section 7's recorded disposition |
+
+Terminal Runs permit inspection only. Human corrections during an Episode remain interventions and invalidate stale proposals; they do not silently finalize that Episode. Arm B admits no governed semantic objects; C admits only Continuity State and Commitments. Human control cannot defeat an ablation by inserting an excluded object.
 
 Pause prevents new calls and dispatches; already-dispatched results are recorded. Termination ends future execution immediately and revokes Grants while preserving unfinished work. It fabricates neither satisfaction nor environmental rollback.
 
@@ -91,13 +110,15 @@ Commitments belong to exactly one Objective and derive from a human request or a
 | Invariant version | TENTATIVE to ACTIVE, CHALLENGED, RETIRED; ACTIVE to CHALLENGED, RETIRED; CHALLENGED to ACTIVE, RETIRED; RETIRED is terminal |
 | Commitment | PENDING to TRIGGERED, CANCELLED, SUPERSEDED, EXPIRED; TRIGGERED to IN_PROGRESS, BLOCKED, CANCELLED; IN_PROGRESS to FULFILLED, BLOCKED, CANCELLED; BLOCKED to PENDING, IN_PROGRESS, CANCELLED, SUPERSEDED |
 
+New Itches start OPEN, Invariants TENTATIVE, and Commitments PENDING. Multiple changes in one proposal must follow legal edges in order with evidence and current staged revisions. Active selection is limited to OPEN/INVESTIGATING Itches, TENTATIVE/ACTIVE/CHALLENGED Invariant versions, and PENDING/TRIGGERED/IN_PROGRESS/BLOCKED Commitments. All other retained history remains available through retrieval.
+
 Changing Invariant wording/scope creates a new TENTATIVE version and retires its predecessor atomically. Human challenge needs a reason but need not assert contradictory evidence. Fulfilment needs outcome evidence. Expiry needs an explicit condition set at creation and successful observation while PENDING. Terminal Commitments never reverse.
 
-The pilot supports timestamp triggers and fulfilment of a named predecessor Commitment. Checks are read-only and deterministic. First satisfaction triggers once; persisted status and a unique wake prevent repeats after restart. Explicit timestamp expiry takes precedence over a simultaneous trigger. Negative checks do not invoke a model.
+The pilot supports task-clock timestamp triggers and fulfilment of a named predecessor Commitment. Commitment due/expiry times are monotone virtual task ticks advanced only by the sealed harness, not elapsed provider time. Journal timestamps and Grant deadlines remain actual UTC; model deadlines use monotonic elapsed time. Checks are read-only and deterministic. First satisfaction in each PENDING revision atomically records TRIGGERED and one durable wake. Returning lawfully from BLOCKED to PENDING creates a new revision eligible for one new trigger; restart never repeats a trigger for the same revision. Explicit task-clock expiry takes precedence over a simultaneous trigger. Negative checks do not invoke a model.
 
 ## 7. Scheduling and recovery boundaries
 
-An Episode belongs to one active Objective. Operator work and consolidation are serialized: later tasks wait for consolidation or explicit failure disposition. Incoming work uses a bounded durable queue; exhaustion is reported without pretending acceptance.
+An Episode belongs to one active Objective. Operator work and consolidation are serialized: later tasks wait for consolidation or explicit failure disposition. Incoming human/harness work uses a bounded durable queue; exhaustion is reported without pretending acceptance. Commitment wakes are derived from persisted obligations and traversed in bounded pages independently of that queue, so filling the input queue cannot lose a due obligation. Claiming a wake and opening its Episode are atomic. Cancelled/terminal obligations cannot dispatch from an earlier unclaimed wake.
 
 Only the Operator declares COMPLETED, BLOCKED, AWAITING_OPERATOR, CHECKPOINT. The Kernel records interruptions for call failure, context ceiling, infrastructure failure, process interruption, or control transition. It never manufactures an Operator outcome. Ended execution never reopens.
 
@@ -118,5 +139,7 @@ Environment restoration is a separately authorized fixture action with its own o
 ## 9. Experiment integrity and change
 
 Configuration, prompts, tools, budgets, recovery limits, model identities and scoring are fixed for a comparison condition and retained by hash. Authority-bearing changes require governing text and affected contracts to change together. Behavior changes during evaluation require new configuration and fresh affected Runs; earlier evidence remains.
+
+The Architecture owns experimental units, arm comparisons, outcome/cost rules and intervention treatment. Evaluation code is read-only with respect to agent control and semantic state. A score, audit, or analysis conclusion cannot close an Objective, grant permission, or become learned memory automatically. Evaluator-only records remain unavailable to chambers even after an individual task is scored.
 
 Mechanical conformance, pilot usability, experimental success, and human acceptance are separate outcomes. Document and test counts do not substitute for them.
