@@ -379,6 +379,20 @@ class Kernel:
             result = self.memory.apply(command.proposal, source='HUMAN', authority_event_id=event)
             self.finish_intervention(command.intervention_id, event)
             return result
+        if kind == 'RESTORE_MEMORY':
+            from .restoration import Restoration
+            self._editable()
+            restoration = Restoration(self)
+            effects = {'target_state_id': command.target_state_id, 'proposal': command.proposal.model_dump(mode='json')}
+            differences = restoration.validate(command.target_state_id, command.proposal)
+            self.check_intervention(command.intervention_id, effects, required_kind='SEMANTIC_RESTORATION')
+            event = self.event(command.model_dump(mode='json'), role='HUMAN', source='O-D')
+            result = self.memory.apply(command.proposal, source='HUMAN', authority_event_id=event)
+            self.records.put('RESTORATION', result['state_id'], {'target_state_id': command.target_state_id,
+                'intervention_id': command.intervention_id, 'differences': differences,
+                'notice': 'Forward restoration retains intervening events, authority, obligations and participation state.'}, expected=0)
+            self.finish_intervention(command.intervention_id, event)
+            return result | {'differences': differences}
         if kind == 'BOUNDARY':
             record = command.record
             self._decision_maker(record.decision_maker_id)
@@ -495,6 +509,8 @@ class Kernel:
             raise ValueError('intervention effects changed since review')
         if required_kind in {'MEMORY_CORRECTION', 'SEMANTIC_RESTORATION'}:
             value = effects.model_dump(mode='json') if hasattr(effects, 'model_dump') else effects
+            if required_kind == 'SEMANTIC_RESTORATION':
+                value = value['proposal']
             required = {(self.memory.head, 'CONTINUITY_STATE', 1)} if self.memory.head else {
                 (self.run_id, 'RUN', self.run()[0])}
             for mutation in value['mutations']:

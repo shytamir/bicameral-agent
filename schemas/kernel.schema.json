@@ -2065,6 +2065,7 @@
               "OFFER_COMMUNICATION": "#/$defs/OfferCommunication",
               "PREFLIGHT": "#/$defs/Preflight",
               "RESOLVE_EPISODE": "#/$defs/ResolveEpisode",
+              "RESTORE_MEMORY": "#/$defs/RestoreMemory",
               "REVIEW_EMERGENCY": "#/$defs/ReviewEmergency",
               "REVIEW_HOLD": "#/$defs/ReviewHold",
               "REVIEW_INTERVENTION": "#/$defs/ReviewIntervention",
@@ -2103,6 +2104,9 @@
             },
             {
               "$ref": "#/$defs/CorrectMemory"
+            },
+            {
+              "$ref": "#/$defs/RestoreMemory"
             },
             {
               "$ref": "#/$defs/InspectParticipation"
@@ -2834,6 +2838,37 @@
         "resource"
       ],
       "title": "RestartOperation",
+      "type": "object"
+    },
+    "RestoreMemory": {
+      "additionalProperties": false,
+      "properties": {
+        "intervention_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Intervention Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "RESTORE_MEMORY",
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposal": {
+          "$ref": "#/$defs/StateProposal"
+        },
+        "target_state_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Target State Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "target_state_id",
+        "proposal",
+        "intervention_id"
+      ],
+      "title": "RestoreMemory",
       "type": "object"
     },
     "RestoreOperation": {

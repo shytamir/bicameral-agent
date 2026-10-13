@@ -137,6 +137,12 @@ Commitment checks use a durable index independently of queue capacity and select
 
 Validation passed 135 tests, all three schema checks and `git diff --check`. Eighteen [scheduler tests](tests/test_scheduler.py) cover A/B/C traces, rearming and expiry, full queues, timeout accounting, bounded recovery, stale proposals, planned completion, atomic rejection, startup interruption and an actual process exit after semantic acceptance. No provider calls or live experiments ran. P07 proceeds with reviewed forward restoration; P08/P10 add complete inspection and governed disposition before P09.
 
+## P07 acceptance and handoff
+
+P07 is accepted under owner delegation within the SCRIPTED envelope. [Forward restoration](bicameral_agent/kernel/restoration.py) reconstructs a named earlier semantic version, displays its exact proposed handoff and status transitions, and requires current scoped intervention review. Acceptance appends a new version and explicit restored/retained differences. Current obligations absent from the target persist; authority, intervening evidence, holds and fixture effects remain intact.
+
+Validation passed 143 tests, all three schema checks and whitespace checks. Eight [restoration tests](tests/test_restoration.py) cover newer obligations and withdrawal preservation, terminal Commitments and retired Invariants, illegal transitions, new contradiction evidence, unresolved objections, changed/stale reviews, invalid old selection/focus, strict parsing and transaction failure/restart. Invalid references reject the entire restoration; no implicit pruning or retargeting occurs. This slice restores semantics only; P08/P10 provide inspection and retention controls.
+
 ## Scope
 
 This is not a claim about consciousness, sentience, personhood, artificial emotion, or human memory. It is not an unrestricted autonomous-agent framework.

@@ -92,7 +92,7 @@ class KernelCase(unittest.TestCase):
         if targets is None and kind in {'MEMORY_CORRECTION', 'SEMANTIC_RESTORATION'}:
             targets = ([{'record_type': 'CONTINUITY_STATE', 'record_id': self.k.memory.head, 'expected_revision': 1}]
                        if self.k.memory.head else [{'record_type': 'RUN', 'record_id': self.run, 'expected_revision': self.k.run()[0]}])
-            for mutation in effects['mutations']:
+            for mutation in (effects['proposal'] if kind == 'SEMANTIC_RESTORATION' else effects)['mutations']:
                 target = mutation.get('target')
                 if target and target['kind'] == 'EXISTING':
                     obj = self.k.memory.objects()[target['object_id']]

@@ -117,6 +117,13 @@ class CorrectMemory(Contract):
     intervention_id: Identifier
 
 
+class RestoreMemory(Contract):
+    kind: Literal['RESTORE_MEMORY']
+    target_state_id: Identifier
+    proposal: StateProposal
+    intervention_id: Identifier
+
+
 class InspectParticipation(Contract):
     kind: Literal['INSPECT_PARTICIPATION']
     role: Literal['OPERATOR', 'STEWARD']
@@ -159,7 +166,7 @@ class ResolveEpisode(Contract):
 
 
 Command = Annotated[Preflight | RunCommand | CreateObjective | CloseObjective | IssueGrant | RevokeGrant |
-                    ReviewHold | ReviewIntervention | DiscussBoundary | CorrectMemory | InspectParticipation | ReviewEmergency |
+                    ReviewHold | ReviewIntervention | DiscussBoundary | CorrectMemory | RestoreMemory | InspectParticipation | ReviewEmergency |
                     OfferCommunication | ResolveEpisode,
                     Field(discriminator='kind')]
 COMMAND = TypeAdapter(Command)
