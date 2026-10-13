@@ -16,7 +16,7 @@ If the simpler baselines perform as well as the full architecture at comparable 
 
 The process separates cognition from authority:
 
-- The **Operator** interprets objectives, reasons about tasks, uses permitted tools, and observes results. It cannot directly rewrite durable semantic state.
+- The **Operator** interprets objectives, reasons about tasks, uses permitted tools, and observes results. It cannot commit governed semantic state.
 - The **Steward** consolidates experience into proposed Continuity State, Itch, Invariant, and Commitment transitions. It has no machine-execution tools.
 - The deterministic **State Kernel** schedules Episodes, assembles bounded contexts, journals evidence, validates authority and transitions, commits atomic state changes, and provides auditable rollback.
 
@@ -34,13 +34,13 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 The project is **pre-implementation and undergoing design revision**.
 
 - The Architecture and Operating Constitution and Execution Protocol remain the design and governance baseline.
-- The prior specification freeze is reopened. The 43 scrutiny entries record earlier decisions; they are not evidence of executable conformance or experimental validity.
+- The 0.2 design replaces the prior broad v0 contract. The earlier contract and scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
 - No supervisor, persistence layer, chamber adapter, tool runtime, or benchmark harness has been implemented.
 - No experimental result has been produced, and none should be inferred from the completeness of the documents.
 
-The current work revises bounded context, memory channels, experimental comparisons, ordinary contract flows, recovery, and first-cut scope. The [roadmap](ROADMAP.md) retains the earlier inventory pending that revision. Implementation and live experiments require separate authorization. The first implementation remains LLM-less.
+The current work revises bounded context, memory channels, experimental comparisons, ordinary contract flows, recovery, and first-cut scope. The first pilot uses a typed simulated-service fixture, one active Objective, and serialized execution/consolidation. The [roadmap](ROADMAP.md) retains the earlier inventory pending reconciliation. Implementation and live experiments require separate authorization. The first implementation remains LLM-less.
 
-Deferred features—including vector retrieval, model routing, semantic Commitment triggers, multi-Objective concurrency, R3 operations, and elaborate UI—should be added only when the experiment demonstrates a need.
+Arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
 
 ## Scope
 
