@@ -2,7 +2,7 @@
 
 **Version:** 0.3-design
 
-**Status:** P01-P03 have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. Fixture execution, complete input accounting, scheduling and experiment conformance remain in subsequent authorized slices.
+**Status:** P01-P04 have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. Complete input accounting, scheduling and experiment conformance remain in subsequent authorized slices.
 
 ## 1. Contract boundary
 
@@ -91,7 +91,7 @@ Descriptors fix arguments, resource extraction, risk, reversibility, postconditi
 
 Evaluator setup/hidden changes and scoring have a separate capability boundary and evidence namespace. Chamber retrieval cannot access held-out criteria, future perturbations, evaluator observations or audit labels. Range/search/chunk queries enforce visibility, including indirect payload references. Human inspection is independent and counted if it informs an intervention.
 
-Concrete resource/value sets, state machine and operation schemas belong to the environment slice. No executable fixture contract exists until they are implemented and pass isolation tests.
+Concrete resource/value sets, state machine and operation schemas belong to the environment slice. P04 implements these contracts in the finite simulated-service fixture; its scripted isolation, postcondition, snapshot, clock and crash tests are recorded in the README handoff.
 
 ## 6. Human control and Run lifecycle
 

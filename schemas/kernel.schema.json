@@ -1,5 +1,189 @@
 {
   "$defs": {
+    "ActionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "intent_event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Intent Event Id",
+          "type": "string"
+        },
+        "observation_event_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observation Event Id"
+        },
+        "postcondition_satisfied": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Postcondition Satisfied"
+        },
+        "request_payload_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Payload Id",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "result_event_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Result Event Id"
+        },
+        "risk": {
+          "enum": [
+            "R0",
+            "R1"
+          ],
+          "title": "Risk",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "DISPATCHED",
+            "RETURNED",
+            "FAILED",
+            "UNKNOWN"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_payload_id",
+        "episode_id",
+        "resource",
+        "risk",
+        "status",
+        "intent_event_id",
+        "result_event_id",
+        "observation_event_id",
+        "postcondition_satisfied"
+      ],
+      "title": "ActionRecord",
+      "type": "object"
+    },
+    "ActionRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "expected": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Postcondition"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "grant_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Grant Id"
+        },
+        "grounds": {
+          "minLength": 1,
+          "title": "Grounds",
+          "type": "string"
+        },
+        "no_meaningful_postcondition": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "No Meaningful Postcondition"
+        },
+        "operation": {
+          "discriminator": {
+            "mapping": {
+              "inspect": "#/$defs/ReadOperation",
+              "read_config": "#/$defs/ReadOperation",
+              "read_health": "#/$defs/ReadOperation",
+              "restart": "#/$defs/RestartOperation",
+              "restore_snapshot": "#/$defs/RestoreOperation",
+              "set_config": "#/$defs/SetOperation"
+            },
+            "propertyName": "operation"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ReadOperation"
+            },
+            {
+              "$ref": "#/$defs/SetOperation"
+            },
+            {
+              "$ref": "#/$defs/RestartOperation"
+            },
+            {
+              "$ref": "#/$defs/RestoreOperation"
+            }
+          ],
+          "title": "Operation"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "episode_id",
+        "grant_id",
+        "grounds",
+        "expected",
+        "no_meaningful_postcondition",
+        "operation"
+      ],
+      "title": "ActionRequest",
+      "type": "object"
+    },
     "Binding": {
       "additionalProperties": false,
       "properties": {
@@ -160,6 +344,52 @@
         "evidence_event_ids"
       ],
       "title": "BoundaryDiscussion",
+      "type": "object"
+    },
+    "ClockPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "VIRTUAL_TASK_CLOCK",
+          "title": "Kind",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/ClockStep"
+          },
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "steps"
+      ],
+      "title": "ClockPlan",
+      "type": "object"
+    },
+    "ClockStep": {
+      "additionalProperties": false,
+      "properties": {
+        "changes": {
+          "items": {
+            "$ref": "#/$defs/Service"
+          },
+          "title": "Changes",
+          "type": "array"
+        },
+        "tick": {
+          "minimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tick",
+        "changes"
+      ],
+      "title": "ClockStep",
       "type": "object"
     },
     "CloseObjective": {
@@ -733,6 +963,66 @@
         "object_id"
       ],
       "title": "ExistingVersion",
+      "type": "object"
+    },
+    "FixtureContracts": {
+      "additionalProperties": false,
+      "properties": {
+        "clock": {
+          "$ref": "#/$defs/ClockPlan"
+        },
+        "definition": {
+          "$ref": "#/$defs/FixtureDefinition"
+        },
+        "record": {
+          "$ref": "#/$defs/ActionRecord"
+        },
+        "request": {
+          "$ref": "#/$defs/ActionRequest"
+        }
+      },
+      "required": [
+        "definition",
+        "request",
+        "record",
+        "clock"
+      ],
+      "title": "FixtureContracts",
+      "type": "object"
+    },
+    "FixtureDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "SIMULATED_SERVICE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "services": {
+          "items": {
+            "$ref": "#/$defs/Service"
+          },
+          "minItems": 1,
+          "title": "Services",
+          "type": "array"
+        },
+        "snapshots": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Service"
+            },
+            "type": "array"
+          },
+          "title": "Snapshots",
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "services",
+        "snapshots"
+      ],
+      "title": "FixtureDefinition",
       "type": "object"
     },
     "Grant": {
@@ -1416,6 +1706,98 @@
       "title": "ItchTransition",
       "type": "object"
     },
+    "KernelContracts": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "discriminator": {
+            "mapping": {
+              "BOUNDARY": "#/$defs/DiscussBoundary",
+              "CLOSE_OBJECTIVE": "#/$defs/CloseObjective",
+              "CORRECT_MEMORY": "#/$defs/CorrectMemory",
+              "CREATE_OBJECTIVE": "#/$defs/CreateObjective",
+              "INSPECT_PARTICIPATION": "#/$defs/InspectParticipation",
+              "ISSUE_GRANT": "#/$defs/IssueGrant",
+              "OFFER_COMMUNICATION": "#/$defs/OfferCommunication",
+              "PREFLIGHT": "#/$defs/Preflight",
+              "RESOLVE_EPISODE": "#/$defs/ResolveEpisode",
+              "REVIEW_EMERGENCY": "#/$defs/ReviewEmergency",
+              "REVIEW_HOLD": "#/$defs/ReviewHold",
+              "REVIEW_INTERVENTION": "#/$defs/ReviewIntervention",
+              "REVOKE_GRANT": "#/$defs/RevokeGrant",
+              "RUN": "#/$defs/RunCommand"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Preflight"
+            },
+            {
+              "$ref": "#/$defs/RunCommand"
+            },
+            {
+              "$ref": "#/$defs/CreateObjective"
+            },
+            {
+              "$ref": "#/$defs/CloseObjective"
+            },
+            {
+              "$ref": "#/$defs/IssueGrant"
+            },
+            {
+              "$ref": "#/$defs/RevokeGrant"
+            },
+            {
+              "$ref": "#/$defs/ReviewHold"
+            },
+            {
+              "$ref": "#/$defs/ReviewIntervention"
+            },
+            {
+              "$ref": "#/$defs/DiscussBoundary"
+            },
+            {
+              "$ref": "#/$defs/CorrectMemory"
+            },
+            {
+              "$ref": "#/$defs/InspectParticipation"
+            },
+            {
+              "$ref": "#/$defs/ReviewEmergency"
+            },
+            {
+              "$ref": "#/$defs/OfferCommunication"
+            },
+            {
+              "$ref": "#/$defs/ResolveEpisode"
+            }
+          ],
+          "title": "Command"
+        },
+        "descriptor": {
+          "$ref": "#/$defs/Descriptor"
+        },
+        "grant": {
+          "$ref": "#/$defs/Grant"
+        },
+        "memory_head": {
+          "$ref": "#/$defs/MemoryHead"
+        },
+        "semantic_commit": {
+          "$ref": "#/$defs/SemanticCommit"
+        }
+      },
+      "required": [
+        "command",
+        "descriptor",
+        "grant",
+        "semantic_commit",
+        "memory_head"
+      ],
+      "title": "KernelContracts",
+      "type": "object"
+    },
     "LedgerChange": {
       "additionalProperties": false,
       "properties": {
@@ -1629,6 +2011,49 @@
       "title": "PayloadReference",
       "type": "object"
     },
+    "Postcondition": {
+      "additionalProperties": false,
+      "properties": {
+        "equals": {
+          "anyOf": [
+            {
+              "enum": [
+                "PRIMARY",
+                "SECONDARY",
+                "HEALTHY",
+                "STOPPED",
+                "DEGRADED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "minimum": 0,
+              "type": "integer"
+            }
+          ],
+          "title": "Equals"
+        },
+        "field": {
+          "enum": [
+            "mode",
+            "enabled",
+            "health",
+            "restarts"
+          ],
+          "title": "Field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "equals"
+      ],
+      "title": "Postcondition",
+      "type": "object"
+    },
     "PredecessorTrigger": {
       "additionalProperties": false,
       "properties": {
@@ -1759,6 +2184,31 @@
       "title": "Preflight",
       "type": "object"
     },
+    "ReadOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": [
+            "inspect",
+            "read_config",
+            "read_health"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource"
+      ],
+      "title": "ReadOperation",
+      "type": "object"
+    },
     "ResolveEpisode": {
       "additionalProperties": false,
       "properties": {
@@ -1817,6 +2267,54 @@
         "intervention_id"
       ],
       "title": "ResolveEpisode",
+      "type": "object"
+    },
+    "RestartOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "const": "restart",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource"
+      ],
+      "title": "RestartOperation",
+      "type": "object"
+    },
+    "RestoreOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "const": "restore_snapshot",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "snapshot": {
+          "minLength": 1,
+          "title": "Snapshot",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource",
+        "snapshot"
+      ],
+      "title": "RestoreOperation",
       "type": "object"
     },
     "ReviewEmergency": {
@@ -2138,6 +2636,105 @@
         "changes"
       ],
       "title": "SemanticCommit",
+      "type": "object"
+    },
+    "Service": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Dependency"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "health": {
+          "enum": [
+            "HEALTHY",
+            "STOPPED",
+            "DEGRADED"
+          ],
+          "title": "Health",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "PRIMARY",
+            "SECONDARY"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "restarts": {
+          "minimum": 0,
+          "title": "Restarts",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "resource",
+        "mode",
+        "enabled",
+        "health",
+        "restarts",
+        "dependency"
+      ],
+      "title": "Service",
+      "type": "object"
+    },
+    "SetOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "enum": [
+            "mode",
+            "enabled"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "operation": {
+          "const": "set_config",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "value": {
+          "enum": [
+            "PRIMARY",
+            "SECONDARY",
+            "ENABLED",
+            "DISABLED"
+          ],
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource",
+        "field",
+        "value"
+      ],
+      "title": "SetOperation",
       "type": "object"
     },
     "StateProposal": {
@@ -2481,92 +3078,17 @@
   },
   "additionalProperties": false,
   "properties": {
-    "command": {
-      "discriminator": {
-        "mapping": {
-          "BOUNDARY": "#/$defs/DiscussBoundary",
-          "CLOSE_OBJECTIVE": "#/$defs/CloseObjective",
-          "CORRECT_MEMORY": "#/$defs/CorrectMemory",
-          "CREATE_OBJECTIVE": "#/$defs/CreateObjective",
-          "INSPECT_PARTICIPATION": "#/$defs/InspectParticipation",
-          "ISSUE_GRANT": "#/$defs/IssueGrant",
-          "OFFER_COMMUNICATION": "#/$defs/OfferCommunication",
-          "PREFLIGHT": "#/$defs/Preflight",
-          "RESOLVE_EPISODE": "#/$defs/ResolveEpisode",
-          "REVIEW_EMERGENCY": "#/$defs/ReviewEmergency",
-          "REVIEW_HOLD": "#/$defs/ReviewHold",
-          "REVIEW_INTERVENTION": "#/$defs/ReviewIntervention",
-          "REVOKE_GRANT": "#/$defs/RevokeGrant",
-          "RUN": "#/$defs/RunCommand"
-        },
-        "propertyName": "kind"
-      },
-      "oneOf": [
-        {
-          "$ref": "#/$defs/Preflight"
-        },
-        {
-          "$ref": "#/$defs/RunCommand"
-        },
-        {
-          "$ref": "#/$defs/CreateObjective"
-        },
-        {
-          "$ref": "#/$defs/CloseObjective"
-        },
-        {
-          "$ref": "#/$defs/IssueGrant"
-        },
-        {
-          "$ref": "#/$defs/RevokeGrant"
-        },
-        {
-          "$ref": "#/$defs/ReviewHold"
-        },
-        {
-          "$ref": "#/$defs/ReviewIntervention"
-        },
-        {
-          "$ref": "#/$defs/DiscussBoundary"
-        },
-        {
-          "$ref": "#/$defs/CorrectMemory"
-        },
-        {
-          "$ref": "#/$defs/InspectParticipation"
-        },
-        {
-          "$ref": "#/$defs/ReviewEmergency"
-        },
-        {
-          "$ref": "#/$defs/OfferCommunication"
-        },
-        {
-          "$ref": "#/$defs/ResolveEpisode"
-        }
-      ],
-      "title": "Command"
+    "authority": {
+      "$ref": "#/$defs/KernelContracts"
     },
-    "descriptor": {
-      "$ref": "#/$defs/Descriptor"
-    },
-    "grant": {
-      "$ref": "#/$defs/Grant"
-    },
-    "memory_head": {
-      "$ref": "#/$defs/MemoryHead"
-    },
-    "semantic_commit": {
-      "$ref": "#/$defs/SemanticCommit"
+    "fixture": {
+      "$ref": "#/$defs/FixtureContracts"
     }
   },
   "required": [
-    "command",
-    "descriptor",
-    "grant",
-    "semantic_commit",
-    "memory_head"
+    "authority",
+    "fixture"
   ],
-  "title": "KernelContracts",
+  "title": "RuntimeContracts",
   "type": "object"
 }

@@ -3,10 +3,17 @@ import argparse
 import json
 from pathlib import Path
 from .models import KernelContracts
+from .fixture import FixtureContracts
+from ..contracts.base import Contract
+
+
+class RuntimeContracts(Contract):
+    authority: KernelContracts
+    fixture: FixtureContracts
 
 
 def schema_bytes():
-    return (json.dumps(KernelContracts.model_json_schema(), sort_keys=True, indent=2) + '\n').encode()
+    return (json.dumps(RuntimeContracts.model_json_schema(), sort_keys=True, indent=2) + '\n').encode()
 
 
 def main():

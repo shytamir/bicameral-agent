@@ -26,6 +26,12 @@ def kernel_configuration(arm='A'):
         for operation, risk in [('inspect', 'R0'), ('read_config', 'R0'), ('read_health', 'R0'),
                                 ('set_config', 'R1'), ('restart', 'R1'), ('restore_snapshot', 'R1')]]})
     artifacts['test_tokenizer'] = canonical_bytes({'kind': 'UTF8_BYTE', 'framing': 'CANONICAL_JSON'})
+    services = [{'resource': 'api', 'mode': 'SECONDARY', 'enabled': True, 'health': 'DEGRADED', 'restarts': 0, 'dependency': 'database'},
+                {'resource': 'database', 'mode': 'PRIMARY', 'enabled': True, 'health': 'HEALTHY', 'restarts': 0, 'dependency': None}]
+    artifacts['fixture'] = canonical_bytes({'kind': 'SIMULATED_SERVICE', 'services': services, 'snapshots': {'baseline': services}})
+    artifacts['test_clock'] = canonical_bytes({'kind': 'VIRTUAL_TASK_CLOCK', 'steps': [
+        {'tick': 1, 'changes': []}, {'tick': 2, 'changes': [services[0] | {'enabled': False, 'health': 'STOPPED'}]},
+        {'tick': 3, 'changes': []}, {'tick': 4, 'changes': []}]})
     for name, body in artifacts.items():
         if name in config['artifacts']:
             config['artifacts'][name] = sha256(body).hexdigest()
