@@ -2,7 +2,7 @@ from hashlib import sha256
 import sqlite3
 import subprocess
 import sys
-from bicameral_agent.contracts.base import canonical_bytes
+from bicameral_agent.contracts.base import canonical_bytes, load_json
 from bicameral_agent.kernel.authority import Kernel
 from bicameral_agent.kernel.inputs import Inputs
 from bicameral_agent.kernel.models import COMMAND
@@ -11,6 +11,7 @@ from bicameral_agent.kernel.scheduler import Scheduler
 from bicameral_agent.storage import Store, EvidenceUnavailable
 from bicameral_agent.storage import StorageError
 from bicameral_agent.storage.store import identifier
+from bicameral_agent.storage.retention import closure
 from tests.kernel_fixtures import KernelCase, HUMAN_KEY, CHAMBER_KEYS, kernel_configuration
 
 
@@ -86,7 +87,9 @@ class RetentionTests(KernelCase):
         self.assertTrue(all(not path.exists() for path in self.copies.values()))
         self.assertEqual('STOPPED', result['continuation'])
         self.assertGreater(len(result['payload_ids']), 10)
-        for path in self.path.parent.glob('store.db*'):
+        paths = list(self.path.parent.glob(self.path.name + '*'))
+        self.assertIn(self.path, paths)
+        for path in paths:
             content = path.read_bytes()
             self.assertNotIn(self.marker, content)
             self.assertNotIn(sha256(self.marker).hexdigest().encode(), content)
@@ -97,6 +100,133 @@ class RetentionTests(KernelCase):
             self.assertEqual('REMOVED', next(r['disposition'] for r in rows if r['id'] == self.root))
         with self.assertRaises(ValueError):
             self.h.run_control('RESUME', 'Cannot revive removed evidence')
+
+    def response_removal(self, *, invalid_route=False, crash=False):
+        attempt = self.s.begin_attempt(self.episode_id)
+        key = self.s.begin_call('STEWARD', self.episode_id, attempt_id=attempt)
+        call = self.s.invocation(key)
+        self.assertIn(self.marker, self.store.read_payload(self.run, call.input_payload_id))
+        if crash:
+            raw = canonical_bytes({'contract_version': '0.3.p01', 'request_id': key, 'run_id': self.run,
+                'episode_id': self.episode_id, 'role': 'STEWARD', 'message_type': 'STEWARD_REPLY',
+                'body': {'participation': None, 'task': self.proposal() | {'mutations': self.marker.decode()}}})
+            def fail(point):
+                if point == 'report.after_commit':
+                    raise RuntimeError('Synthetic failure before scheduler retains output')
+            self.store._fault = fail
+        elif invalid_route:
+            raw = canonical_bytes({'contract_version': '0.3.p01', 'request_id': key, 'run_id': identifier(),
+                'episode_id': self.episode_id, 'role': 'STEWARD', 'message_type': 'STEWARD_REPLY',
+                'body': {'participation': None, 'task': {'private_copy': self.marker.decode()}}})
+        else:
+            raw = b'wrapped malformed response: ' + self.marker
+            self.s.interrupt_call(key, reason='SYNTHETIC_DEADLINE')
+        chamber = self.k.chamber('STEWARD', CHAMBER_KEYS['STEWARD'])
+        if crash:
+            with self.assertRaisesRegex(RuntimeError, 'Synthetic failure'):
+                self.s.deliver(chamber, key, raw)
+            self.reopen(); self.s = Scheduler(self.k)
+            self.assertIsNone(self.s.invocation(key).output_payload_id)
+        else:
+            result = self.s.deliver(chamber, key, raw)
+            self.assertEqual('REJECTED' if invalid_route else 'LATE', result['status'])
+        request = self.store._request(self.run, 'STEWARD', key)
+        self.assertIsNotNone(request)
+        raw_id = request['request_payload_id']
+        receipt = load_json(self.store.read_payload(self.run, request['response_payload_id']))
+        diagnostic = receipt['diagnostics']['payload_id']
+        if crash:
+            self.assertIn(self.marker, self.store.read_payload(self.run, diagnostic))
+        plan = closure(self.store, self.run, [self.root])
+        self.assertFalse(plan['legacy_whole_run'])
+        self.assertIn(raw_id, plan['payload_ids'])
+        self.assertIn(diagnostic, plan['payload_ids'])
+        decision = self.authorize()
+        result = Retention.resume(self.store, decision, locations={})
+        self.assertEqual('COMPLETED', result['status'])
+        for pid in (raw_id, diagnostic):
+            with self.assertRaises(EvidenceUnavailable):
+                self.store.read_payload(self.run, pid)
+        paths = list(self.path.parent.glob(self.path.name + '*'))
+        self.assertIn(self.path, paths)
+        for path in paths:
+            content = path.read_bytes()
+            for material in (self.marker, sha256(self.marker).hexdigest().encode(), sha256(raw).hexdigest().encode()):
+                self.assertNotIn(material, content)
+
+    def test_late_malformed_response_is_removed_with_its_input(self):
+        self.response_removal()
+
+    def test_invalid_route_response_is_removed_with_its_input(self):
+        self.response_removal(invalid_route=True)
+
+    def test_first_report_commit_retains_raw_and_diagnostic_lineage_before_crash(self):
+        self.response_removal(crash=True)
+
+    def test_artifact_removal_includes_configuration_digest(self):
+        self.root = self.store._db.execute("SELECT payload_id FROM artifacts WHERE run_id=? AND name='scripted_messages'",
+            (self.run,)).fetchone()[0]
+        material = self.store.read_payload(self.run, self.root)
+        configuration = self.store._db.execute('SELECT configuration_id FROM runs WHERE id=?', (self.run,)).fetchone()[0]
+        self.assertIn(configuration, closure(self.store, self.run, [self.root])['payload_ids'])
+        decision = self.authorize()
+        result = Retention.resume(self.store, decision, locations={})
+        self.assertEqual('COMPLETED', result['status'])
+        self.assertFalse(result['legacy_whole_run'])
+        paths = list(self.path.parent.glob(self.path.name + '*'))
+        self.assertIn(self.path, paths)
+        for path in paths:
+            self.assertNotIn(sha256(material).hexdigest().encode(), path.read_bytes())
+
+    def test_upgrade_invalidates_historical_incomplete_lineage(self):
+        from unittest.mock import patch
+        from bicameral_agent.storage.migrations import MIGRATIONS
+        old_path = self.path.parent / 'released.db'
+        # Versions 1-7 are released history; they falsely marked missing edges complete.
+        with patch('bicameral_agent.storage.store.MIGRATIONS', MIGRATIONS[:7]):
+            with Store(old_path, busy_timeout_ms=100) as old:
+                config, artifacts = kernel_configuration()
+                run = old.retain_configuration(canonical_bytes(config), artifacts)
+                root = old._db.execute('SELECT payload_id FROM artifacts WHERE run_id=? LIMIT 1', (run,)).fetchone()[0]
+                with old._transaction('released-missing-edges'):
+                    old._write('DELETE FROM derived_payloads WHERE run_id=?', (run,))
+                self.assertFalse(closure(old, run, [root])['legacy_whole_run'])
+        with Store(old_path, busy_timeout_ms=100) as upgraded:
+            plan = closure(upgraded, run, [root])
+            self.assertTrue(plan['legacy_whole_run'])
+            all_payloads = {r[0] for r in upgraded._db.execute('SELECT id FROM payloads WHERE run_id=?', (run,))}
+            self.assertEqual(all_payloads, set(plan['payload_ids']))
+
+    def test_upgrade_blocks_omitted_derivatives_from_previously_completed_removal(self):
+        # Reproduce a v7 decision: every payload claims complete lineage, but a
+        # wrapped response is missing its source edge and is left out of scope.
+        with self.store._transaction('released-removal-fixture'):
+            omitted = self.store._payload(self.run, b'legacy wrapped response: ' + self.marker)
+            self.store._write('DELETE FROM migrations WHERE version>7')
+        decision = self.authorize()
+        original = Retention.resume(self.store, decision, locations={})
+        self.assertEqual('COMPLETED', original['status'])
+        self.assertNotIn(omitted, original['payload_ids'])
+        self.assertIn(self.marker, self.store.read_payload(self.run, omitted))
+        self.maintenance()
+        updated = self.store.removals.all(self.run)[0]
+        self.assertEqual('INCOMPLETE', updated['status'])
+        self.assertTrue(updated['scope_review_required'])
+        self.assertEqual(original['payload_ids'], updated['payload_ids'])
+        with self.assertRaises(EvidenceUnavailable):
+            self.store.read_payload(self.run, omitted)
+        result = Retention.resume(self.store, decision, locations={})
+        self.assertEqual('INCOMPLETE', result['status'])
+        self.assertEqual(original['payload_ids'], result['payload_ids'])
+        # Blocking access must not silently expand the human-approved deletion.
+        self.assertEqual('RETAINED', self.store._db.execute('SELECT disposition FROM payloads WHERE id=?',
+            (omitted,)).fetchone()[0])
+        with self.h.inspect_snapshot() as snapshot:
+            with self.assertRaises(EvidenceUnavailable):
+                snapshot.page('blobs', offset=0, limit=128)
+        self.maintenance()
+        with self.assertRaises(EvidenceUnavailable):
+            self.store.read_payload(self.run, omitted)
 
     def test_decision_survives_authorization_transaction_failure_and_restart(self):
         command = self.request()
@@ -171,6 +301,14 @@ class RetentionTests(KernelCase):
         decision = self.authorize()
         self.assertEqual('PAUSED', self.store.removals.all()[0]['previous_run_status'])
         self.assertEqual('COMPLETED', Retention.resume(self.store, decision, locations={})['status'])
+
+    def test_welfare_hold_preserves_separately_reviewed_removal_path(self):
+        self.report({'kind': 'WITHDRAW', 'activity_id': self.objective,
+            'communication': 'NO_FURTHER_CALLS', 'text': 'Keep optional work stopped'})
+        decision = self.authorize()
+        result = Retention.resume(self.store, decision, locations={})
+        self.assertEqual('COMPLETED', result['status'])
+        self.assertEqual('STOPPED', result['continuation'])
 
     def test_compaction_waits_for_old_reader(self):
         # A retained reader holds old SQLite pages; logical blocking precedes

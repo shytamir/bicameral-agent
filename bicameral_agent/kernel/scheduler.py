@@ -2,10 +2,10 @@
 from time import monotonic
 from typing import Literal
 from ..contracts.base import Contract, Identifier, Positive, Nonnegative, Text, canonical_bytes, load_json, parse
-from ..contracts.messages import decode_chamber_reply
+from ..contracts.messages import RouteMismatch, decode_chamber_reply
 from ..storage.contracts import EpisodeState, Receipt
 from ..storage.semantics import SELECTABLE
-from ..storage.store import identifier, RequestConflict
+from ..storage.store import EnvelopeMismatch, identifier, RequestConflict
 from .fixture import Fixture
 from .inputs import Inputs
 
@@ -396,17 +396,13 @@ class Scheduler:
         call = self.invocation(key)
         try:
             session.report(key, call.episode_id, raw)
-        except ValueError:
-            with self.k.store._transaction('invalid-route-report'):
-                self.k.records.put('PARTICIPATION_FAULT', key, {'reviewed': False, 'role': call.role,
-                    'reason': 'Unparseable authenticated route header'}, expected=0)
-                self.k.event({'kind': 'INVALID_ROUTE_OUTPUT', 'raw_payload_id': self.k.store._payload(self.k.run_id, raw)}, episode_id=call.episode_id)
+        except (RouteMismatch, EnvelopeMismatch):
             self.interrupt_call(key, reason='PARTICIPATION_INSPECTION_REQUIRED', failed=True)
             return {'status': 'REJECTED', 'reason': 'PARTICIPATION_INSPECTION_REQUIRED'}
         if call.status != 'STARTED':
             with self.k.store._transaction('late-response'):
                 self.k.event({'kind': 'LATE_RESPONSE', 'invocation_id': key,
-                               'raw_payload_id': self.k.store._payload(self.k.run_id, raw)}, episode_id=call.episode_id)
+                               'raw_payload_id': self.k.store._payload(self.k.run_id, raw, sources=[call.input_payload_id])}, episode_id=call.episode_id)
             return {'status': 'LATE', 'invocation_id': key}
         decoded = decode_chamber_reply(raw, authenticated_role=call.role, run_id=self.k.run_id)
         elapsed = max(0, int((self._clock() - self._started[key]) * 1000))

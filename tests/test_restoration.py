@@ -42,6 +42,12 @@ class RestorationTests(KernelCase):
         grant = self.grant()
         self.report({'kind': 'WITHDRAW', 'activity_id': self.objective, 'communication': 'NO_FURTHER_CALLS', 'text': 'Keep this dissent'})
         command = self.command_for(target)
+        held = self.k.controls('WELFARE_HOLD')
+        before = list(self.store._db.iterdump())
+        with self.assertRaisesRegex(ValueError, 'welfare hold'):
+            self.command(command)
+        self.assertEqual(before, list(self.store._db.iterdump()))
+        self.resolve_hold(held[0][0])
         run_before = self.k.run()
         holds = self.k.controls('WELFARE_HOLD')
         count = len(self.store.events(self.run))

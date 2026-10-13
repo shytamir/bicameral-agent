@@ -81,6 +81,19 @@ def scrub_database(store):
     decisions = store.removals.all()
     if not decisions:
         return
+    for decision in decisions:
+        if decision.get('scope_review_required') or decision['legacy_whole_run']:
+            continue
+        incomplete = store._db.execute('''SELECT 1 FROM payloads p WHERE p.run_id=? AND p.disposition='RETAINED'
+            AND NOT EXISTS(SELECT 1 FROM payload_lineage l WHERE l.run_id=p.run_id AND l.payload_id=p.id)
+            AND p.id NOT IN (SELECT value FROM json_each(?)) LIMIT 1''',
+            (decision['run_id'], canonical_bytes(decision['payload_ids']).decode())).fetchone()
+        if incomplete:
+            # A released selective decision may have omitted derivatives. Do not
+            # expand immutable deletion authority or continue claiming completion.
+            decision.update(status='INCOMPLETE', scope_review_required=True,
+                scope_review_reason='Historical lineage is incomplete; accountable review of the remaining content is required.')
+            store.removals.put(decision)
     store._db.execute('BEGIN IMMEDIATE')
     try:
         for decision in decisions:

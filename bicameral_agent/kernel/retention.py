@@ -67,6 +67,7 @@ class Retention:
         if set(locations) - {c['id'] for c in decision['copies']}:
             raise ValueError('unapproved copy location')
         scrub_database(store)
+        decision = next(d for d in store.removals.all() if d['id'] == decision_id)
         decision['storage_scrubbed'] = True
         for copy in decision['copies']:
             if copy['disposition'] == 'REMOVED':
@@ -123,7 +124,8 @@ class Retention:
         decision['shared_payloads'] = [p for p in decision['shared_payloads'] if store._db.execute(
             "SELECT 1 FROM payloads WHERE run_id=? AND id=? AND disposition='RETAINED'", (p['run_id'], p['id'])).fetchone()]
         decision['file_compaction_verified'] = compact(store)
-        decision['status'] = ('COMPLETED' if decision['file_compaction_verified'] and not decision['shared_payloads'] and
+        decision['status'] = ('COMPLETED' if not decision.get('scope_review_required') and
+            decision['file_compaction_verified'] and not decision['shared_payloads'] and
             all(c['disposition'] == 'REMOVED' for c in decision['copies']) else 'INCOMPLETE')
         store.removals.put(decision)
         with store._transaction('retention-copy-dispositions'):

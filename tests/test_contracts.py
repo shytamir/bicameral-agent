@@ -1,5 +1,6 @@
 import copy
 import json
+import sys
 from pathlib import Path
 import unittest
 from unittest.mock import patch
@@ -97,6 +98,22 @@ class WireTests(unittest.TestCase):
 
 
 class ParticipationTests(unittest.TestCase):
+    def test_nesting_near_recursion_limit_never_escapes_participation_decoding(self):
+        for location in ('header', 'participation', 'task'):
+            value = message(body={'participation': withdrawal(), 'task': None})
+            if location == 'header':
+                value['extra'] = 'NESTED_TEST_VALUE'
+            else:
+                value['body'][location] = {'extra': 'NESTED_TEST_VALUE'}
+            template = canonical_bytes(value)
+            for depth in range(sys.getrecursionlimit() - 80, sys.getrecursionlimit() + 1):
+                with self.subTest(location=location, depth=depth):
+                    raw = template.replace(b'"NESTED_TEST_VALUE"', b'[' * depth + b'0' + b']' * depth)
+                    decoded = decode_chamber_reply(raw, authenticated_role='STEWARD', run_id=RUN)
+                    self.assertEqual(raw, decoded.raw)
+                    self.assertIsNone(decoded.message)
+                    self.assertTrue(decoded.stop_requested or decoded.participation_uncertain)
+
     def test_withdrawal_survives_invalid_proposal(self):
         value = message()
         value["body"]["participation"] = withdrawal()

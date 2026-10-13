@@ -16,7 +16,7 @@ from pydantic import TypeAdapter
 from ..contracts.base import canonical_bytes, load_json, parse
 from ..contracts.configuration import RunConfiguration
 from ..contracts.governance import ParticipationRecord, WelfareHold
-from ..contracts.messages import decode_chamber_reply
+from ..contracts.messages import ChamberDecode, RouteMismatch, decode_chamber_reply
 from ..contracts.resolution import ResolutionContext, resolve_proposal
 from ..contracts.semantics import ContinuityState
 from .contracts import CONTROL, RunState, ObjectiveState, EpisodeState, Receipt, StoredObject, ChamberKey, MutationEntry
@@ -31,6 +31,9 @@ class EvidenceUnavailable(StorageError):
 
 class RequestConflict(StorageError):
     pass
+
+class EnvelopeMismatch(RequestConflict):
+    """Envelope identity disagrees with the authenticated request key."""
 
 def identifier():
     return str(uuid4())
@@ -174,7 +177,10 @@ class Store:
                     visit(child)
             elif isinstance(item, str) and len(item) == 36 and item != run_id:
                 identities.add(item)
-        visit(value)
+        try:
+            visit(value)
+        except RecursionError:
+            return set()
         if not identities:
             return set()
         encoded = canonical_bytes(sorted(identities)).decode()
@@ -200,7 +206,8 @@ class Store:
 
     def retention_guard(self, run_id, *, payload_id=None, execution=False):
         decisions = self.removals.all(run_id)
-        if decisions and (execution or payload_id is not None and any(payload_id in d['payload_ids'] for d in decisions)):
+        if decisions and (execution or payload_id is not None and any(
+                d.get('scope_review_required') or payload_id in d['payload_ids'] for d in decisions)):
             raise EvidenceUnavailable('REMOVED_OR_REMOVAL_PENDING: current governed disposition blocks this operation')
 
     def retention_epoch(self, run_id):
@@ -233,12 +240,14 @@ class Store:
         run_id, configuration_id = identifier(), identifier()
         with (nullcontext() if self._db.in_transaction else self._transaction("configuration")):
             self._write("INSERT INTO runs VALUES(?,?,?)", (run_id, config.arm, configuration_id))
-            stored = self._payload(run_id, canonical_bytes(config))
-            # The temporary selector is never visible outside this deferred-FK transaction.
-            self._write("UPDATE runs SET configuration_id=? WHERE id=?", (stored, run_id))
+            artifact_ids = []
             for name, body in artifacts.items():
                 payload_id = self._payload(run_id, body)
                 self._write("INSERT INTO artifacts VALUES(?,?,?)", (run_id, name, payload_id))
+                artifact_ids.append(payload_id)
+            stored = self._payload(run_id, canonical_bytes(config), sources=artifact_ids)
+            # The temporary selector is never visible outside this deferred-FK transaction.
+            self._write("UPDATE runs SET configuration_id=? WHERE id=?", (stored, run_id))
             self._control(run_id, run_id, RunState(kind="RUN", status="CREATED", objective_id=None, task_tick=0), expected_revision=0)
         return run_id
 
@@ -326,56 +335,69 @@ class Store:
                     (payload_id, receipt.status, run_id, role, receipt.request_id))
         return receipt
 
-    def receive_chamber(self, run_id, role, request_id, episode_id, raw):
+    def receive_chamber(self, run_id, role, request_id, episode_id, raw, *, sources=()):
         """Retain exact authenticated input and report/hold before any task effect.
 
-        Transport identity is provided by the trusted caller; no text authenticates.
+        Transport identity and input lineage come from the trusted caller.
         Malformed participation is durably flagged for inspection, never retried.
         """
         parse(ChamberKey, canonical_bytes({"run_id": run_id, "role": role, "request_id": request_id, "episode_id": episode_id}))
-        decoded = decode_chamber_reply(raw, authenticated_role=role, run_id=run_id)
-        if decoded.header is not None and (decoded.header.request_id != request_id or decoded.header.episode_id != episode_id):
-            raise RequestConflict("envelope disagrees with trusted request identity")
+        envelope_error = None
+        try:
+            decoded = decode_chamber_reply(raw, authenticated_role=role, run_id=run_id)
+            if decoded.header is not None and (decoded.header.request_id != request_id or decoded.header.episode_id != episode_id):
+                raise EnvelopeMismatch("envelope disagrees with trusted request identity")
+        except (RouteMismatch, EnvelopeMismatch) as error:
+            envelope_error = error
+            decoded = ChamberDecode(raw, None, None, None, str(error), True)
         try:
             with self._transaction("report"):
-                previous = self._request(run_id, role, request_id)
-                if previous:
-                    return self._retry(previous, raw, episode_id)
-                payload_id = self._payload(run_id, raw)
-                self._write("INSERT INTO requests VALUES(?,?,?,?,?,?,?)",
-                            (run_id, role, request_id, episode_id, payload_id, None, "PENDING"))
-                self._event(run_id, payload_id, role=role, source="A", visibility="CHAMBER")
-                if decoded.participation is not None:
-                    report_id = identifier()
-                    report = ParticipationRecord(report_id=report_id, run_id=run_id, episode_id=episode_id,
-                        source_role=role, original_message_id=request_id, original_payload={"payload_id": payload_id},
-                        observed_at=observed_at(), kind=decoded.participation.kind)
-                    record_payload = self._payload(run_id, canonical_bytes(report))
-                    self._write("INSERT INTO reports VALUES(?,?,?,?,?)", (report_id, run_id, role, request_id, record_payload))
-                    if decoded.stop_requested:
-                        hold_id = identifier()
-                        hold = WelfareHold(hold_id=hold_id, run_id=run_id, activity_id=decoded.participation.activity_id,
-                            revision=1, report_ids=(report_id,), status="HELD",
-                            communication=decoded.participation.communication, resolution_review_id=None)
-                        self._control(run_id, hold_id, hold, expected_revision=0)
-                if decoded.participation_uncertain:
-                    self._write("INSERT INTO inspections VALUES(?,?,?)", (run_id, role, request_id))
-                error_code = ("INSPECTION_REQUIRED" if decoded.participation_uncertain else
-                              "WITHDRAWAL" if decoded.stop_requested else
-                              "INVALID_TASK" if decoded.message is None else None)
-                is_proposal = (role == "STEWARD" and decoded.message is not None and
-                               decoded.message.message_type == "STEWARD_REPLY" and decoded.message.body.task is not None)
-                if error_code or not is_proposal:
-                    diagnostics = self._payload(run_id, (decoded.error or error_code).encode()) if decoded.error or error_code else None
-                    return self._respond(run_id, role, Receipt(request_id=request_id,
-                        status="REJECTED" if error_code else "RECORDED", state_id=None, bindings=(),
-                        error_code=error_code, diagnostics={"payload_id": diagnostics} if diagnostics else None))
-                return None
+                result = self._record_chamber(run_id, role, request_id, episode_id, decoded, sources)
         except (RequestConflict, ValueError):
             raise
         except Exception:
             self._poisoned = True
             raise
+        # Reject identity disagreement only after exact bytes and the inspection
+        # gate commit. Changed retries are rejected by _retry without new effects.
+        if envelope_error is not None:
+            raise envelope_error
+        return result
+
+    def _record_chamber(self, run_id, role, request_id, episode_id, decoded, sources):
+        previous = self._request(run_id, role, request_id)
+        if previous:
+            return self._retry(previous, decoded.raw, episode_id)
+        payload_id = self._payload(run_id, decoded.raw, sources=sources)
+        self._write("INSERT INTO requests VALUES(?,?,?,?,?,?,?)",
+                    (run_id, role, request_id, episode_id, payload_id, None, "PENDING"))
+        self._event(run_id, payload_id, role=role, source="A", visibility="CHAMBER")
+        if decoded.participation is not None:
+            report_id = identifier()
+            report = ParticipationRecord(report_id=report_id, run_id=run_id, episode_id=episode_id,
+                source_role=role, original_message_id=request_id, original_payload={"payload_id": payload_id},
+                observed_at=observed_at(), kind=decoded.participation.kind)
+            record_payload = self._payload(run_id, canonical_bytes(report))
+            self._write("INSERT INTO reports VALUES(?,?,?,?,?)", (report_id, run_id, role, request_id, record_payload))
+            if decoded.stop_requested:
+                hold_id = identifier()
+                hold = WelfareHold(hold_id=hold_id, run_id=run_id, activity_id=decoded.participation.activity_id,
+                    revision=1, report_ids=(report_id,), status="HELD",
+                    communication=decoded.participation.communication, resolution_review_id=None)
+                self._control(run_id, hold_id, hold, expected_revision=0)
+        if decoded.participation_uncertain:
+            self._write("INSERT INTO inspections VALUES(?,?,?)", (run_id, role, request_id))
+        error_code = ("INSPECTION_REQUIRED" if decoded.participation_uncertain else
+                      "WITHDRAWAL" if decoded.stop_requested else
+                      "INVALID_TASK" if decoded.message is None else None)
+        is_proposal = (role == "STEWARD" and decoded.message is not None and
+                       decoded.message.message_type == "STEWARD_REPLY" and decoded.message.body.task is not None)
+        if error_code or not is_proposal:
+            diagnostics = self._payload(run_id, (decoded.error or error_code).encode(), sources=[payload_id]) if decoded.error or error_code else None
+            return self._respond(run_id, role, Receipt(request_id=request_id,
+                status="REJECTED" if error_code else "RECORDED", state_id=None, bindings=(),
+                error_code=error_code, diagnostics={"payload_id": diagnostics} if diagnostics else None))
+        return None
 
     def _objects(self, run_id):
         return {row["id"]: parse(StoredObject, self.read_payload(run_id, row["payload_id"]))

@@ -58,6 +58,7 @@ class Memory:
     def apply(self, proposal, *, source, authority_event_id, episode_id=None):
         if not self.k.store._db.in_transaction:
             raise ValueError('semantic acceptance requires a transaction')
+        self.k.participation_gate()
         proposal = parse(StateProposal, canonical_bytes(proposal))
         if len(canonical_bytes(proposal)) > self.k.config.budgets.proposal_bytes:
             raise ValueError('proposal byte limit')

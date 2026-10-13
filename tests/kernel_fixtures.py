@@ -138,3 +138,15 @@ class KernelCase(unittest.TestCase):
         self.store.close()
         self.store = Store(self.path, busy_timeout_ms=100)
         self.attach()
+
+    def resolve_hold(self, hold_id, role='OPERATOR'):
+        revision, _ = self.store.control(self.run, hold_id)
+        request, _ = self.report({'kind': 'ASSENT', 'subject_id': hold_id, 'subject_revision': revision,
+            'text': 'Voluntary renewed participation after synthetic review'}, role=role)
+        report_id = self.store._db.execute('SELECT id FROM reports WHERE run_id=? AND role=? AND request_id=?',
+            (self.run, role, request)).fetchone()[0]
+        self.command({'kind': 'REVIEW_HOLD', 'review': {'review_id': identifier(), 'hold_id': hold_id,
+            'expected_hold_revision': revision, 'decision_maker_id': self.k.config.responsible_human_id,
+            'assessment': 'Reviewed synthetic withdrawal', 'alternatives': ['Keep work stopped'],
+            'decision': 'RESOLVE', 'renewed_participation_report_id': report_id, 'remedy': None,
+            'unresolved_consequences': [], 'evidence_event_ids': []}})

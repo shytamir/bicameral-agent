@@ -71,8 +71,8 @@ Run states are CREATED, ACTIVE, PAUSED, COMPLETED and TERMINATED; the last two a
 | Create Objective | ACTIVE, PAUSED | No active Objective or unresolved Episode; new identity with human-authorized statement |
 | Close Objective | ACTIVE, PAUSED | Active target and explicit outstanding Commitment dispositions; section 4's atomic closure |
 | Issue / revoke Grant | ACTIVE, PAUSED | Issuance requires active Objective and registered finite scope; revocation requires active Grant |
-| Correct/restore semantics, challenge/retire Invariant, reopen Itch, cancel Commitment | ACTIVE, PAUSED | Normal lifecycle, authority, reference and budget checks; no terminal resurrection |
-| Close failed consolidation through human correction or skip | ACTIVE, PAUSED | Episode is RECOVERY_REQUIRED; section 7's recorded disposition |
+| Correct/restore semantics, challenge/retire Invariant, reopen Itch, cancel Commitment | ACTIVE, PAUSED | Cleared participation gates under section 5.1; normal lifecycle, authority, reference and budget checks; no terminal resurrection |
+| Close failed consolidation through human correction or skip | ACTIVE, PAUSED | Episode is RECOVERY_REQUIRED; section 7's recorded disposition; HUMAN_CORRECTED requires cleared participation gates, while SKIPPED has no semantic effects |
 | Record participation concern, intervention review, or boundary discussion | Any | No task execution, semantic rewrite or permission expansion; sections 5.1-5.3 govern effects |
 | Offer review or closing communication | ACTIVE, PAUSED | Section 5.1's bounded communication only; no task/tool/semantic effects, no override of a request for no further calls |
 | Resolve welfare hold | Any | Accountable human review and recorded disposition; cannot compel withdrawn participation or revive terminal execution |
@@ -89,6 +89,8 @@ Interventions are recorded and counted. Unlogged database editing is outside ord
 Pilot research tasks and consolidation are optional activities. Either chamber can report a concern or request withdrawal/pause through a common participation channel, independently of a task outcome or semantic proposal. Preserve the original report, subject only to section 6's justified retention exception. Consciousness, persuasive wording, or a valid task proposal is not a prerequisite for consideration.
 
 A stop request places a durable welfare hold on the pilot's single optional-work lane before further task/consolidation calls, dispatches, retries, or semantic acceptance. Record already-dispatched results without accepting further proposed actions or semantic effects; do not pretend to undo effects already dispatched. A hold does not revoke restrictions, remove obligations, or fabricate an Operator outcome. Human inspection, access reduction, containment, and review remain available. Ordinary resume, restart, due Commitments, and consolidation recovery cannot bypass it.
+
+A welfare hold or unresolved participation inspection blocks all elective semantic commits, including human correction, restoration, HUMAN_CORRECTED recovery, and semantic Commitment dispositions accompanying Objective closure. Permission under the lifecycle table is necessary but does not override this gate. Human inspection, review, access reduction, necessary containment or shutdown, recovery without semantic effects, and separately approved retention remain available. These actions neither resolve the hold nor imply assent. Semantic work may resume only after the applicable review and renewed-participation requirements are satisfied. Unresolved objections continue to block elective restoration. Emergency authority confers no general exemption for memory editing.
 
 A human may offer a bounded review or closing exchange under previously disclosed communication rules, separately from the declined task. This admits only notices and participation responses: no environment tools, consolidation, task guidance or automatic resumption. It cannot require agreement or a final statement. A request for no further calls blocks this exchange too; if its scope is unclear, keep calls stopped for human inspection. Silence never supplies renewed participation. Review may conclude without further model calls, leaving work stopped or ending operation under the charter. This narrow communication control is serialized with all other calls and consumes a finite, recorded allowance.
 
@@ -160,7 +162,7 @@ Uncertain external actions are never automatically replayed. Observation may est
 
 ## 8. Restoration
 
-Semantic restoration appends a new version and accepted/rejected differences, with section 5.3's review and an honest notice of intervening events. It never erases evidence, changes the Constitution, reopens an Objective, revives a Grant, reverses a terminal Commitment, un-retires an Invariant version, or undoes a tool action. Authorized evidence removal uses section 6's separate retention path, never a disguised restoration.
+Semantic restoration appends a new version and accepted/rejected differences, subject to section 5.1's participation gates, section 5.3's review and an honest notice of intervening events. It never erases evidence, changes the Constitution, reopens an Objective, revives a Grant, reverses a terminal Commitment, un-retires an Invariant version, or undoes a tool action. Authorized evidence removal uses section 6's separate retention path, never a disguised restoration.
 
 Current Commitments absent from the target remain present. Restore an earlier nonterminal status only through a legal edge; otherwise retain the current projection and report the difference. Restored references/focus must be valid now. Reject invalid restoration without silently retargeting or pruning.
 

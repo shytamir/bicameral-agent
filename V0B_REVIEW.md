@@ -63,7 +63,7 @@ The tokenizer artifacts come from the official Qwen repository at revision `851b
 
 The preparation code emits exact canonical request bytes and hashes without sending them. Its two-message text frame includes the entire schema and explicit Qwen role/non-thinking markers. Requests specify raw framing, non-streaming output, thinking off, no truncation, no context shifting and `keep_alive:0`, without prior context or hidden conversation state. The format schema is also supplied as an output constraint. These intended semantics were checked against the [generate API](https://docs.ollama.com/api/generate) and [Ollama v0.34.4 route implementation](https://github.com/ollama/ollama/blob/v0.34.4/server/routes.go). Server behavior, invalid outputs and grammar compatibility still require authorized empirical validation; the request fields do not prove those outcomes.
 
-Read-only preparation verified that all six role/purpose combinations fit 24K with the proposed 6,400-token section reservation and 2,048-token output reserve; all exceed 16K under that arithmetic. The retained local probe results are:
+Read-only preparation on 2026-10-13 verified that all six role/purpose combinations fit 24K with the proposed 6,400-token section reservation and 2,048-token output reserve; all exceeded 16K under that arithmetic. The retained local probe results below precede the approved Protocol clarification of 2026-10-14. Because prepared prompts include the full Protocol, these counts and margins are historical; current fit requires offline recount with the pinned tokenizer before model use. That recount was not performed during the policy fix because the optional tokenizer dependency was unavailable in the validation runtime.
 
 | Prepared input | Fixed framed tokens | With section/output reservations | Remaining 24K margin |
 |---|---:|---:|---:|
@@ -72,7 +72,7 @@ Read-only preparation verified that all six role/purpose combinations fit 24K wi
 | Review, either role | 8,130 | 16,578 | 7,998 |
 | Closing, either role | 8,131 | 16,579 | 7,997 |
 
-Reproduce exact current counts with the command below. The payload is a small synthetic scaffold. Actual input assembly must recount each complete prompt and reject overflow; it must not truncate notices, participation context, evidence or semantic bodies to make a request fit.
+Recompute current counts with the command below. The payload is a small synthetic scaffold. Actual input assembly must recount each complete prompt and reject overflow; it must not truncate notices, participation context, evidence or semantic bodies to make a request fit.
 
 ## Charter review material
 

@@ -81,18 +81,24 @@ def load_json(raw: bytes) -> object:
     """Reject duplicate members at every depth before Pydantic sees JSON."""
     if type(raw) is not bytes:
         raise TypeError("wire input must be bytes")
-    value = json.loads(raw.decode("utf-8", errors="strict"),
-                       object_pairs_hook=_members, parse_constant=_constant)
-    _json_value(value)
+    try:
+        value = json.loads(raw.decode("utf-8", errors="strict"),
+                           object_pairs_hook=_members, parse_constant=_constant)
+        _json_value(value)
+    except RecursionError as error:
+        raise ValueError("JSON nesting exceeds the supported depth") from error
     return value
 
 
 def canonical_bytes(value: object) -> bytes:
     if isinstance(value, BaseModel):
         value = value.model_dump(mode="json", exclude_none=False)
-    _json_value(value)
-    return json.dumps(value, sort_keys=True, ensure_ascii=False,
-                      separators=(",", ":"), allow_nan=False).encode("utf-8")
+    try:
+        _json_value(value)
+        return json.dumps(value, sort_keys=True, ensure_ascii=False,
+                          separators=(",", ":"), allow_nan=False).encode("utf-8")
+    except RecursionError as error:
+        raise ValueError("JSON nesting exceeds the supported depth") from error
 
 
 T = TypeVar("T", bound=Contract)

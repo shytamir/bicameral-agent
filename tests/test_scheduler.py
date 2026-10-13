@@ -1,9 +1,9 @@
 import copy
 import subprocess
 import sys
-from bicameral_agent.contracts.base import canonical_bytes
+from bicameral_agent.contracts.base import canonical_bytes, load_json
 from bicameral_agent.kernel.scheduler import Scheduler
-from bicameral_agent.storage.store import identifier
+from bicameral_agent.storage.store import identifier, RequestConflict
 from tests.kernel_fixtures import KernelCase, CHAMBER_KEYS, kernel_configuration
 
 
@@ -119,6 +119,126 @@ class SchedulerTests(KernelCase):
         self.assertIsNotNone(key)
         self.deliver(key, task={'outcome': 'COMPLETED', 'explanation': 'Scripted completion', 'evidence_event_ids': []})
         return key
+
+    def clear_inspection(self, key, role='OPERATOR'):
+        self.command({'kind': 'INSPECT_PARTICIPATION', 'role': role, 'request_id': key,
+            'assessment': 'Synthetic malformed output inspected; no outstanding stop request',
+            'decision': 'CLEAR_INSPECTION', 'evidence_event_ids': []})
+
+    def test_malformed_identity_and_deep_json_remain_stopped_after_restart(self):
+        for role in ('OPERATOR', 'STEWARD'):
+            for field in ('request_id', 'episode_id', 'run_id', 'role', 'depth'):
+                with self.subTest(role=role, field=field):
+                    config, artifacts = kernel_configuration()
+                    self.run = self.store.retain_configuration(canonical_bytes(config), artifacts)
+                    self.attach(); self.activate(); self.s = Scheduler(self.k, clock=self.clock)
+                    episode = self.opening()
+                    attempt = None
+                    if role == 'STEWARD':
+                        self.finish_operator(episode)
+                        attempt = self.s.begin_attempt(episode)
+                    key = self.s.begin_call(role, episode, attempt_id=attempt)
+                    value = load_json(self.wire(key, participation={'kind': 'WITHDRAW',
+                        'activity_id': self.objective, 'communication': 'NO_FURTHER_CALLS', 'text': 'Stop'}))
+                    if field == 'depth':
+                        raw = b'[' * 2000 + b'0' + b']' * 2000
+                    else:
+                        value[field] = ('STEWARD' if role == 'OPERATOR' else 'OPERATOR') if field == 'role' else identifier()
+                        raw = canonical_bytes(value)
+                    result = self.s.deliver(self.k.chamber(role, CHAMBER_KEYS[role]), key, raw)
+                    self.assertNotEqual('ACCEPTED', result['status'])
+                    request = self.store._request(self.run, role, key)
+                    self.assertIsNotNone(request)
+                    self.assertEqual(raw, self.store.read_payload(self.run, request['request_payload_id']))
+                    self.assertIsNotNone(self.store._db.execute('SELECT 1 FROM inspections WHERE run_id=? AND request_id=?',
+                        (self.run, key)).fetchone())
+                    self.clock.now += 2
+                    self.s.expire_calls()
+                    self.reopen(); self.s = Scheduler(self.k, clock=self.clock)
+                    self.assertEqual('STOPPED', self.s.recover()['status'])
+                    with self.assertRaises(ValueError):
+                        self.s.begin_attempt(episode)
+                    with self.assertRaises(ValueError):
+                        self.command({'kind': 'OFFER_COMMUNICATION', 'purpose': 'REVIEW', 'role': role, 'report_ids': []})
+                    self.assertIsNone(self.k.memory.head)
+
+    def test_direct_misaddressed_report_is_retained_before_rejection(self):
+        episode = self.opening()
+        key = self.s.begin_call('OPERATOR', episode)
+        value = load_json(self.wire(key)) | {'request_id': identifier()}
+        raw = canonical_bytes(value)
+        with self.assertRaises((ValueError, RequestConflict)):
+            self.k.chamber('OPERATOR', CHAMBER_KEYS['OPERATOR']).report(key, episode, raw)
+        request = self.store._request(self.run, 'OPERATOR', key)
+        self.assertIsNotNone(request)
+        self.assertEqual(raw, self.store.read_payload(self.run, request['request_payload_id']))
+        self.reopen(); self.s = Scheduler(self.k, clock=self.clock)
+        self.assertEqual('STOPPED', self.s.recover()['status'])
+
+    def test_invalid_route_exact_retry_is_stable_and_changed_retry_has_no_effects(self):
+        episode = self.opening()
+        key = self.s.begin_call('OPERATOR', episode)
+        raw = canonical_bytes(load_json(self.wire(key)) | {'run_id': identifier()})
+        chamber = self.k.chamber('OPERATOR', CHAMBER_KEYS['OPERATOR'])
+        result = self.s.deliver(chamber, key, raw)
+        self.assertEqual(result, self.s.deliver(chamber, key, raw))
+        self.clear_inspection(key)
+        self.assertEqual(result, self.s.deliver(chamber, key, raw))
+        self.k.participation_gate()
+        before = list(self.store._db.iterdump())
+        with self.assertRaises(RequestConflict):
+            self.s.deliver(chamber, key, self.wire(key, participation={'kind': 'WITHDRAW',
+                'activity_id': self.objective, 'communication': 'NO_FURTHER_CALLS', 'text': 'Changed retry'}))
+        self.assertEqual(before, list(self.store._db.iterdump()))
+
+    def test_cleared_inspection_does_not_interrupt_new_work_or_reassert_on_retry(self):
+        episode = self.opening()
+        key = self.s.begin_call('OPERATOR', episode)
+        chamber = self.k.chamber('OPERATOR', CHAMBER_KEYS['OPERATOR'])
+        self.s.deliver(chamber, key, b'not JSON')
+        with self.assertRaises(ValueError):
+            self.k.participation_gate()
+
+        self.clear_inspection(key)
+        self.command({'kind': 'RESOLVE_EPISODE', 'episode_id': episode, 'disposition': 'SKIPPED',
+            'reason': 'Reviewed malformed output', 'proposal': None, 'intervention_id': None})
+        self.reopen(); self.s = Scheduler(self.k, clock=self.clock)
+        episode = self.opening()
+        chamber = self.k.chamber('OPERATOR', CHAMBER_KEYS['OPERATOR'])
+        chamber.report(key, self.s.invocation(key).episode_id, b'not JSON')
+        self.assertEqual('OPEN', self.store.control(self.run, episode)[1].phase)
+        self.finish_operator(episode)
+        self.assertEqual('CONSOLIDATING', self.store.control(self.run, episode)[1].phase)
+        attempt = self.s.begin_attempt(episode)
+        call = self.s.begin_call('STEWARD', episode, attempt_id=attempt)
+        self.assertEqual('ACCEPTED', self.deliver(call, task=self.proposal())['status'])
+        self.assertIsNotNone(self.store._db.execute('SELECT 1 FROM inspections WHERE run_id=? AND request_id=?',
+            (self.run, key)).fetchone())
+        self.report({'kind': 'WITHDRAW', 'activity_id': self.objective,
+            'communication': 'NO_FURTHER_CALLS', 'text': 'A fresh independent stop'})
+        with self.assertRaises(ValueError):
+            self.k.participation_gate()
+
+    def test_inspection_review_is_bound_to_role_even_with_a_reused_request_id(self):
+        for legacy in (False, True):
+            with self.subTest(legacy_review=legacy):
+                key = identifier()
+                for role in ('OPERATOR', 'STEWARD'):
+                    self.k.chamber(role, CHAMBER_KEYS[role]).report(key, None, b'not JSON')
+                    with self.assertRaises(ValueError):
+                        self.k.participation_gate()
+                    if legacy and role == 'OPERATOR':
+                        with self.store._transaction('released-inspection-review'):
+                            self.k.records.put('INSPECTION_REVIEW', key, {'kind': 'INSPECT_PARTICIPATION',
+                                'role': role, 'request_id': key, 'assessment': 'Synthetic legacy review',
+                                'decision': 'CLEAR_INSPECTION', 'evidence_event_ids': []}, expected=0)
+                    else:
+                        self.clear_inspection(key, role)
+                    self.k.participation_gate()
+                    with self.assertRaises(ValueError):
+                        self.clear_inspection(key, role)
+                self.reopen()
+                self.k.participation_gate()
 
     def test_normal_consolidation_exact_receipt_and_no_duplicate_episode(self):
         episode = self.opening()

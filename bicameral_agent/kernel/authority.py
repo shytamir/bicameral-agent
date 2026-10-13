@@ -9,10 +9,10 @@ from hashlib import sha256
 from hmac import compare_digest
 from ..contracts.base import canonical_bytes, load_json, parse
 from ..contracts.governance import WelfareHold, WelfareReview, InterventionRecord, BoundaryDiscussion
-from ..contracts.messages import decode_chamber_reply
+from ..contracts.messages import RouteMismatch, decode_chamber_reply
 from ..storage.contracts import RunState, ObjectiveState, EpisodeState
 from ..storage.semantics import SELECTABLE
-from ..storage.store import identifier, observed_at
+from ..storage.store import EnvelopeMismatch, identifier, observed_at
 from .models import COMMAND, ToolRegistry, Grant, Preflight
 from .records import Records
 from .memory import Memory
@@ -444,8 +444,10 @@ class Kernel:
                 raise ValueError('unknown participation inspection')
             self._evidence(command.evidence_event_ids)
             if command.decision == 'CLEAR_INSPECTION':
-                self.records.put('INSPECTION_REVIEW', command.request_id, command, expected=0)
-                if fault:
+                if self._inspection_reviewed(command.role, command.request_id):
+                    raise ValueError('participation inspection already reviewed')
+                self.records.put('INSPECTION_REVIEW', command.role + ':' + command.request_id, command, expected=0)
+                if fault and fault['role'] == command.role:
                     self.records.put('PARTICIPATION_FAULT', command.request_id, fault | {'reviewed': True},
                                      expected=self.records.revision('PARTICIPATION_FAULT', command.request_id))
             return self.event(command.model_dump(mode='json'), role='HUMAN', source='O-D')
@@ -547,6 +549,20 @@ class Kernel:
         self.records.put('INTERVENTION_REVIEW', key, reviewed | {'executed': True},
                          expected=self.records.revision('INTERVENTION_REVIEW', key))
 
+    def _inspection_reviewed(self, role, request_id):
+        review = self.records.get('INSPECTION_REVIEW', role + ':' + request_id)
+        if review is None:
+            # Released reviews used only the request ID; honor their recorded
+            # role without granting clearance to another authenticated chamber.
+            review = self.records.get('INSPECTION_REVIEW', request_id)
+        return review is not None and review['role'] == role and review['decision'] == 'CLEAR_INSPECTION'
+
+    def _unresolved_participation_inspection(self):
+        if any(not r['reviewed'] for _, r in self.records.latest('PARTICIPATION_FAULT')):
+            return True
+        return any(not self._inspection_reviewed(row['role'], row['request_id'])
+                   for row in self.store._db.execute('SELECT role,request_id FROM inspections WHERE run_id=?', (self.run_id,)))
+
     def participation_gate(self, *, communication=False):
         self.store.retention_guard(self.run_id, execution=True)
         if not communication and self.store._db.execute('SELECT 1 FROM allocations a JOIN study_suspensions s ON s.plan_id=a.plan_id WHERE a.run_id=?', (self.run_id,)).fetchone():
@@ -555,11 +571,8 @@ class Kernel:
             raise ValueError('storage unavailable')
         if any(not r['reviewed'] for _, r in self.records.latest('EMERGENCY')):
             raise ValueError('emergency awaits accountable review')
-        if any(not r['reviewed'] for _, r in self.records.latest('PARTICIPATION_FAULT')):
-            raise ValueError('authenticated output needs participation inspection')
-        for row in self.store._db.execute('SELECT request_id FROM inspections WHERE run_id=?', (self.run_id,)):
-            if self.records.get('INSPECTION_REVIEW', row[0]) is None:
-                raise ValueError('participation inspection unresolved')
+        if self._unresolved_participation_inspection():
+            raise ValueError('participation inspection unresolved')
         for _, _, hold in self.controls('WELFARE_HOLD'):
             if hold.status == 'HELD' and (not communication or hold.communication != 'REVIEW_PERMITTED'):
                 raise ValueError('welfare hold blocks this activity')
@@ -624,7 +637,14 @@ class Kernel:
     def _receive(self, cap, role, request_id, episode_id, raw):
         if cap is not self._chamber_caps.get(role):
             raise PermissionError('authenticated chamber route required')
-        result = self.store.receive_chamber(self.run_id, role, request_id, episode_id, raw)
+        invocation = self.records.get('INVOCATION', request_id)
+        sources = [invocation['input_payload_id']] if invocation and invocation['role'] == role else []
+        envelope_error = None
+        try:
+            result = self.store.receive_chamber(self.run_id, role, request_id, episode_id, raw, sources=sources)
+        except (RouteMismatch, EnvelopeMismatch) as error:
+            # Storage has already retained the exact output and inspection gate.
+            envelope_error = error
         if episode_id is not None:
             known = self.store._db.execute("SELECT 1 FROM control_heads p JOIN control_history h USING(run_id,id,revision) WHERE h.run_id=? AND h.id=? AND h.kind='EPISODE'",
                                             (self.run_id, episode_id)).fetchone()
@@ -635,10 +655,11 @@ class Kernel:
                                                    (self.run_id, request['request_payload_id'])).fetchone()
                     self.store._write('INSERT OR IGNORE INTO event_episodes VALUES(?,?,?)', (self.run_id, event[0], episode_id))
         # The report/hold already committed. Interruption failure cannot remove it.
-        if any(h.status == 'HELD' for _, _, h in self.controls('WELFARE_HOLD')) or self.store._db.execute(
-                'SELECT 1 FROM inspections WHERE run_id=?', (self.run_id,)).fetchone():
+        if any(h.status == 'HELD' for _, _, h in self.controls('WELFARE_HOLD')) or self._unresolved_participation_inspection():
             with self.store._transaction('participation-interruption'):
                 self._interrupt('PARTICIPATION')
+        if envelope_error is not None:
+            raise envelope_error
         return result
 
     def _emergency(self, cap, reason, terminate, alternatives, unresolved_consequences):

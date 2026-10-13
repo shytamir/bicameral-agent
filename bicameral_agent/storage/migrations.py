@@ -177,7 +177,12 @@ COMPARISONS = (
     """CREATE TRIGGER task_result_no_delete BEFORE DELETE ON task_results BEGIN SELECT RAISE(ABORT,'fixed primary accounting'); END""",
     """CREATE TRIGGER allocation_no_delete BEFORE DELETE ON allocations BEGIN SELECT RAISE(ABORT,'no replacement allocation'); END""",
 )
-MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX, HUMAN_INSPECTION, RETENTION_LINEAGE, COMPARISONS)
+# Released stores marked lineage complete before all response/diagnostic and
+# artifact dependencies were recorded. Preserve their bytes and history, but
+# require the existing review-visible whole-Run fallback for historical content.
+REVALIDATE_LINEAGE = ('DELETE FROM payload_lineage',)
+MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX, HUMAN_INSPECTION, RETENTION_LINEAGE, COMPARISONS,
+              REVALIDATE_LINEAGE)
 
 def checksum(statements):
     return sha256("\n".join(statements).encode()).hexdigest()
