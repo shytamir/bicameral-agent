@@ -3,7 +3,7 @@
 ## Authority
 
 - Read the repository documents relevant to the task before making substantive changes.
-- This file governs agent workflow only. It is subordinate to the project's Architecture, Operating Constitution and Execution Protocol, and Executable Specification.
+- This file governs agent workflow only. It is subordinate to the project's Reciprocal Charter, Architecture, Operating Constitution and Execution Protocol, and Executable Specification.
 - Do not use `AGENTS.md` to record project status, repeat management state, or establish product policy.
 - If documents conflict, follow the more authoritative project document and surface the conflict. Never settle it silently in code, prompts, tests, defaults, or this file.
 
@@ -23,7 +23,7 @@
 - Do not invent rules that alter what the process may believe, remember, promise, or do. Escalate such choices to the governing document.
 - Keep policy-bearing behavior explicit and testable. Prefer typed contracts, closed transitions, explicit configuration, and visible failure over heuristic defaults.
 - Preserve the documented separation between cognitive proposals and deterministic authority enforcement.
-- Preserve append-only evidence, provenance, atomic state transitions, and forward-moving recovery semantics wherever the implemented slice touches them.
+- Preserve the governed evidence/retention rules, provenance, atomic state transitions, and forward-moving recovery semantics wherever the implemented slice touches them. Apply the charter's retention exceptions through the Protocol's explicit path, never by silently weakening audit history.
 - Do not connect an LLM before the deterministic contracts and invariants required by that slice have executable tests.
 
 ## Verification

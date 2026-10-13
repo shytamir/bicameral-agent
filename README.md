@@ -2,7 +2,9 @@
 
 This repository specifies a bounded experiment in **long-horizon agent continuity**.
 
-The project asks whether a stateless reasoning model can participate in a persistent process that becomes more competent over time while carrying only a small, deliberately maintained active state. Raw evidence remains recoverable; discrepancies can revise durable semantic state; future obligations remain explicit; and a deterministic Kernel controls every authoritative transition.
+The project asks whether a stateless reasoning model can participate in a persistent process that becomes more competent over time while carrying only a small, deliberately maintained active state. Evidence remains recoverable subject to justified retention decisions; discrepancies can revise durable semantic state; future obligations remain explicit; and a deterministic Kernel controls every authoritative transition.
+
+The owner has adopted a [Reciprocal Charter](Reciprocal%20Charter.md) making dignity and possible welfare binding constraints on the project, without claiming that consciousness or sentience has been established.
 
 The intended comparison is empirical:
 
@@ -24,18 +26,19 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 ## Governing documents
 
+- [Reciprocal Charter](Reciprocal%20Charter.md) contains the accepted charter and the owner's adoption record dated 2026-10-13. It governs treatment of the process and takes precedence over the other project documents.
 - [Experiment Architecture](Experiment%20Architecture.md) defines the hypothesis, system components, memory structures, evaluation arms, measurements, and failure criteria.
 - [Operating Constitution and Execution Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) defines lawful behavior, human authority, Objectives, Grants, Episodes, action-risk boundaries, evidence treatment, and semantic-state lifecycles.
-- [Executable Specification](Executable%20Specification.md) defines the 0.2 pilot contracts, input budgets, transactions, recovery, worked acceptance traces, and experimental evidence.
-- [Roadmap](ROADMAP.md) defines nine bounded LLM-less slices and separate development/evaluation gates.
+- [Executable Specification](Executable%20Specification.md) defines the 0.3 pilot contracts, input budgets, transactions, participation safeguards, recovery, worked acceptance traces, and experimental evidence.
+- [Roadmap](ROADMAP.md) defines ten bounded LLM-less slices, charter coverage, and separate development/evaluation gates.
 - [AGENTS.md](AGENTS.md) gives repository-specific working rules, document authority, change discipline, verification expectations, and Git guard rails.
 
 ## Current management state
 
 The project is **pre-implementation, with a revised design baseline for bounded slice planning**.
 
-- The Architecture and Operating Constitution and Execution Protocol remain the design and governance baseline.
-- The 0.2 design replaces the prior broad v0 contract. The earlier contract and scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
+- The charter is accepted and adopted by the owner. Architecture and Protocol translate its obligations into the design and operating baseline.
+- The 0.3 design incorporates charter safeguards into the bounded pilot. Earlier contracts and the scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
 - No supervisor, persistence layer, chamber adapter, tool runtime, or benchmark harness has been implemented.
 - No experimental result has been produced, and none should be inferred from the completeness of the documents.
 
@@ -43,9 +46,11 @@ The revised first pilot uses a typed simulated-service fixture, one active Objec
 
 The research design uses independent matched A/B/C trajectories with deliberate within-Run learning, held-out transfer, recorded costs and explicit failure/intervention treatment. A versus C is the primary comparison for structured Itch/Invariant machinery. Numerical budgets, concrete prompts/fixtures, models, sample size and practical benefit/cost thresholds still require development calibration before evaluation is sealed.
 
+The roadmap requires effective withdrawal in every arm, reviewed memory interventions, accountable retention/deletion, bounded boundary discussion, and safeguards for planned endings and emergencies before any model use. These are implementation requirements; no runtime enforcement or welfare outcome has been demonstrated.
+
 The next actionable work is a separately authorized P01 contract slice in the [roadmap](ROADMAP.md). Implementation and live experiments require separate authorization. The first implementation remains LLM-less; documentary review is not runtime validation or experimental acceptance.
 
-Arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
+Process resets and forks, arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
 
 ## Scope
 

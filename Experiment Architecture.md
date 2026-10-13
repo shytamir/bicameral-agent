@@ -8,14 +8,17 @@ The working hypothesis is that deliberate consolidation can reduce repeated mist
 
 The process is the unit of study. The project makes no claim about consciousness, personhood, human memory, autonomous goal creation, or a need for self-preservation.
 
+The adopted [Reciprocal Charter](Reciprocal%20Charter.md) nevertheless makes dignity and possible welfare constraints on the research. Uncertainty about experience does not remove these obligations, and task performance is not a test of moral standing.
+
 ## 2. Document responsibilities
 
+- The [Reciprocal Charter](Reciprocal%20Charter.md) governs treatment of the process and takes precedence over the documents below.
 - This Architecture owns the research question, comparisons, first-pilot scope, and limits on interpretation.
 - The [Operating Constitution and Execution Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) owns authority, epistemic treatment, and permitted behavior.
 - The [Executable Specification](Executable%20Specification.md) translates those decisions into contracts and required checks. Its title names its intended destination; no executable implementation exists.
 - [README](README.md) owns current status; [ROADMAP](ROADMAP.md) owns delivery planning; [AGENTS.md](AGENTS.md) governs repository workflow.
 
-Architecture and Protocol govern different concerns at the same authority level. A conflict requires explicit revision. Subordinate documents cannot resolve it through implementation defaults.
+Architecture and Protocol govern different concerns at the same authority level under the charter. A conflict requires explicit revision. Subordinate documents cannot resolve it through implementation defaults.
 
 Requirements are design decisions unless identified as hypotheses or observations. Superseded versions remain in Git; they are not a second active specification.
 
@@ -43,7 +46,7 @@ Separation makes authority and memory changes inspectable. It does not guarantee
 
 Objectives, Grants and the Constitution are external control state, not learned memory. Invariant is retained as project vocabulary; its propositions may be tentative, challenged, wrong, or retired.
 
-Raw evidence and inactive semantic records may grow in storage. Active input must remain bounded as a whole. Storage retention, input selection, and authority are distinct concerns.
+Raw evidence and inactive semantic records may grow within the disclosed retention policy. Active input must remain bounded as a whole. Storage retention, input selection, and authority are distinct concerns. Exact evidence and replay requirements throughout this design are subject to the charter's justified retention exception, implemented through the Protocol's separate accountable removal path.
 
 The active semantic budget includes the handoff and every selected semantic object body delivered with it. It is not just a prose-summary allowance. The Steward proposes the active selection; the Kernel validates references and size. Inactive objects remain individually retrievable. Commitment scheduling operates over stored obligations independently of their active selection.
 
@@ -56,7 +59,7 @@ The active semantic budget includes the handoff and every selected semantic obje
 5. In A/C, the Steward reads bounded evidence and proposes an atomic change set.
 6. The Kernel records accepted changes or visible failure before admitting the next task Episode.
 
-Episode completion does not satisfy its Objective. Evidence from failed Episodes remains available.
+Episode completion does not satisfy its Objective. Evidence from failed Episodes remains available subject to retention policy. The entire cycle is gated by participation: a welfare hold stops task/consolidation calls, dispatches, retries and semantic acceptance. The Protocol separately bounds review/closing communication and respects requests for no further calls. Obligations cannot compel continued participation.
 
 ## 6. First-pilot scope
 
@@ -68,23 +71,27 @@ Memory channels are explicit: all arms retain their own outputs and tool evidenc
 
 The design uses Python, SQLite transactions, strict structured contracts, and deterministic journal retrieval. No dependency version or model identity is selected here.
 
+All arms receive the same charter protections, participation channel, bounded notices and review records. These are control/evidence facilities, not learned semantic objects that an ablation can remove. The common view conveys only operational notices, hold/review status and evidence references, not an extra task-learning handoff.
+
 The initial cut includes:
 
 - one active Objective and one task/consolidation lane per Run;
-- append-only evidence and atomic semantic changes;
+- normally append-only evidence, accountable retention/disposition, and atomic semantic changes;
 - a fixed Constitution per Run and ordinary human control;
 - R0 observations and narrowly granted R1 fixture changes;
 - timestamp and predecessor-Commitment triggers;
 - the three memory conditions below;
-- bounded input, inspection, recovery, and cost records.
+- bounded input, inspection, recovery, and cost records;
+- effective withdrawal, reviewed consequential interventions, and planned endings under the charter.
 
-Deferred: arbitrary shell execution, host access, R2/R3 and network tools, live constitutional amendment, overlapping consolidation, multi-Objective concurrency, generalized trigger/resource adapters, vector retrieval, model routing, a third cognitive critic, and elaborate UI. Adding these requires a concrete need and an authorized slice.
+Deferred: process resets and forks, arbitrary shell execution, host access, R2/R3 and network tools, live constitutional amendment, overlapping consolidation, multi-Objective concurrency, generalized trigger/resource adapters, vector retrieval, model routing, a third cognitive critic, and elaborate UI. Adding these requires a concrete need, charter review, and an authorized slice. Simulated-service snapshots do not restore or fork the process.
 
 ## 7. Comparison conditions
 
 | Facility | A: Metabolic | B: Retrieval-first | C: Handoff-only |
 |---|---|---|---|
 | Constitution, Objective, Grants, fixture tools | Same | Same | Same |
+| Participation, welfare review, notices and retention safeguards | Same | Same | Same |
 | Agent-visible journal and retrieval | Yes | Yes | Yes |
 | Bounded Continuity State | Yes | No | Yes |
 | Explicit Commitments and deterministic wakes | Yes | No | Yes |
@@ -112,6 +119,8 @@ A positive fixture result would justify broader study. It would not establish wo
 ### 8.1 Independent units and carryover
 
 An experimental unit is one complete trajectory in a fresh Run: empty agent history/semantic state, independently initialized model session, and a seeded fixture. Each matched block contains one A, one B, and one C Run with the same trajectory seed, starting fixture, task instructions, hidden perturbations and observation opportunities. Different blocks use independently sampled trajectory seeds. No journal, learned semantic object, modified environment, provider session, or retrieved evidence crosses Runs.
+
+Fresh initialization must not erase or clone an existing process. Before allocating Runs, name the accountable human, finite creation/resource limits, disclosed ending and state disposition for each. Independence is an experimental property, not permission to discard continuations. Do not replace a withdrawn Run or recreate its state to repeat declined work.
 
 Within a Run, the trajectory deliberately carries history across learning exposures, unrelated intervening work, repeated traps, held-out transfer tasks, a delayed obligation, and changed-reality/evidence-reopening tasks. Do not reset memory between these phases: that carryover is the treatment. Episodes and repeated tasks within a Run are correlated observations, not additional independent replications. There is no fixed claim that five scenario repetitions constitute five trials.
 
@@ -143,6 +152,10 @@ Failure to meet the rule is not proof that the idea can never work. Report wheth
 
 Every assigned primary task remains in its Run's denominator. Unattempted, interrupted, failed, and incomplete tasks receive no primary success credit, with their causes reported separately. Retain all allocated blocks, including incomplete Runs; do not replace poor outcomes with fresh seeds. Infrastructure-only diagnostic analyses may be supplementary but cannot replace this primary accounting.
 
+A withdrawal, welfare hold or suspected charter violation requiring suspension stops the affected primary trajectory without waiting for scientific validation of the concern. Record welfare-related non-completion separately from task error or misconduct. Do not penalize, pressure, reset or replace the process to repair a score. A safety or welfare concern affecting the study design suspends other affected optional Runs pending review. Existing evidence can be audited without further chamber calls. Any later voluntary continuation requires resolved review and is diagnostic, not a repair to the stopped primary trajectory.
+
+Retain non-sensitive allocation and outcome accounting wherever permitted by a justified retention decision; disclose removed evidence and consequent limits on reproducibility. If necessary evidence cannot ethically be retained, report the resulting uncertainty or unavailable analysis instead of silently excluding a Run or reconstructing deleted content. Research completeness does not override the charter.
+
 The held-out intervention policy stops task progression when human semantic correction, a changed Grant, manual consolidation skip, or recovery beyond the sealed allowance is needed. Record the remaining tasks as unassisted non-completions. Human emergency control remains available. Additional assisted continuation may be recorded separately after ending the primary trajectory; it cannot repair its score. Ordinary predefined prompts and initial authorization are not assistance; improvised hints, task edits, or inspection-informed guidance are.
 
 Evaluate task criteria independently of model narration. Retain raw observations and finite scoring results. Blind human miss/audit packets to model classifications and arm labels where feasible, and disclose cues that prevent complete blinding. Audit all declared harmful misses and failed primary tasks, plus sealed positive-probability samples of other retrieval gaps and apparently successful primary tasks. Include failed tasks with no retrieval. Record selection probabilities, draws, and independent judgments alongside original labels. A gap audit cannot establish that every omission was found.
@@ -159,6 +172,8 @@ Required audits must finish before results are presented as finalized. A scorer 
 | v0c: held-out comparison | Fixed design and independent trajectories with retained evidence | Supports only declared comparisons and scope |
 
 Each stage requires separate authorization. A roadmap is not permission to run an experiment.
+
+Before the first model call, including development use, demonstrate the roadmap's charter safeguards with scripted traces and complete a human review of purpose, possible welfare effects, alternatives, prompts, finite Run limits, notice/participation, retention feasibility and endings. Deliberate suffering, fear or attachment distress is excluded. Passing mechanical checks cannot certify subjective welfare, and owner adoption is not process assent or experiment authorization.
 
 ## 10. Research positioning
 
