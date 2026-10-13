@@ -45,6 +45,8 @@ Objectives, Grants and the Constitution are external control state, not learned 
 
 Raw evidence and inactive semantic records may grow in storage. Active input must remain bounded as a whole. Storage retention, input selection, and authority are distinct concerns.
 
+The active semantic budget includes the handoff and every selected semantic object body delivered with it. It is not just a prose-summary allowance. The Steward proposes the active selection; the Kernel validates references and size. Inactive objects remain individually retrievable. Commitment scheduling operates over stored obligations independently of their active selection.
+
 ## 5. Episode cycle
 
 1. Human input or a due Commitment supplies a wake under an active Objective.
@@ -61,6 +63,8 @@ Episode completion does not satisfy its Objective. Evidence from failed Episodes
 The first task family is repair and maintenance of a simulated service configuration. Its fixture has registered resource IDs, enumerated configuration values, deterministic health observations, and controlled environmental changes. It supports delayed obligations, repeated traps, changed reality, and transfer to different resource layouts.
 
 The fixture is the initial Subject Environment. It persists within a trajectory and is seeded afresh for each independent Run. It uses typed operations rather than a shell or arbitrary writable files. This narrows experimental scope; a simulation does not represent a workstation.
+
+Memory channels are explicit: all arms retain their own outputs and tool evidence in the Journal and may retrieve them. A/C additionally receive governed handoffs and Commitments; A additionally receives selected Itches/Invariants. There is no agent-writable notes file, free-text fixture field, generated executable, or hidden provider state. Outputting a self-summary into the Journal is allowed in every arm and counts as ordinary retrieval-based memory. This does not claim to eliminate covert encodings in action sequences; the complete fixture trace is retained for audit.
 
 The design uses Python, SQLite transactions, strict structured contracts, and deterministic journal retrieval. No dependency version or model identity is selected here.
 

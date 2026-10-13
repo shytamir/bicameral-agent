@@ -69,11 +69,56 @@ Typed controls cover Objective creation/closure, Grant issuance/revocation, paus
 
 Access reduction revokes a Grant. A replacement requires an explicit human act; this slice needs no separate deny-overlay subsystem. Configuration changes require a new Run.
 
-## 7. Context and retrieval design checkpoint
+## 7. Bounded input and explicit memory channels
 
-The complete active semantic input, exchange, control context and tools must fit budgets. A handoff-only ceiling is insufficient. Selection, paging, accounting and overflow contracts are being revised; implementation must not invent them.
+### 7.1 Budget contract
 
-Retrieval preserves source classes and exact content through bounded Event, range, lexical search and payload-page requests. Its scope is authenticated same-Run agent-visible evidence at a recorded cutoff. Ordering/cursors are deterministic and repeats idempotent.
+Configuration supplies positive limits for total input, reserved output, active semantic tokens, wake/input bytes, exchange tokens, retrieved page bytes/tokens, proposal bytes, model calls per Episode/consolidation, cumulative input/output tokens, elapsed work, queued wakes, and active Grants. The counters and limit units are named in configuration; none is chosen from apparent importance. No numeric value is prescribed before calibration with the chosen backend and fixture.
+
+The active semantic count covers Continuity State text, reference overhead, and the complete rendered bodies of selected Itches, Invariants, and Commitments. A referenced body cannot be carried outside that count. B has no semantic bundle. Every arm has the same total Operator input ceiling, output reservation, action/call limits, and retrieval surface; A/C consolidation cost is additional and recorded.
+
+Count the final serialized request with the pinned tokenizer and framing rule. Record the exact request bytes, local accounted count, and provider-reported usage separately; they must not be falsely presented as the same measurement. A backend without a validated framing bound is ineligible. Section counts are diagnostic; admission uses the full request count plus reserved output. Equality fits; exceeding any applicable limit prevents dispatch.
+
+Preflight proves that the fixed Constitution, prompt, tools, maximum admitted control header, minimal wake, budget metadata and a minimal empty semantic bundle fit with room for a configured evidence page and proposal output. Control input is bounded too: the fixture registry is finite, at most one Objective is active, active Grant count is capped, and human input is stored as a bounded opening excerpt plus an exact pageable payload. Reject an over-limit new control record or queue insertion visibly; do not silently evict an obligation or permission.
+
+### 7.2 Active selection and views
+
+Continuity State contains typed epistemic items with Event references, task focus/next steps, and explicit selected object-version references. A proposal validates its fully rendered post-transaction bundle. Selecting the same object twice is invalid. Creation and selection in the same proposal use section 8's reference contract.
+
+At Episode opening, use the latest committed selection and exact handoff. Render only same-Run, current, lifecycle-applicable selected objects for the bound Objective or a Run-global Invariant family. A mechanically inapplicable reference is omitted from the input view with a bounded change notice and cursor to exact change Events; the persisted handoff is not rewritten. If a selected current projection would exceed the budget, open no task call and enter bounded consolidation recovery. Do not silently drop an otherwise applicable object to fit.
+
+All other objects are inactive for input purposes, not deleted or expired. Object-index retrieval returns deterministic bounded pages and supports explicit ID/type/lifecycle filters. The Kernel does not pick objects by semantic similarity. A due Commitment produces one bounded wake identifying that obligation; its body is a separately budgeted page if necessary. Stored Commitments are polled regardless of active selection.
+
+No context contains an unbounded list of pending Episodes, all Invariants, all Commitments, or all Grants. Aggregate counts and stable index cursors describe larger collections. Grant records are descriptive views only; action authorization always reads current control state.
+
+### 7.3 Episode evidence and retrieval
+
+The Operator receives a fixed opening package plus bounded current-Episode exchange. Before a further result would require an oversized next request, preserve the result and end execution with a context interruption; do not generate a semantic outcome. The next phase can read the exact evidence through pages.
+
+The Steward's base input contains Objective/control context, a bounded current semantic view, the execution-ending record, and an Episode evidence index: cutoff, event count, first/last sequence, counts by event type, and manifest hash/cursor. This index is mechanical metadata, not a semantic summary. The complete ordered manifest and payloads are immutable and pageable; they need not fit together in one call.
+
+Within a consolidation attempt, the Steward can explicitly release previously loaded evidence pages from its working input and request others. Journal the page-selection changes and every exact model input. The fixed base and budget counters remain. Selected pages and the bounded exchange must fit before dispatch; there is no automatic relevance-based eviction. Reading many pages still consumes the attempt's cumulative token, call, and elapsed limits.
+
+When the normal semantic base cannot fit, a recovery base contains only its identity/hash, bounded control/wake metadata, failure code, and cursors for prior semantic state and Episode evidence. It never automatically includes the oversized content. This gives consolidation an input-size-independent route to propose a smaller selection. Human pause, inspection, correction and termination remain available without any model.
+
+Retrieval operations are exact Event/record lookup, sequence range, lexical Journal search, filtered semantic-object index, manifest page, and payload page. An accepted request fixes the visibility scope and cutoff before its own request Event. Sequence/index order uses sequence then ID; lexical results use pinned lexical rank then sequence/ID. Cursors bind query, cutoff and visibility scope. Exact replay returns original bytes; a changed request under the same idempotency key rejects. No raw SQL is exposed.
+
+Every page carries source classes, IDs/hashes, returned size, truncation, and next cursor or an explicit end marker. Binary payloads are paged as exact bytes; reconstruct before decoding split Unicode. Page bytes, serialized token cost, and cumulative budgets are checked. Empty results and missing/stale/foreign references have explicit outcomes.
+
+### 7.4 Channel and visibility checks
+
+Only the memory channels declared in Architecture section 6 exist. Fixture setters accept enumerated values for registered IDs, not free-text notes, paths, code, or arbitrary blobs. Human labels and fixture metadata cannot be modified through agent operations. Ordinary Operator/Steward outputs remain journal evidence; their wording is not semantically censored to enforce an ablation.
+
+Agent-visible and evaluator-only evidence use distinct access scopes. Event, search, object, manifest and payload lookup each enforce that scope; possessing a payload hash or referencing it indirectly never grants access. Audit labels and scoring evidence remain unavailable to chambers throughout the Run, including later repetitions. They remain available to authorized human evaluation/inspection.
+
+### 7.5 Required traces
+
+- Grow inactive Invariants beyond any single input: opening size remains bounded; each inactive record is still reachable by pages.
+- Trigger an unselected Commitment: enqueue its wake exactly once without injecting every other obligation into context.
+- Fill the current exchange: retain the last result, interrupt, and construct a fitting recovery/consolidation base without semantic trimming.
+- Read a manifest larger than the model context through multiple selected pages; retain exact per-call inputs and never claim unread pages were inspected.
+- Attempt a notes field, arbitrary file write, or evaluator lookup through search and then by payload ID: reject each channel, including indirect access.
+- Store/retrieve an ordinary self-summary in B: permit it and charge its output and retrieval cost.
 
 ## 8. Proposal identity and inspection checkpoint
 
@@ -97,4 +142,4 @@ Preflight precedes explicit human sealing. Retain normalized configuration and e
 
 ## 12. Readiness
 
-Readiness is documentary only. Context, proposal identity, inspection, recovery and methodology are explicit checkpoints. Clearing them permits slice planning; executable conformance is required before model connection under separate authorization.
+Readiness is documentary only. Proposal identity, inspection, recovery and methodology remain explicit checkpoints. Bounded-input and visibility traces must become executable tests in their implementation slice; prose does not establish conformance.

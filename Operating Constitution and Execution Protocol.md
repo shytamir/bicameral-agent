@@ -69,6 +69,12 @@ The Journal retains exact messages, outputs, errors and change evidence. Referen
 
 Continuity State is orientation, not authority. It distinguishes observations, inferences, assumptions, unresolved claims, and contradictions. Facts may survive an Objective; next steps and semantic references must apply to the current focus.
 
+The Steward proposes which semantic records enter active input. The complete rendered semantic bundle must fit a fixed budget. The Kernel performs deterministic applicability and budget checks, not relevance ranking. Objects outside the bundle remain stored and retrievable. An obligation remains binding and its trigger remains polled even when its body is absent from the bundle.
+
+Bounded paging may replace an unbounded manifest or object listing. It exposes exact recorded content with completeness metadata and stable cursors; it never claims an unvisited page was read. Context overflow is a recorded interruption or recovery condition, not permission to erase evidence or fabricate a summary. Human control and inspection do not require a model call or a fitting chamber context.
+
+All arms may retrieve their earlier ordinary outputs, including self-written summaries. The pilot prohibits arbitrary writable memory files and free-text fixture fields through its tool schemas. These restrictions concern available channels, not a claim that a model cannot learn in an unstructured handoff.
+
 Itches preserve discrepancies. Invariants preserve scoped lessons with supporting/contradictory evidence. The Kernel validates links, not truth. Mechanically valid but wrong lessons are observable experimental failures.
 
 Commitments belong to exactly one Objective and derive from a human request or an evidenced necessary step under it. They do not expire through age or absence from active input. External instructions alone create neither obligations nor permissions.
