@@ -184,6 +184,106 @@
       "title": "ActionRequest",
       "type": "object"
     },
+    "Attempt": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Attempt Id",
+          "type": "string"
+        },
+        "attempt_number": {
+          "exclusiveMinimum": 0,
+          "title": "Attempt Number",
+          "type": "integer"
+        },
+        "base_payload_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Base Payload Id",
+          "type": "string"
+        },
+        "episode_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "objective_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Objective Revision",
+          "type": "integer"
+        },
+        "parent_state_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Parent State Id"
+        },
+        "proposal_payload_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Proposal Payload Id"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        },
+        "recovery_base": {
+          "title": "Recovery Base",
+          "type": "boolean"
+        },
+        "run_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Run Revision",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "ACCEPTED",
+            "REJECTED",
+            "FAILED"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "attempt_id",
+        "episode_id",
+        "attempt_number",
+        "parent_state_id",
+        "run_revision",
+        "objective_revision",
+        "base_payload_id",
+        "recovery_base",
+        "status",
+        "reason",
+        "proposal_payload_id"
+      ],
+      "title": "Attempt",
+      "type": "object"
+    },
     "Binding": {
       "additionalProperties": false,
       "properties": {
@@ -1575,6 +1675,216 @@
       "title": "InvariantTransition",
       "type": "object"
     },
+    "Invocation": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Attempt Id"
+        },
+        "charged_input": {
+          "minimum": 0,
+          "title": "Charged Input",
+          "type": "integer"
+        },
+        "charged_ms": {
+          "minimum": 0,
+          "title": "Charged Ms",
+          "type": "integer"
+        },
+        "charged_output": {
+          "minimum": 0,
+          "title": "Charged Output",
+          "type": "integer"
+        },
+        "elapsed_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Elapsed Ms"
+        },
+        "episode_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Episode Id"
+        },
+        "input_payload_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Input Payload Id",
+          "type": "string"
+        },
+        "invitation_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Invitation Id"
+        },
+        "invocation_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Invocation Id",
+          "type": "string"
+        },
+        "local_input_tokens": {
+          "minimum": 0,
+          "title": "Local Input Tokens",
+          "type": "integer"
+        },
+        "local_output_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Local Output Tokens"
+        },
+        "mode": {
+          "const": "SCRIPTED",
+          "title": "Mode",
+          "type": "string"
+        },
+        "output_payload_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Output Payload Id"
+        },
+        "provider_input_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Provider Input Tokens"
+        },
+        "provider_output_tokens": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Provider Output Tokens"
+        },
+        "purpose": {
+          "enum": [
+            "TASK",
+            "REVIEW",
+            "CLOSING"
+          ],
+          "title": "Purpose",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "OPERATOR",
+            "STEWARD"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "STARTED",
+            "RETURNED",
+            "FAILED",
+            "UNKNOWN"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "unavailable_reason": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unavailable Reason"
+        },
+        "valid_output": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid Output"
+        }
+      },
+      "required": [
+        "invocation_id",
+        "mode",
+        "role",
+        "purpose",
+        "episode_id",
+        "attempt_id",
+        "invitation_id",
+        "status",
+        "input_payload_id",
+        "output_payload_id",
+        "local_input_tokens",
+        "local_output_tokens",
+        "provider_input_tokens",
+        "provider_output_tokens",
+        "elapsed_ms",
+        "unavailable_reason",
+        "charged_input",
+        "charged_output",
+        "charged_ms",
+        "valid_output"
+      ],
+      "title": "Invocation",
+      "type": "object"
+    },
     "IssueGrant": {
       "additionalProperties": false,
       "properties": {
@@ -2714,6 +3024,23 @@
       "title": "RunCommand",
       "type": "object"
     },
+    "SchedulerContracts": {
+      "additionalProperties": false,
+      "properties": {
+        "attempt": {
+          "$ref": "#/$defs/Attempt"
+        },
+        "invocation": {
+          "$ref": "#/$defs/Invocation"
+        }
+      },
+      "required": [
+        "invocation",
+        "attempt"
+      ],
+      "title": "SchedulerContracts",
+      "type": "object"
+    },
     "Scope": {
       "additionalProperties": false,
       "properties": {
@@ -3370,12 +3697,16 @@
     },
     "inputs": {
       "$ref": "#/$defs/InputContracts"
+    },
+    "scheduler": {
+      "$ref": "#/$defs/SchedulerContracts"
     }
   },
   "required": [
     "authority",
     "fixture",
-    "inputs"
+    "inputs",
+    "scheduler"
   ],
   "title": "RuntimeContracts",
   "type": "object"

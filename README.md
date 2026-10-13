@@ -129,6 +129,14 @@ Event/range/search, object-index, manifest, prior-state and binary-payload retri
 
 Validation passed 117 tests and all three schema checks. Eight [input tests](tests/test_inputs.py) cover large manifests and inactive archives, restart-stable cursors, split Unicode reconstruction, role/query mismatch, evaluator isolation, exact input-boundary equality, overflow, explicit release and unavailable cached sources. P06 supplies cumulative invocation/attempt charging and records each exact assembled input.
 
+## P06 acceptance and handoff
+
+P06 is accepted under owner delegation within the local SCRIPTED envelope. The [scheduler](bicameral_agent/kernel/scheduler.py) serializes Episodes, invocations and attempts; reserves complete input/output/deadline costs before calls; retains unknown usage after interruption; and protects finite review/closing allowances. Attempt acceptance, local bindings and Episode closure commit together. Restart disposes uncommitted outputs without replay, and an accepted response survives a lost acknowledgment with its original identity.
+
+Commitment checks use a durable index independently of queue capacity and selected memory. Due/expiry transitions preserve the authored handoff; unique wakes follow pending revisions, remain ordered and take priority over ordinary queued work. Participation reports precede task effects, including late responses. Holds, pause, terminal state, stale authority and no-further-calls requests gate the appropriate lanes. Bounded review and planned-closing exchanges have no task surface.
+
+Validation passed 135 tests, all three schema checks and `git diff --check`. Eighteen [scheduler tests](tests/test_scheduler.py) cover A/B/C traces, rearming and expiry, full queues, timeout accounting, bounded recovery, stale proposals, planned completion, atomic rejection, startup interruption and an actual process exit after semantic acceptance. No provider calls or live experiments ran. P07 proceeds with reviewed forward restoration; P08/P10 add complete inspection and governed disposition before P09.
+
 ## Scope
 
 This is not a claim about consciousness, sentience, personhood, artificial emotion, or human memory. It is not an unrestricted autonomous-agent framework.

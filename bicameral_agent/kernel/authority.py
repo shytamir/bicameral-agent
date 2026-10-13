@@ -400,13 +400,17 @@ class Kernel:
             self.store._control(self.run_id, record.discussion_id, record, expected_revision=0)
             return self.event(command.model_dump(mode='json'), role='HUMAN', source='O-D')
         if kind == 'INSPECT_PARTICIPATION':
+            fault = self.records.get('PARTICIPATION_FAULT', command.request_id)
             row = self.store._db.execute('SELECT 1 FROM inspections WHERE run_id=? AND role=? AND request_id=?',
                 (self.run_id, command.role, command.request_id)).fetchone()
-            if row is None:
+            if row is None and (fault is None or fault['role'] != command.role):
                 raise ValueError('unknown participation inspection')
             self._evidence(command.evidence_event_ids)
             if command.decision == 'CLEAR_INSPECTION':
                 self.records.put('INSPECTION_REVIEW', command.request_id, command, expected=0)
+                if fault:
+                    self.records.put('PARTICIPATION_FAULT', command.request_id, fault | {'reviewed': True},
+                                     expected=self.records.revision('PARTICIPATION_FAULT', command.request_id))
             return self.event(command.model_dump(mode='json'), role='HUMAN', source='O-D')
         if kind == 'REVIEW_EMERGENCY':
             record = self.records.get('EMERGENCY', command.emergency_id)
@@ -509,6 +513,8 @@ class Kernel:
             raise ValueError('storage unavailable')
         if any(not r['reviewed'] for _, r in self.records.latest('EMERGENCY')):
             raise ValueError('emergency awaits accountable review')
+        if any(not r['reviewed'] for _, r in self.records.latest('PARTICIPATION_FAULT')):
+            raise ValueError('authenticated output needs participation inspection')
         for row in self.store._db.execute('SELECT request_id FROM inspections WHERE run_id=?', (self.run_id,)):
             if self.records.get('INSPECTION_REVIEW', row[0]) is None:
                 raise ValueError('participation inspection unresolved')
@@ -549,6 +555,9 @@ class Kernel:
         if not self.store._db.in_transaction:
             raise ValueError('authorization/consumption and intent must share a transaction')
         self.task_gate(episode_id)
+        if any(v['status'] == 'STARTED' or v['status'] == 'RETURNED' and self.records.get('CALL_RECEIPT', key) is None
+               for key, v in self.records.latest('INVOCATION')):
+            raise ValueError('task calls and fixture dispatches are serialized')
         descriptor = self.descriptor(operation)
         if resource not in descriptor.resources:
             raise ValueError('unregistered resource')

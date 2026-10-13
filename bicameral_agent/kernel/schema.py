@@ -5,6 +5,7 @@ from pathlib import Path
 from .models import KernelContracts
 from .fixture import FixtureContracts
 from .inputs import InputContracts
+from .scheduler import SchedulerContracts
 from ..contracts.base import Contract
 
 
@@ -12,6 +13,7 @@ class RuntimeContracts(Contract):
     authority: KernelContracts
     fixture: FixtureContracts
     inputs: InputContracts
+    scheduler: SchedulerContracts
 
 
 def schema_bytes():

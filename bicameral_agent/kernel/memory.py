@@ -29,7 +29,7 @@ class Memory:
         value = self.k.records.get('MEMORY_HEAD', self.k.run_id)
         return None if value is None else parse(ContinuityState, canonical_bytes(value['continuity']))
 
-    def _resolve(self, proposal, objects, parent, objective, tick, allocator, prior):
+    def _resolve(self, proposal, objects, parent, objective, tick, allocator, prior, *, kernel_transition=False):
         events = self.k.store.events(self.k.run_id)
         context = parse(ResolutionContext, canonical_bytes({
             'run_id': self.k.run_id, 'objective_id': objective, 'parent_state_id': parent, 'arm': self.k.config.arm,
@@ -43,7 +43,8 @@ class Memory:
             if event['id'] in referenced:
                 self.k.store.read_payload(self.k.run_id, event['payload_id'])
         final, changes = stage(resolution, objects, run_id=self.k.run_id, task_tick=tick,
-                               event_sources={e['id']: e['source'] for e in events}, prior_evidence=prior)
+                               event_sources={e['id']: e['source'] for e in events}, prior_evidence=prior,
+                               validate_selection=not kernel_transition)
         return resolution, final, changes
 
     def prior(self):
@@ -62,13 +63,17 @@ class Memory:
             raise ValueError('proposal byte limit')
         run = self.k.run()[1]
         objects = self.objects()
+        if source == 'KERNEL':
+            if (proposal.continuity != self.continuity() or not proposal.mutations or
+                    any(m.kind != 'COMMITMENT_TRANSITION' or m.status not in {'TRIGGERED', 'EXPIRED'} for m in proposal.mutations)):
+                raise ValueError('Kernel may only observe due/expiry transitions, preserving the handoff')
         resolution, final, changes = self._resolve(proposal, objects, self.head, run.objective_id,
-                                                   run.task_tick, identifier, self.prior())
+                                                   run.task_tick, identifier, self.prior(), kernel_transition=source == 'KERNEL')
         bundle = canonical_bytes({'continuity': resolution.proposal.continuity.model_dump(mode='json'),
                                   'selected_objects': [final[r.object_id].model_dump(mode='json')
                                                        for r in resolution.proposal.continuity.selected_objects],
                                   'inapplicable_count': 0, 'change_cursor': None})
-        if len(bundle) > self.k.config.budgets.active_semantic_tokens:
+        if source != 'KERNEL' and len(bundle) > self.k.config.budgets.active_semantic_tokens:
             raise ValueError('scripted byte-token semantic budget')
         state_id = identifier()
         ledger = {'state_id': state_id, 'parent': self.head, 'source': source, 'authority_event_id': authority_event_id,
@@ -84,6 +89,12 @@ class Memory:
         for group in changes:
             for before, after in group:
                 self.k.records.put('OBJECT', after.object_id, after, expected=before.revision if before else 0)
+                if after.object_type == 'COMMITMENT':
+                    first = self.k.store._db.execute("SELECT MIN(sequence) FROM kernel_records WHERE run_id=? AND kind='OBJECT' AND id=?",
+                                                     (self.k.run_id, after.object_id)).fetchone()[0]
+                    self.k.store._write("""INSERT INTO commitment_index VALUES(?,?,?,'OBJECT',?,?,?)
+                        ON CONFLICT(run_id,id) DO UPDATE SET revision=excluded.revision,status=excluded.status""",
+                        (self.k.run_id, after.object_id, after.revision, after.objective_id, after.status, first))
         self.k.records.put('MEMORY_HEAD', self.k.run_id,
                            MemoryHead(state_id=state_id, continuity=resolution.proposal.continuity),
                            expected=self.k.records.revision('MEMORY_HEAD', self.k.run_id))
@@ -114,8 +125,12 @@ class Memory:
                 if episode.phase != 'CONSOLIDATING' or episode.objective_id != run.objective_id:
                     raise ValueError('Steward acceptance used ineligible Episode')
             ids = iter(b['object_id'] for b in ledger['bindings'])
+            if ledger['source'] == 'KERNEL' and (ledger['original']['continuity'] != continuity.model_dump(mode='json') or
+                    any(m['kind'] != 'COMMITMENT_TRANSITION' or m['status'] not in {'TRIGGERED', 'EXPIRED'} for m in ledger['original']['mutations'])):
+                raise ValueError('invalid Kernel semantic effect')
             resolution, final, changes = self._resolve(parse(StateProposal, canonical_bytes(ledger['original'])),
-                objects, parent, ledger['objective_id'], ledger['task_tick'], lambda: next(ids), prior)
+                objects, parent, ledger['objective_id'], ledger['task_tick'], lambda: next(ids), prior,
+                kernel_transition=ledger['source'] == 'KERNEL')
             expected = [[{'before': b.model_dump(mode='json') if b else None, 'after': a.model_dump(mode='json')}
                          for b, a in group] for group in changes]
             if (resolution.proposal.model_dump(mode='json') != ledger['resolved'] or expected != ledger['changes']
@@ -130,4 +145,9 @@ class Memory:
             raise ValueError('semantic projection mismatch')
         if history != self.k.records.history('OBJECT'):
             raise ValueError('semantic object history differs from ledger')
+        index = {row['id']: (row['revision'], row['objective_id'], row['status']) for row in self.k.store._db.execute(
+            'SELECT * FROM commitment_index WHERE run_id=?', (self.k.run_id,))}
+        expected = {obj.object_id: (obj.revision, obj.objective_id, obj.status) for obj in objects.values() if obj.object_type == 'COMMITMENT'}
+        if index != expected:
+            raise ValueError('Commitment obligation index differs from semantic ledger')
         return objects

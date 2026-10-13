@@ -122,7 +122,20 @@ RETRIEVAL_PROVENANCE = (
         PRIMARY KEY(run_id,event_id), FOREIGN KEY(run_id,event_id) REFERENCES events(run_id,id),
         FOREIGN KEY(run_id,episode_id) REFERENCES control_heads(run_id,id)) STRICT""",
 )
-MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE)
+OBLIGATION_INDEX = (
+    """CREATE TABLE commitment_index(run_id TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL,
+        kind TEXT NOT NULL CHECK(kind='OBJECT'), objective_id TEXT NOT NULL, status TEXT NOT NULL,
+        creation_order INTEGER NOT NULL, PRIMARY KEY(run_id,id),
+        FOREIGN KEY(run_id,kind,id,revision) REFERENCES kernel_records(run_id,kind,id,revision)) STRICT""",
+    """INSERT INTO commitment_index
+        SELECT r.run_id,r.id,r.revision,'OBJECT',json_extract(CAST(b.body AS TEXT),'$.objective_id'),
+          json_extract(CAST(b.body AS TEXT),'$.status'),
+          (SELECT MIN(sequence) FROM kernel_records x WHERE x.run_id=r.run_id AND x.kind=r.kind AND x.id=r.id)
+        FROM kernel_records r JOIN payloads p ON p.run_id=r.run_id AND p.id=r.payload_id JOIN blobs b ON b.id=p.blob_id
+        WHERE r.kind='OBJECT' AND json_extract(CAST(b.body AS TEXT),'$.object_type')='COMMITMENT'
+          AND NOT EXISTS(SELECT 1 FROM kernel_records n WHERE n.run_id=r.run_id AND n.kind=r.kind AND n.id=r.id AND n.revision>r.revision)""",
+)
+MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE, OBLIGATION_INDEX)
 
 def checksum(statements):
     return sha256("\n".join(statements).encode()).hexdigest()

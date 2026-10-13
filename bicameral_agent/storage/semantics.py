@@ -19,7 +19,7 @@ EDGES = {
 SELECTABLE = {"ITCH": {"OPEN", "INVESTIGATING"}, "INVARIANT_VERSION": {"TENTATIVE", "ACTIVE", "CHALLENGED"},
               "COMMITMENT": {"PENDING", "TRIGGERED", "IN_PROGRESS", "BLOCKED"}}
 
-def stage(resolution, existing, *, run_id, task_tick, event_sources, prior_evidence):
+def stage(resolution, existing, *, run_id, task_tick, event_sources, prior_evidence, validate_selection=True):
     """Return complete projection and ordered before/after changes for each mutation."""
     objects = dict(existing)
     bindings = {item.local_key: item for item in resolution.bindings}
@@ -94,7 +94,7 @@ def stage(resolution, existing, *, run_id, task_tick, event_sources, prior_evide
             used_evidence.setdefault(after.object_id, set()).update(
                 e for key, ids in mutation.items() if key.endswith("event_ids") for e in ids)
         all_changes.append(changes)
-    for selected in resolution.proposal.continuity.selected_objects:
+    for selected in resolution.proposal.continuity.selected_objects if validate_selection else ():
         obj = objects[selected.object_id]
         if obj.status not in SELECTABLE[obj.object_type]:
             raise ValueError("selection includes an inactive lifecycle")
