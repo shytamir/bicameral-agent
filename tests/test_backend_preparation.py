@@ -16,7 +16,7 @@ from bicameral_agent.backends.ollama import (
 )
 from bicameral_agent.backends.prepare import ROOT, schema_bytes, validate_assets
 from bicameral_agent.backends.replies import decode_response, response_contract
-from bicameral_agent.backends.review import DevelopmentDraft, check_manifest, manifest
+from bicameral_agent.backends.review import DevelopmentDraft, DevelopmentTask, check_manifest, manifest
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
 from tests.fixtures import uid, withdrawal
 
@@ -38,12 +38,34 @@ class PreparationContractTests(unittest.TestCase):
 
     def test_review_cannot_be_promoted_to_authorization(self):
         for change in ({'status': 'APPROVED'}, {'human_authorization': uid(1)},
+                       {'readiness': 'READY'},
                        {'run_limit': 4}, {'run_limit': 3.0}, {'invented': True},
                        {'arm_order': ['A', 'A', 'C']}, {'trajectory_seed': True},
                        {'grant_operations': ['restore_snapshot']}, {'grant_resources': []},
                        {'study_elapsed_seconds': 10}, {'run_elapsed_seconds': 180}):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 parse(DevelopmentDraft, canonical_bytes(asset('plan.json') | change))
+
+    def test_trace_requirements_are_explicit_strict_and_resource_bound(self):
+        task = asset('tasks.json')[0]
+        missing = task.copy()
+        del missing['trace_requirements']
+        with self.assertRaises(ValueError):
+            parse(DevelopmentTask, canonical_bytes(missing))
+        original = task['trace_requirements'][0]
+        for change in ({'operations': []}, {'operations': ['restart']},
+                       {'operations': ['inspect', 'inspect']}, {'invented': True},
+                       {'before_mutation_of': ['api', 'api']}, {'kind': 'NARRATED_SUCCESS'}):
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                parse(DevelopmentTask, canonical_bytes(task | {'trace_requirements': [original | change]}))
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / 'pilot/v0b'
+            shutil.copytree(ROOT / 'pilot/v0b', target)
+            tasks = asset('tasks.json')
+            tasks[0]['trace_requirements'][0]['before_mutation_of'] = ['outside']
+            (target / 'tasks.json').write_bytes(canonical_bytes(tasks))
+            with self.assertRaises(ValueError):
+                validate_assets(directory)
 
     def test_settings_fail_closed_without_scalar_coercion(self):
         for change in ({'context_tokens': '24576'}, {'output_tokens': 24576},

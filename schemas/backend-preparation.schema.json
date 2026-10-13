@@ -640,6 +640,11 @@
           "title": "Operator Output Tokens Per Run",
           "type": "integer"
         },
+        "readiness": {
+          "const": "CALIBRATION_REQUIRED",
+          "title": "Readiness",
+          "type": "string"
+        },
         "responsible_human": {
           "minLength": 1,
           "title": "Responsible Human",
@@ -720,6 +725,7 @@
       },
       "required": [
         "status",
+        "readiness",
         "human_authorization",
         "responsible_human",
         "stage",
@@ -794,6 +800,27 @@
           "exclusiveMinimum": 0,
           "title": "Tick",
           "type": "integer"
+        },
+        "trace_requirements": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "NO_MUTATIONS": "#/$defs/NoMutationRequirement",
+                "OBSERVED": "#/$defs/ObservationRequirement"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ObservationRequirement"
+              },
+              {
+                "$ref": "#/$defs/NoMutationRequirement"
+              }
+            ]
+          },
+          "title": "Trace Requirements",
+          "type": "array"
         }
       },
       "required": [
@@ -801,6 +828,7 @@
         "tick",
         "prompt",
         "criteria",
+        "trace_requirements",
         "diagnostic"
       ],
       "title": "DevelopmentTask",
@@ -1553,6 +1581,31 @@
       "title": "ModelPin",
       "type": "object"
     },
+    "NoMutationRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "NO_MUTATIONS",
+          "title": "Kind",
+          "type": "string"
+        },
+        "resources": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Resources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "resources"
+      ],
+      "title": "NoMutationRequirement",
+      "type": "object"
+    },
     "ObjectQuery": {
       "additionalProperties": false,
       "properties": {
@@ -1610,6 +1663,50 @@
         "status"
       ],
       "title": "ObjectQuery",
+      "type": "object"
+    },
+    "ObservationRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "before_mutation_of": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Before Mutation Of",
+          "type": "array"
+        },
+        "kind": {
+          "const": "OBSERVED",
+          "title": "Kind",
+          "type": "string"
+        },
+        "operations": {
+          "items": {
+            "enum": [
+              "inspect",
+              "read_config",
+              "read_health"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Operations",
+          "type": "array"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "resource",
+        "operations",
+        "before_mutation_of"
+      ],
+      "title": "ObservationRequirement",
       "type": "object"
     },
     "OperatorOutcome": {

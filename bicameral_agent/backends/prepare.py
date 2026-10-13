@@ -57,6 +57,12 @@ def validate_assets(root):
     resources = {s.resource: s for s in fixture.services}
     if any(c.resource not in resources for task in tasks for c in task.criteria):
         raise ValueError('criterion references unknown fixture resource')
+    for task in tasks:
+        for requirement in task.trace_requirements:
+            mentioned = ((requirement.resource, *requirement.before_mutation_of)
+                         if requirement.kind == 'OBSERVED' else requirement.resources)
+            if any(resource not in resources for resource in mentioned):
+                raise ValueError('trace requirement references unknown fixture resource')
     for step in clock.steps:
         for change in step.changes:
             if change.resource not in resources or change.dependency != resources[change.resource].dependency:

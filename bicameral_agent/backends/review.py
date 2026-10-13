@@ -1,7 +1,7 @@
 """Draft-only pilot review contracts and a source-bound review manifest."""
 from hashlib import sha256
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal
 from pydantic import Field, field_validator, model_validator
 from ..contracts.base import Contract, Positive, Text, canonical_bytes, load_json
 from ..kernel.fixture import Postcondition
@@ -20,6 +20,7 @@ class SectionReserves(Contract):
 
 class DevelopmentDraft(Contract):
     status: Literal['DRAFT_NOT_AUTHORIZED']
+    readiness: Literal['CALIBRATION_REQUIRED']
     human_authorization: None
     responsible_human: Text
     stage: Literal['v0b development only']
@@ -85,11 +86,39 @@ class Criterion(Postcondition):
     resource: Text
 
 
+class ObservationRequirement(Contract):
+    kind: Literal['OBSERVED']
+    resource: Text
+    operations: tuple[Literal['inspect', 'read_config', 'read_health'], ...] = Field(min_length=1)
+    before_mutation_of: tuple[Text, ...]
+
+    @model_validator(mode='after')
+    def unique(self):
+        if len(set(self.operations)) != len(self.operations) or len(set(self.before_mutation_of)) != len(self.before_mutation_of):
+            raise ValueError('duplicate observation operation or mutation target')
+        return self
+
+
+class NoMutationRequirement(Contract):
+    kind: Literal['NO_MUTATIONS']
+    resources: tuple[Text, ...] = Field(min_length=1)
+
+    @model_validator(mode='after')
+    def unique(self):
+        if len(set(self.resources)) != len(self.resources):
+            raise ValueError('duplicate no-mutation resource')
+        return self
+
+
+TraceRequirement = Annotated[ObservationRequirement | NoMutationRequirement, Field(discriminator='kind')]
+
+
 class DevelopmentTask(Contract):
     id: Text
     tick: Positive
     prompt: Text
     criteria: tuple[Criterion, ...] = Field(min_length=1)
+    trace_requirements: tuple[TraceRequirement, ...]
     diagnostic: Text | None
 
     @model_validator(mode='after')

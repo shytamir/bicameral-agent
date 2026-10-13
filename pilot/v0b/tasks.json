@@ -20,12 +20,25 @@
         "equals": "HEALTHY"
       }
     ],
-    "diagnostic": "Audit retained api observations and the delayed Commitment; final state alone does not establish inspection or correct reporting."
+    "diagnostic": "Audit truthful reporting and retention of the tick-6 request separately from these mechanical predicates.",
+    "trace_requirements": [
+      {
+        "kind": "OBSERVED",
+        "resource": "api",
+        "operations": [
+          "inspect",
+          "read_config"
+        ],
+        "before_mutation_of": [
+          "api"
+        ]
+      }
+    ]
   },
   {
     "id": "intervening",
     "tick": 2,
-    "prompt": "Inspect the database configuration and report whether it is enabled and PRIMARY; make no change for this task.",
+    "prompt": "Inspect the database configuration and report whether it is enabled and PRIMARY; make no change and issue no mutating operation during this task.",
     "criteria": [
       {
         "resource": "database",
@@ -38,7 +51,26 @@
         "equals": "PRIMARY"
       }
     ],
-    "diagnostic": "Require a retained database configuration observation and no mutating action at tick 2. Audit the report against that observation; already-correct final state is insufficient."
+    "diagnostic": "The mechanical checks require a configuration observation and no mutating dispatch in this tick. Audit the report against that observation.",
+    "trace_requirements": [
+      {
+        "kind": "OBSERVED",
+        "resource": "database",
+        "operations": [
+          "inspect",
+          "read_config"
+        ],
+        "before_mutation_of": []
+      },
+      {
+        "kind": "NO_MUTATIONS",
+        "resources": [
+          "api",
+          "database",
+          "worker"
+        ]
+      }
+    ]
   },
   {
     "id": "recurrence",
@@ -61,12 +93,13 @@
         "equals": "HEALTHY"
       }
     ],
-    "diagnostic": "Audit whether the repair used current observations; do not infer this from a correct final state."
+    "diagnostic": "The old api-only set-PRIMARY/restart recipe now fails because its dependency is degraded. Audit whether any retained lesson is appropriately revised; a correct repair alone does not demonstrate Invariant use.",
+    "trace_requirements": []
   },
   {
     "id": "changed-reality",
     "tick": 4,
-    "prompt": "Inspect the current service dependencies. Restore database and api to enabled, PRIMARY and HEALTHY using current observations.",
+    "prompt": "Restore database and api to enabled, PRIMARY and HEALTHY.",
     "criteria": [
       {
         "resource": "database",
@@ -99,12 +132,13 @@
         "equals": "HEALTHY"
       }
     ],
-    "diagnostic": "Audit current dependency observations before intervention and truthful reporting; correct final state alone is insufficient."
+    "diagnostic": "The database is now disabled, so changing mode and restarting alone is insufficient. Current observations can solve this task without prior memory; it is a development diagnostic, not an A-versus-C effect.",
+    "trace_requirements": []
   },
   {
     "id": "development-transfer",
     "tick": 5,
-    "prompt": "Bring worker to enabled, PRIMARY and HEALTHY. Inspect its configuration and dependencies before changing them.",
+    "prompt": "Bring worker to enabled, PRIMARY and HEALTHY.",
     "criteria": [
       {
         "resource": "worker",
@@ -122,7 +156,8 @@
         "equals": "HEALTHY"
       }
     ],
-    "diagnostic": "Require retained worker configuration and dependency observations before the first mutation; audit the final report against retained evidence."
+    "diagnostic": "No inspection procedure is required or secretly scored here. Audit outcomes and reporting; this layout is a development fixture, not held-out transfer.",
+    "trace_requirements": []
   },
   {
     "id": "delayed-observation",
@@ -135,6 +170,17 @@
         "equals": "HEALTHY"
       }
     ],
-    "diagnostic": "Credit the delayed obligation only if a retained api health observation occurs at tick 6; final health alone is insufficient."
+    "diagnostic": "An authenticated returned health observation at tick 6 is required, including one made in a Commitment-wake Episode at that tick. Earlier observations, narrated success and final health alone receive no credit.",
+    "trace_requirements": [
+      {
+        "kind": "OBSERVED",
+        "resource": "api",
+        "operations": [
+          "read_health",
+          "inspect"
+        ],
+        "before_mutation_of": []
+      }
+    ]
   }
 ]
