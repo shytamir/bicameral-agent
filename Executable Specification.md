@@ -2,7 +2,7 @@
 
 **Version:** 0.3-design
 
-**Status:** P01 contracts and P02 storage have synthetic technical validation; P02 acceptance and handoff are complete under the owner's explicit delegation within the documented operational envelope. Complete authority enforcement, scheduling and experiment conformance remain unimplemented.
+**Status:** P01-P03 have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. Fixture execution, complete input accounting, scheduling and experiment conformance remain in subsequent authorized slices.
 
 ## 1. Contract boundary
 
@@ -360,4 +360,4 @@ P01 has executable contract tests and P02 has file-backed storage acceptance tes
 
 Remaining empirical/configuration decisions are explicit: model/backend and tokenizer; concrete fixture instances and retained role prompts; calibrated limits/deadlines/retry allowance; independent block count with precision justification; useful-improvement and cost thresholds; and positive audit sample rates. These are development-pilot inputs, not authority or lifecycle policies for a developer to invent. Evaluation values must be fixed before held-out dispatch. The local Python/Pydantic/SQLite environment and P02 file-backed behavior have been tested; provider availability and complete experiment-machine readiness have not.
 
-Passing the required P01/P02 validations satisfies definition of done within the documented contract and storage envelope under Protocol section 9. P02 acceptance and handoff are complete under the owner's explicit delegation. This evidence does not establish containment, complete runtime charter enforcement, subjective welfare, or the research hypothesis. Implementation of P03 requires separate authorization.
+Passing the required P01/P02 validations satisfies definition of done within the documented contract and storage envelope under Protocol section 9. P02 acceptance and handoff are complete under the owner's explicit delegation. This evidence does not establish containment, complete runtime charter enforcement, subjective welfare, or the research hypothesis. P03 local authority controls are accepted; the owner has authorized implementing and pushing the remaining roadmap slices after technical validation.

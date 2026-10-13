@@ -98,7 +98,22 @@ INITIAL += tuple(
     f"CREATE TRIGGER {table}_{operation.lower()} BEFORE {operation} ON {table} BEGIN SELECT RAISE(ABORT,'append-only record'); END"
     for table in APPEND_ONLY for operation in ("UPDATE", "DELETE")
 )
-MIGRATIONS = (INITIAL,)
+KERNEL_RECORDS = (
+    """CREATE TABLE kernel_records(
+        sequence INTEGER PRIMARY KEY, run_id TEXT NOT NULL REFERENCES runs(id),
+        kind TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL CHECK(revision>0),
+        payload_id TEXT NOT NULL, UNIQUE(run_id,kind,id,revision),
+        FOREIGN KEY(run_id,payload_id) REFERENCES payloads(run_id,id)) STRICT""",
+    """CREATE TRIGGER kernel_record_revision BEFORE INSERT ON kernel_records
+        WHEN NEW.revision != COALESCE((SELECT MAX(revision)+1 FROM kernel_records
+          WHERE run_id=NEW.run_id AND kind=NEW.kind AND id=NEW.id),1)
+        BEGIN SELECT RAISE(ABORT,'nonconsecutive Kernel revision'); END""",
+    """CREATE TRIGGER kernel_record_update BEFORE UPDATE ON kernel_records
+        BEGIN SELECT RAISE(ABORT,'append-only Kernel record'); END""",
+    """CREATE TRIGGER kernel_record_delete BEFORE DELETE ON kernel_records
+        BEGIN SELECT RAISE(ABORT,'append-only Kernel record'); END""",
+)
+MIGRATIONS = (INITIAL, KERNEL_RECORDS)
 
 def checksum(statements):
     return sha256("\n".join(statements).encode()).hexdigest()

@@ -414,10 +414,11 @@ class StorageTests(StorageCase):
         with self.assertRaisesRegex(StorageError, "checksum"):
             Store(path, busy_timeout_ms=100)
 
-        for version in (2, 999):
+        from bicameral_agent.storage.migrations import MIGRATIONS
+        for version in (len(MIGRATIONS) + 1, 999):
             other_path = Path(self.temp.name) / f"version-{version}.db"
             with Store(other_path, busy_timeout_ms=100) as migrated:
-                migrated._db.execute("UPDATE migrations SET version=?", (version,))
+                migrated._db.execute("UPDATE migrations SET version=? WHERE version=(SELECT MAX(version) FROM migrations)", (version,))
             with self.assertRaisesRegex(StorageError, "unknown or nonconsecutive"):
                 Store(other_path, busy_timeout_ms=100)
 

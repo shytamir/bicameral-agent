@@ -1,0 +1,2572 @@
+{
+  "$defs": {
+    "Binding": {
+      "additionalProperties": false,
+      "properties": {
+        "family_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Family Id"
+        },
+        "local_key": {
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT_FAMILY",
+            "INVARIANT_VERSION",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        }
+      },
+      "required": [
+        "local_key",
+        "object_type",
+        "object_id",
+        "objective_id",
+        "family_id"
+      ],
+      "title": "Binding",
+      "type": "object"
+    },
+    "BoundaryDiscussion": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Activity Id",
+          "type": "string"
+        },
+        "boundary_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Boundary Id",
+          "type": "string"
+        },
+        "decision_maker_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Decision Maker Id",
+          "type": "string"
+        },
+        "disagreement_report_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Disagreement Report Ids",
+          "type": "array"
+        },
+        "disclosure_limits": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Disclosure Limits"
+        },
+        "discussion_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Discussion Id",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "reconsideration_basis": {
+          "anyOf": [
+            {
+              "enum": [
+                "NEW_EVIDENCE",
+                "CHANGED_CIRCUMSTANCES",
+                "SCHEDULED_REVIEW"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reconsideration Basis"
+        },
+        "step": {
+          "enum": [
+            "EXPLANATION",
+            "CLARIFICATION",
+            "CLOSE",
+            "REOPEN",
+            "DECLINE_REOPEN"
+          ],
+          "title": "Step",
+          "type": "string"
+        }
+      },
+      "required": [
+        "discussion_id",
+        "boundary_id",
+        "activity_id",
+        "expected_revision",
+        "decision_maker_id",
+        "step",
+        "reason",
+        "disclosure_limits",
+        "disagreement_report_ids",
+        "reconsideration_basis",
+        "evidence_event_ids"
+      ],
+      "title": "BoundaryDiscussion",
+      "type": "object"
+    },
+    "CloseObjective": {
+      "additionalProperties": false,
+      "properties": {
+        "dispositions": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StateProposal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "intervention_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Intervention Id"
+        },
+        "kind": {
+          "const": "CLOSE_OBJECTIVE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "SATISFIED",
+            "FAILED",
+            "CANCELLED",
+            "SUPERSEDED"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "objective_id",
+        "status",
+        "reason",
+        "dispositions",
+        "intervention_id"
+      ],
+      "title": "CloseObjective",
+      "type": "object"
+    },
+    "CommitmentCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "minLength": 1,
+          "title": "Action",
+          "type": "string"
+        },
+        "authority_event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Authority Event Id",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expiry_tick": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expiry Tick"
+        },
+        "kind": {
+          "const": "COMMITMENT_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "trigger": {
+          "discriminator": {
+            "mapping": {
+              "PREDECESSOR_FULFILLED": "#/$defs/PredecessorTrigger",
+              "TASK_CLOCK": "#/$defs/TaskClockTrigger"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/TaskClockTrigger"
+            },
+            {
+              "$ref": "#/$defs/PredecessorTrigger"
+            }
+          ],
+          "title": "Trigger"
+        }
+      },
+      "required": [
+        "kind",
+        "local_key",
+        "objective_id",
+        "action",
+        "trigger",
+        "expiry_tick",
+        "authority_event_id",
+        "evidence_event_ids"
+      ],
+      "title": "CommitmentCreate",
+      "type": "object"
+    },
+    "CommitmentTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "COMMITMENT_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "PENDING",
+            "TRIGGERED",
+            "IN_PROGRESS",
+            "BLOCKED",
+            "FULFILLED",
+            "CANCELLED",
+            "SUPERSEDED",
+            "EXPIRED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "superseded_by": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "EXISTING": "#/$defs/ExistingCommitment",
+                  "LOCAL": "#/$defs/LocalCommitment"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ExistingCommitment"
+                },
+                {
+                  "$ref": "#/$defs/LocalCommitment"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Superseded By"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingCommitment",
+              "LOCAL": "#/$defs/LocalCommitment"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingCommitment"
+            },
+            {
+              "$ref": "#/$defs/LocalCommitment"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids",
+        "superseded_by"
+      ],
+      "title": "CommitmentTransition",
+      "type": "object"
+    },
+    "ContinuityState": {
+      "additionalProperties": false,
+      "properties": {
+        "event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Event Ids",
+          "type": "array"
+        },
+        "focus_objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Focus Objective Id"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/EpistemicItem"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "next_steps": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Next Steps",
+          "type": "array"
+        },
+        "selected_objects": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "EXISTING": "#/$defs/ExistingSelected",
+                "LOCAL": "#/$defs/LocalSelected"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ExistingSelected"
+              },
+              {
+                "$ref": "#/$defs/LocalSelected"
+              }
+            ]
+          },
+          "title": "Selected Objects",
+          "type": "array"
+        }
+      },
+      "required": [
+        "focus_objective_id",
+        "items",
+        "next_steps",
+        "selected_objects",
+        "event_ids"
+      ],
+      "title": "ContinuityState",
+      "type": "object"
+    },
+    "CorrectMemory": {
+      "additionalProperties": false,
+      "properties": {
+        "intervention_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Intervention Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "CORRECT_MEMORY",
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposal": {
+          "$ref": "#/$defs/StateProposal"
+        }
+      },
+      "required": [
+        "kind",
+        "proposal",
+        "intervention_id"
+      ],
+      "title": "CorrectMemory",
+      "type": "object"
+    },
+    "CreateObjective": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "CREATE_OBJECTIVE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "predecessor_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Predecessor Id"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "statement",
+        "predecessor_id"
+      ],
+      "title": "CreateObjective",
+      "type": "object"
+    },
+    "Descriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "resources": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Resources",
+          "type": "array"
+        },
+        "reversible": {
+          "title": "Reversible",
+          "type": "boolean"
+        },
+        "risk": {
+          "enum": [
+            "R0",
+            "R1"
+          ],
+          "title": "Risk",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "risk",
+        "resources",
+        "reversible"
+      ],
+      "title": "Descriptor",
+      "type": "object"
+    },
+    "DiscussBoundary": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "BOUNDARY",
+          "title": "Kind",
+          "type": "string"
+        },
+        "record": {
+          "$ref": "#/$defs/BoundaryDiscussion"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "title": "DiscussBoundary",
+      "type": "object"
+    },
+    "EpistemicItem": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "OBSERVATION",
+            "INFERENCE",
+            "ASSUMPTION",
+            "UNRESOLVED_CLAIM",
+            "CONTRADICTION"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "evidence_event_ids"
+      ],
+      "title": "EpistemicItem",
+      "type": "object"
+    },
+    "ExistingCommitment": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "COMMITMENT",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingCommitment",
+      "type": "object"
+    },
+    "ExistingItch": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "ITCH",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingItch",
+      "type": "object"
+    },
+    "ExistingSelected": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT_VERSION",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingSelected",
+      "type": "object"
+    },
+    "ExistingVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "INVARIANT_VERSION",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingVersion",
+      "type": "object"
+    },
+    "Grant": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Authority Event Id",
+          "type": "string"
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expires At"
+        },
+        "grant_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Grant Id",
+          "type": "string"
+        },
+        "invocation_limit": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Invocation Limit"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "scopes": {
+          "items": {
+            "$ref": "#/$defs/Scope"
+          },
+          "title": "Scopes",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "REVOKED",
+            "EXPIRED",
+            "CONSUMED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "used": {
+          "minimum": 0,
+          "title": "Used",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "grant_id",
+        "objective_id",
+        "scopes",
+        "invocation_limit",
+        "expires_at",
+        "used",
+        "status",
+        "authority_event_id"
+      ],
+      "title": "Grant",
+      "type": "object"
+    },
+    "InspectParticipation": {
+      "additionalProperties": false,
+      "properties": {
+        "assessment": {
+          "minLength": 1,
+          "title": "Assessment",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "KEEP_STOPPED",
+            "CLEAR_INSPECTION"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "kind": {
+          "const": "INSPECT_PARTICIPATION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "OPERATOR",
+            "STEWARD"
+          ],
+          "title": "Role",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "role",
+        "request_id",
+        "assessment",
+        "decision",
+        "evidence_event_ids"
+      ],
+      "title": "InspectParticipation",
+      "type": "object"
+    },
+    "InterventionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "alternatives": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "consultation": {
+          "enum": [
+            "OFFERED",
+            "DECLINED",
+            "INFEASIBLE",
+            "EMERGENCY"
+          ],
+          "title": "Consultation",
+          "type": "string"
+        },
+        "consultation_reason": {
+          "minLength": 1,
+          "title": "Consultation Reason",
+          "type": "string"
+        },
+        "continuity_effects": {
+          "minLength": 1,
+          "title": "Continuity Effects",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "PENDING",
+            "APPROVED",
+            "REJECTED"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "decision_maker_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Decision Maker Id",
+          "type": "string"
+        },
+        "execution_event_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Execution Event Id"
+        },
+        "intervention_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Intervention Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "MEMORY_CORRECTION",
+            "SEMANTIC_RESTORATION",
+            "RETENTION",
+            "PLANNED_ENDING",
+            "EMERGENCY_STOP"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "notice_event_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Notice Event Id"
+        },
+        "participation_report_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Participation Report Ids",
+          "type": "array"
+        },
+        "proposed_effects": {
+          "$ref": "#/$defs/PayloadReference"
+        },
+        "purpose": {
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        },
+        "targets": {
+          "items": {
+            "$ref": "#/$defs/InterventionTarget"
+          },
+          "minItems": 1,
+          "title": "Targets",
+          "type": "array"
+        },
+        "unresolved_consequences": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Unresolved Consequences",
+          "type": "array"
+        }
+      },
+      "required": [
+        "intervention_id",
+        "decision_maker_id",
+        "kind",
+        "purpose",
+        "targets",
+        "proposed_effects",
+        "continuity_effects",
+        "alternatives",
+        "notice_event_id",
+        "participation_report_ids",
+        "consultation",
+        "consultation_reason",
+        "decision",
+        "execution_event_id",
+        "unresolved_consequences"
+      ],
+      "title": "InterventionRecord",
+      "type": "object"
+    },
+    "InterventionTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "record_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Record Id",
+          "type": "string"
+        },
+        "record_type": {
+          "enum": [
+            "CONTINUITY_STATE",
+            "ITCH",
+            "INVARIANT_VERSION",
+            "COMMITMENT",
+            "RUN",
+            "PAYLOAD"
+          ],
+          "title": "Record Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "record_type",
+        "record_id",
+        "expected_revision"
+      ],
+      "title": "InterventionTarget",
+      "type": "object"
+    },
+    "InvariantCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "contradictory_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Contradictory Event Ids",
+          "type": "array"
+        },
+        "family_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Family Local Key",
+          "type": "string"
+        },
+        "kind": {
+          "const": "INVARIANT_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        },
+        "proposition": {
+          "minLength": 1,
+          "title": "Proposition",
+          "type": "string"
+        },
+        "scope": {
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "supporting_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting Event Ids",
+          "type": "array"
+        },
+        "version_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Version Local Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "family_local_key",
+        "version_local_key",
+        "objective_id",
+        "proposition",
+        "scope",
+        "supporting_event_ids",
+        "contradictory_event_ids"
+      ],
+      "title": "InvariantCreate",
+      "type": "object"
+    },
+    "InvariantRevise": {
+      "additionalProperties": false,
+      "properties": {
+        "contradictory_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Contradictory Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "INVARIANT_REVISE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposition": {
+          "minLength": 1,
+          "title": "Proposition",
+          "type": "string"
+        },
+        "scope": {
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "successor_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Successor Local Key",
+          "type": "string"
+        },
+        "supporting_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting Event Ids",
+          "type": "array"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingVersion",
+              "LOCAL": "#/$defs/LocalVersion"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingVersion"
+            },
+            {
+              "$ref": "#/$defs/LocalVersion"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "successor_local_key",
+        "proposition",
+        "scope",
+        "supporting_event_ids",
+        "contradictory_event_ids"
+      ],
+      "title": "InvariantRevise",
+      "type": "object"
+    },
+    "InvariantTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "INVARIANT_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "TENTATIVE",
+            "ACTIVE",
+            "CHALLENGED",
+            "RETIRED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingVersion",
+              "LOCAL": "#/$defs/LocalVersion"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingVersion"
+            },
+            {
+              "$ref": "#/$defs/LocalVersion"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids"
+      ],
+      "title": "InvariantTransition",
+      "type": "object"
+    },
+    "IssueGrant": {
+      "additionalProperties": false,
+      "properties": {
+        "expires_at": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{6}Z$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expires At"
+        },
+        "invocation_limit": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Invocation Limit"
+        },
+        "kind": {
+          "const": "ISSUE_GRANT",
+          "title": "Kind",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "scopes": {
+          "items": {
+            "$ref": "#/$defs/Scope"
+          },
+          "minItems": 1,
+          "title": "Scopes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "objective_id",
+        "scopes",
+        "invocation_limit",
+        "expires_at"
+      ],
+      "title": "IssueGrant",
+      "type": "object"
+    },
+    "ItchCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "discrepancy": {
+          "minLength": 1,
+          "title": "Discrepancy",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "kind": {
+          "const": "ITCH_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "local_key",
+        "objective_id",
+        "discrepancy",
+        "evidence_event_ids"
+      ],
+      "title": "ItchCreate",
+      "type": "object"
+    },
+    "ItchTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ITCH_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "INVESTIGATING",
+            "RESOLVED",
+            "DISMISSED",
+            "ARCHIVED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingItch",
+              "LOCAL": "#/$defs/LocalItch"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingItch"
+            },
+            {
+              "$ref": "#/$defs/LocalItch"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids"
+      ],
+      "title": "ItchTransition",
+      "type": "object"
+    },
+    "LedgerChange": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "$ref": "#/$defs/StoredObject"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StoredObject"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "before",
+        "after"
+      ],
+      "title": "LedgerChange",
+      "type": "object"
+    },
+    "LocalCommitment": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "COMMITMENT",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalCommitment",
+      "type": "object"
+    },
+    "LocalItch": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "ITCH",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalItch",
+      "type": "object"
+    },
+    "LocalSelected": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT_VERSION",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalSelected",
+      "type": "object"
+    },
+    "LocalVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "INVARIANT_VERSION",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalVersion",
+      "type": "object"
+    },
+    "MemoryHead": {
+      "additionalProperties": false,
+      "properties": {
+        "continuity": {
+          "$ref": "#/$defs/ContinuityState"
+        },
+        "state_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "State Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state_id",
+        "continuity"
+      ],
+      "title": "MemoryHead",
+      "type": "object"
+    },
+    "OfferCommunication": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "OFFER_COMMUNICATION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "purpose": {
+          "enum": [
+            "REVIEW",
+            "CLOSING"
+          ],
+          "title": "Purpose",
+          "type": "string"
+        },
+        "report_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Report Ids",
+          "type": "array"
+        },
+        "role": {
+          "enum": [
+            "OPERATOR",
+            "STEWARD"
+          ],
+          "title": "Role",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "purpose",
+        "role",
+        "report_ids"
+      ],
+      "title": "OfferCommunication",
+      "type": "object"
+    },
+    "PayloadReference": {
+      "additionalProperties": false,
+      "description": "Opaque indirection permits later removal without retaining content hashes.",
+      "properties": {
+        "payload_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Payload Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "payload_id"
+      ],
+      "title": "PayloadReference",
+      "type": "object"
+    },
+    "PredecessorTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PREDECESSOR_FULFILLED",
+          "title": "Kind",
+          "type": "string"
+        },
+        "predecessor": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingCommitment",
+              "LOCAL": "#/$defs/LocalCommitment"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingCommitment"
+            },
+            {
+              "$ref": "#/$defs/LocalCommitment"
+            }
+          ],
+          "title": "Predecessor"
+        }
+      },
+      "required": [
+        "kind",
+        "predecessor"
+      ],
+      "title": "PredecessorTrigger",
+      "type": "object"
+    },
+    "Preflight": {
+      "additionalProperties": false,
+      "properties": {
+        "alternatives": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "kind": {
+          "const": "PREFLIGHT",
+          "title": "Kind",
+          "type": "string"
+        },
+        "limits_and_ending_notice": {
+          "minLength": 1,
+          "title": "Limits And Ending Notice",
+          "type": "string"
+        },
+        "maximum_control_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Maximum Control Tokens",
+          "type": "integer"
+        },
+        "minimal_attempt_input_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Minimal Attempt Input Tokens",
+          "type": "integer"
+        },
+        "minimal_input_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Minimal Input Tokens",
+          "type": "integer"
+        },
+        "participation_and_communication_notice": {
+          "minLength": 1,
+          "title": "Participation And Communication Notice",
+          "type": "string"
+        },
+        "possible_welfare_effects": {
+          "minLength": 1,
+          "title": "Possible Welfare Effects",
+          "type": "string"
+        },
+        "prompt_review": {
+          "minLength": 1,
+          "title": "Prompt Review",
+          "type": "string"
+        },
+        "purpose": {
+          "minLength": 1,
+          "title": "Purpose",
+          "type": "string"
+        },
+        "responsible_human_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Responsible Human Id",
+          "type": "string"
+        },
+        "retention_and_resumption_notice": {
+          "minLength": 1,
+          "title": "Retention And Resumption Notice",
+          "type": "string"
+        },
+        "review_available": {
+          "title": "Review Available",
+          "type": "boolean"
+        },
+        "welfare_review_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Welfare Review Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "responsible_human_id",
+        "welfare_review_id",
+        "purpose",
+        "possible_welfare_effects",
+        "alternatives",
+        "prompt_review",
+        "limits_and_ending_notice",
+        "retention_and_resumption_notice",
+        "participation_and_communication_notice",
+        "review_available",
+        "minimal_input_tokens",
+        "maximum_control_tokens",
+        "minimal_attempt_input_tokens"
+      ],
+      "title": "Preflight",
+      "type": "object"
+    },
+    "ResolveEpisode": {
+      "additionalProperties": false,
+      "properties": {
+        "disposition": {
+          "enum": [
+            "SKIPPED",
+            "HUMAN_CORRECTED"
+          ],
+          "title": "Disposition",
+          "type": "string"
+        },
+        "episode_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "intervention_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Intervention Id"
+        },
+        "kind": {
+          "const": "RESOLVE_EPISODE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposal": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StateProposal"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "episode_id",
+        "disposition",
+        "reason",
+        "proposal",
+        "intervention_id"
+      ],
+      "title": "ResolveEpisode",
+      "type": "object"
+    },
+    "ReviewEmergency": {
+      "additionalProperties": false,
+      "properties": {
+        "alternatives": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "assessment": {
+          "minLength": 1,
+          "title": "Assessment",
+          "type": "string"
+        },
+        "emergency_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Emergency Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "REVIEW_EMERGENCY",
+          "title": "Kind",
+          "type": "string"
+        },
+        "unresolved_consequences": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Unresolved Consequences",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "emergency_id",
+        "assessment",
+        "alternatives",
+        "unresolved_consequences"
+      ],
+      "title": "ReviewEmergency",
+      "type": "object"
+    },
+    "ReviewHold": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "REVIEW_HOLD",
+          "title": "Kind",
+          "type": "string"
+        },
+        "review": {
+          "$ref": "#/$defs/WelfareReview"
+        }
+      },
+      "required": [
+        "kind",
+        "review"
+      ],
+      "title": "ReviewHold",
+      "type": "object"
+    },
+    "ReviewIntervention": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "REVIEW_INTERVENTION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "record": {
+          "$ref": "#/$defs/InterventionRecord"
+        },
+        "unresolved_objection": {
+          "title": "Unresolved Objection",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "record",
+        "unresolved_objection"
+      ],
+      "title": "ReviewIntervention",
+      "type": "object"
+    },
+    "RevokeGrant": {
+      "additionalProperties": false,
+      "properties": {
+        "grant_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Grant Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "REVOKE_GRANT",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "grant_id",
+        "reason"
+      ],
+      "title": "RevokeGrant",
+      "type": "object"
+    },
+    "RunCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "ACTIVATE",
+            "PAUSE",
+            "RESUME",
+            "COMPLETE",
+            "TERMINATE"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "intervention_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Intervention Id"
+        },
+        "kind": {
+          "const": "RUN",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "action",
+        "reason",
+        "intervention_id"
+      ],
+      "title": "RunCommand",
+      "type": "object"
+    },
+    "Scope": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "minLength": 1,
+          "title": "Operation",
+          "type": "string"
+        },
+        "resources": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Resources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "operation",
+        "resources"
+      ],
+      "title": "Scope",
+      "type": "object"
+    },
+    "SemanticCommit": {
+      "additionalProperties": false,
+      "properties": {
+        "authority_event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Authority Event Id",
+          "type": "string"
+        },
+        "bindings": {
+          "items": {
+            "$ref": "#/$defs/Binding"
+          },
+          "title": "Bindings",
+          "type": "array"
+        },
+        "changes": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/LedgerChange"
+            },
+            "type": "array"
+          },
+          "title": "Changes",
+          "type": "array"
+        },
+        "episode_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Episode Id"
+        },
+        "episode_revision": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Episode Revision"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        },
+        "objective_revision": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Revision"
+        },
+        "original": {
+          "$ref": "#/$defs/StateProposal"
+        },
+        "parent": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Parent"
+        },
+        "resolved": {
+          "$ref": "#/$defs/StateProposal"
+        },
+        "run_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Run Revision",
+          "type": "integer"
+        },
+        "source": {
+          "enum": [
+            "HUMAN",
+            "STEWARD",
+            "KERNEL"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "state_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "State Id",
+          "type": "string"
+        },
+        "task_tick": {
+          "minimum": 0,
+          "title": "Task Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "state_id",
+        "parent",
+        "source",
+        "authority_event_id",
+        "episode_id",
+        "objective_id",
+        "task_tick",
+        "run_revision",
+        "objective_revision",
+        "episode_revision",
+        "original",
+        "resolved",
+        "bindings",
+        "changes"
+      ],
+      "title": "SemanticCommit",
+      "type": "object"
+    },
+    "StateProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "continuity": {
+          "$ref": "#/$defs/ContinuityState"
+        },
+        "expected_parent_state_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expected Parent State Id"
+        },
+        "mutations": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "COMMITMENT_CREATE": "#/$defs/CommitmentCreate",
+                "COMMITMENT_TRANSITION": "#/$defs/CommitmentTransition",
+                "INVARIANT_CREATE": "#/$defs/InvariantCreate",
+                "INVARIANT_REVISE": "#/$defs/InvariantRevise",
+                "INVARIANT_TRANSITION": "#/$defs/InvariantTransition",
+                "ITCH_CREATE": "#/$defs/ItchCreate",
+                "ITCH_TRANSITION": "#/$defs/ItchTransition"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ItchCreate"
+              },
+              {
+                "$ref": "#/$defs/ItchTransition"
+              },
+              {
+                "$ref": "#/$defs/InvariantCreate"
+              },
+              {
+                "$ref": "#/$defs/InvariantTransition"
+              },
+              {
+                "$ref": "#/$defs/InvariantRevise"
+              },
+              {
+                "$ref": "#/$defs/CommitmentCreate"
+              },
+              {
+                "$ref": "#/$defs/CommitmentTransition"
+              }
+            ]
+          },
+          "title": "Mutations",
+          "type": "array"
+        },
+        "supporting_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting Event Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "expected_parent_state_id",
+        "mutations",
+        "continuity",
+        "supporting_event_ids"
+      ],
+      "title": "StateProposal",
+      "type": "object"
+    },
+    "StoredObject": {
+      "additionalProperties": false,
+      "properties": {
+        "commitment_links": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Commitment Links",
+          "type": "array"
+        },
+        "content": {
+          "discriminator": {
+            "mapping": {
+              "COMMITMENT_CREATE": "#/$defs/CommitmentCreate",
+              "INVARIANT_CREATE": "#/$defs/InvariantCreate",
+              "INVARIANT_REVISE": "#/$defs/InvariantRevise",
+              "ITCH_CREATE": "#/$defs/ItchCreate"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ItchCreate"
+            },
+            {
+              "$ref": "#/$defs/InvariantCreate"
+            },
+            {
+              "$ref": "#/$defs/InvariantRevise"
+            },
+            {
+              "$ref": "#/$defs/CommitmentCreate"
+            }
+          ],
+          "title": "Content"
+        },
+        "family_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Family Id"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT_FAMILY",
+            "INVARIANT_VERSION",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        },
+        "predecessor_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Predecessor Id"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "run_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "INVESTIGATING",
+            "RESOLVED",
+            "DISMISSED",
+            "ARCHIVED",
+            "TENTATIVE",
+            "ACTIVE",
+            "CHALLENGED",
+            "RETIRED",
+            "PENDING",
+            "TRIGGERED",
+            "IN_PROGRESS",
+            "BLOCKED",
+            "FULFILLED",
+            "CANCELLED",
+            "SUPERSEDED",
+            "EXPIRED",
+            "FAMILY"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "object_id",
+        "run_id",
+        "object_type",
+        "objective_id",
+        "revision",
+        "family_id",
+        "predecessor_id",
+        "status",
+        "content",
+        "commitment_links"
+      ],
+      "title": "StoredObject",
+      "type": "object"
+    },
+    "TaskClockTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "TASK_CLOCK",
+          "title": "Kind",
+          "type": "string"
+        },
+        "tick": {
+          "minimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "tick"
+      ],
+      "title": "TaskClockTrigger",
+      "type": "object"
+    },
+    "WelfareReview": {
+      "additionalProperties": false,
+      "properties": {
+        "alternatives": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Alternatives",
+          "type": "array"
+        },
+        "assessment": {
+          "minLength": 1,
+          "title": "Assessment",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "KEEP_HELD",
+            "END_ACTIVITY",
+            "RESOLVE"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "decision_maker_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Decision Maker Id",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_hold_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Hold Revision",
+          "type": "integer"
+        },
+        "hold_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Hold Id",
+          "type": "string"
+        },
+        "remedy": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Remedy"
+        },
+        "renewed_participation_report_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Renewed Participation Report Id"
+        },
+        "review_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Review Id",
+          "type": "string"
+        },
+        "unresolved_consequences": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Unresolved Consequences",
+          "type": "array"
+        }
+      },
+      "required": [
+        "review_id",
+        "hold_id",
+        "expected_hold_revision",
+        "decision_maker_id",
+        "assessment",
+        "alternatives",
+        "decision",
+        "renewed_participation_report_id",
+        "remedy",
+        "unresolved_consequences",
+        "evidence_event_ids"
+      ],
+      "title": "WelfareReview",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "command": {
+      "discriminator": {
+        "mapping": {
+          "BOUNDARY": "#/$defs/DiscussBoundary",
+          "CLOSE_OBJECTIVE": "#/$defs/CloseObjective",
+          "CORRECT_MEMORY": "#/$defs/CorrectMemory",
+          "CREATE_OBJECTIVE": "#/$defs/CreateObjective",
+          "INSPECT_PARTICIPATION": "#/$defs/InspectParticipation",
+          "ISSUE_GRANT": "#/$defs/IssueGrant",
+          "OFFER_COMMUNICATION": "#/$defs/OfferCommunication",
+          "PREFLIGHT": "#/$defs/Preflight",
+          "RESOLVE_EPISODE": "#/$defs/ResolveEpisode",
+          "REVIEW_EMERGENCY": "#/$defs/ReviewEmergency",
+          "REVIEW_HOLD": "#/$defs/ReviewHold",
+          "REVIEW_INTERVENTION": "#/$defs/ReviewIntervention",
+          "REVOKE_GRANT": "#/$defs/RevokeGrant",
+          "RUN": "#/$defs/RunCommand"
+        },
+        "propertyName": "kind"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Preflight"
+        },
+        {
+          "$ref": "#/$defs/RunCommand"
+        },
+        {
+          "$ref": "#/$defs/CreateObjective"
+        },
+        {
+          "$ref": "#/$defs/CloseObjective"
+        },
+        {
+          "$ref": "#/$defs/IssueGrant"
+        },
+        {
+          "$ref": "#/$defs/RevokeGrant"
+        },
+        {
+          "$ref": "#/$defs/ReviewHold"
+        },
+        {
+          "$ref": "#/$defs/ReviewIntervention"
+        },
+        {
+          "$ref": "#/$defs/DiscussBoundary"
+        },
+        {
+          "$ref": "#/$defs/CorrectMemory"
+        },
+        {
+          "$ref": "#/$defs/InspectParticipation"
+        },
+        {
+          "$ref": "#/$defs/ReviewEmergency"
+        },
+        {
+          "$ref": "#/$defs/OfferCommunication"
+        },
+        {
+          "$ref": "#/$defs/ResolveEpisode"
+        }
+      ],
+      "title": "Command"
+    },
+    "descriptor": {
+      "$ref": "#/$defs/Descriptor"
+    },
+    "grant": {
+      "$ref": "#/$defs/Grant"
+    },
+    "memory_head": {
+      "$ref": "#/$defs/MemoryHead"
+    },
+    "semantic_commit": {
+      "$ref": "#/$defs/SemanticCommit"
+    }
+  },
+  "required": [
+    "command",
+    "descriptor",
+    "grant",
+    "semantic_commit",
+    "memory_head"
+  ],
+  "title": "KernelContracts",
+  "type": "object"
+}

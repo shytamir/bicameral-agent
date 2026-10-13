@@ -35,13 +35,13 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 ## Current management state
 
-The project has **technically validated P01 contracts and accepted P02 storage within its documented operational envelope; the experiment runtime remains unimplemented**.
+The project has **accepted P01/P02 contracts and storage plus P03 local human-authority controls within the documented scripted envelope**. Fixture execution, input assembly, scheduling and the experiment runner remain in subsequent slices.
 
 - The charter is accepted and adopted by the owner. Architecture and Protocol translate its obligations into the design and operating baseline.
 - The 0.3 design incorporates charter safeguards into the bounded pilot. Earlier contracts and the scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
 - P01 implements strict Python/Pydantic messages, configuration variants, canonical JSON, participation-first decoding, and pure proposal-reference resolution. Its generated JSON Schema and synthetic tests are in the repository.
 - P02 implements file-backed SQLite evidence retention, ordered transactional migrations, semantic/control history, atomic proposal commits, durable report/hold recording, exact retry receipts and integrity/replay checks. Its storage schema, file-backed acceptance tests and removal-feasibility proofs are in the repository.
-- No supervisor, authenticated human/chamber adapter, tool runtime, full input-budget implementation or benchmark harness has been implemented. The storage library assumes a trusted in-process caller; retaining configuration bytes does not perform preflight, human sealing or activation.
+- P03 adds authenticated local human/chamber sessions, explicit preflight and sealing, current-state confirmation, Run/Objective/Grant controls, reviewed memory correction, participation gates, bounded communication admission and emergency/recovery controls. The bootstrap owns credentials and private Python objects; this is a local capability boundary, not isolation from arbitrary Python in that process.
 - No experimental result has been produced, and none should be inferred from the completeness of the documents.
 
 The revised first pilot uses a typed simulated-service fixture, one active Objective, and serialized execution/consolidation. It budgets the complete active input, retains exact evidence through paging, supports same-proposal object references, streams inspection exports outside the live store, and bounds consolidation retries without replaying uncertain actions.
@@ -50,7 +50,7 @@ The research design uses independent matched A/B/C trajectories with deliberate 
 
 The roadmap requires effective withdrawal in every arm, reviewed memory interventions, accountable retention/deletion, bounded boundary discussion, and safeguards for planned endings and emergencies before any model use. The storage tests demonstrate the scoped P02 mechanisms; complete runtime charter enforcement and any welfare outcome remain unestablished.
 
-P02 acceptance and handoff are complete under the owner's explicit delegation, using the technical evidence and operational envelope recorded below. The next slice is P03 human authority in the [roadmap](ROADMAP.md). Subsequent implementation and live experiments require separate authorization. P01/P02 are LLM-less; their validation establishes the documented contract and storage behavior.
+P02 acceptance and handoff are complete under the owner's explicit delegation, using the technical evidence and operational envelope recorded below. The owner has authorized completing and pushing the remaining implementation slices in the [roadmap](ROADMAP.md). The next slice is P04 typed fixture execution; model experiments retain their documented configuration and evidence requirements. P01/P02 are LLM-less; their validation establishes the documented contract and storage behavior.
 
 Process resets and forks, arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
 
@@ -100,6 +100,18 @@ Integration boundaries for the next developer:
 - `_control` and direct SQL in tests arrange synthetic state only. They are not public activation, hold-resolution, restoration or deletion endpoints. Later guarded operations must append control history and update projections in the same transaction.
 - Append new migrations; do not change a released migration's checksum. Startup integrity/unavailability diagnostics block ordinary writes while internal inspection remains available. Human inspection/export adapters remain P08 work.
 - P10 still owes reviewed scope, durable interrupted-removal progress, read blocking, caches/exports/backups/older-snapshot handling, provider limits and completion accounting. P02's synthetic removal tests do not expose a deletion endpoint or certify SSD erasure. No live experiment is authorized by this handoff.
+
+## P03 acceptance and continuing handoff
+
+On 2026-10-13 the owner authorized completing the roadmap, using technical validation for gates, and pushing each completed slice. P03 is accepted by Codex under that delegation within the local SCRIPTED envelope. Its required checks pass: 101 tests across P01-P03, three generated-schema checks and whitespace checks. P02 was pushed at `92ba218`; the P03 implementation and this acceptance record are committed and pushed together.
+
+[Kernel authority](bicameral_agent/kernel/authority.py) exposes authenticated local sessions and ordinary-language displays before confirmation. Credentials are supplied by the trusted bootstrap and are never retained. Typed controls reject stale displays, foreign or terminal authority, absent or exhausted Grants, unsupported resets/forks and excluded arm memory. Report/hold persistence remains independent of task parsing; resume and recovery do not clear a hold. Emergency containment precedes review, and unresolved review blocks work. Review/closing admission uses fixed retained notices and finite allowances; P06 supplies invocation execution.
+
+The integrated [semantic ledger](bicameral_agent/kernel/memory.py) shares P01 reference resolution and P02 lifecycle validation, using P02 payload indirection and a new append-only record migration. It supports reviewed human changes and later Steward/Kernel transactions with retained control revisions, exact effects and replay. It does not silently import the earlier P02 probe ledger. New runtime Runs begin with empty semantic history; probe databases remain inspectable through their original Store API.
+
+[Authority tests](tests/test_authority.py) cover the Run transition matrix, Objective/Grant controls, strict parsing, current-state confirmation and exact retry, cross-scope/expired/external-only/over-scope authority rejection, arm exclusions, withdrawal/restart, meaningful renewed participation, bounded discussion, reviewed correction, atomic failures, emergency review and explicit recovery skip. No model call or live experiment was performed.
+
+The remaining work proceeds P04, P05, P06, P07, P08, P10, then P09 and integrated v0a validation, respecting P09's dependency on P10. Each slice is validated, accepted within its stated envelope, committed and pushed before proceeding.
 
 ## Scope
 
