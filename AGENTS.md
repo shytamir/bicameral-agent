@@ -33,7 +33,8 @@
 - Contract or schema changes: test strict parsing, unknown-field rejection, serialization stability, and schema-generation drift.
 - State or persistence changes: use real database constraints and transactions; test allowed and forbidden transitions, failure atomicity, and recovery.
 - Authority changes: include negative tests for absent, stale, terminal, cross-scope, over-risk, external-only, and prohibited authorization paths.
-- Static validation is technical evidence, not proof of experimental success or human acceptance.
+- Apply Protocol section 9: passing the required technical validations satisfies definition of done within the implementation slice's documented operational envelope. When the owner delegates acceptance, make and record that decision from the validation evidence without requesting another sign-off.
+- Record the accepted implementation revision, operational envelope, checks, and remaining integration responsibilities in the project handoff. Keep claims within the evidence and preserve the governing runtime authorization, review, and experiment requirements.
 
 ## Git hygiene
 

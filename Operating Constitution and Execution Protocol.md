@@ -172,4 +172,6 @@ Configuration, prompts, tools, budgets, recovery limits, model identities, chart
 
 The Architecture owns experimental units, arm comparisons, outcome/cost rules and intervention treatment. Evaluation code is read-only with respect to agent control and semantic state. A score, audit, or analysis conclusion cannot close an Objective, grant permission, or become learned memory automatically. Evaluator-only records remain unavailable to chambers even after an individual task is scored.
 
-Mechanical conformance, pilot usability, experimental success, and human acceptance are separate outcomes. Document and test counts do not substitute for them.
+For an authorized implementation slice, passing the required technical validations satisfies definition of done and provides sufficient evidence for owner acceptance within its documented operational envelope. When the owner delegates acceptance to the implementing agent, that agent may approve the slice and complete handoff without another sign-off. Record the delegation, decision-maker, accepted implementation revision, operational envelope, validation evidence and remaining integration responsibilities.
+
+This engineering acceptance leaves the governing runtime authorization, human review and experiment gates in force. Claims about pilot usability, experimental success or welfare require the relevant evidence; document and test counts alone do not establish those outcomes.

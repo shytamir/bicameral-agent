@@ -2,7 +2,7 @@
 
 **Version:** 0.3-design
 
-**Status:** P01 contracts and P02 storage have synthetic technical validation; P02 owner acceptance is pending. Complete authority enforcement, scheduling and experiment conformance remain unimplemented.
+**Status:** P01 contracts and P02 storage have synthetic technical validation; P02 acceptance and handoff are complete under the owner's explicit delegation within the documented operational envelope. Complete authority enforcement, scheduling and experiment conformance remain unimplemented.
 
 ## 1. Contract boundary
 
@@ -44,7 +44,7 @@ Participation is committed before attempted task effects. Valid withdrawal creat
 
 These are trusted storage primitives, not a complete runtime acceptance endpoint. P03 owns authenticated authority and review controls; P05 owns the required full-bundle validator and actual input accounting; P06 owns attempt admission, durable invocation recovery, scheduling and enforcement before calls/dispatches. Test setup uses private control writers to arrange synthetic states; those writers are not exposed human controls. The library has no chamber/provider transport, environment tools, restoration or deletion endpoint.
 
-Before schema construction, a small file-backed proof exercised shared-source removal and rollback. An actual-schema test subsequently removed synthetic source and derived payloads and their hashes, checked WAL/checkpointed database bytes, and retained an honest non-sensitive disposition. P10 must integrate reviewed scope, durable removal progress, read blocking, all cache/export/backup copies and old-snapshot recovery. The tests do not certify physical-media erasure, power-loss behavior, full runtime charter compliance or owner acceptance. The [README handoff](README.md#p02-acceptance-and-handoff) records the acceptance boundary.
+Before schema construction, a small file-backed proof exercised shared-source removal and rollback. An actual-schema test subsequently removed synthetic source and derived payloads and their hashes, checked WAL/checkpointed database bytes, and retained an honest non-sensitive disposition. P10 must integrate reviewed scope, durable removal progress, read blocking, all cache/export/backup copies and old-snapshot recovery. The tests do not certify physical-media erasure, power-loss behavior or full runtime charter compliance. The [README handoff](README.md#p02-acceptance-and-handoff) records delegated owner acceptance and its operational envelope.
 
 ## 3. State and ownership
 
@@ -360,4 +360,4 @@ P01 has executable contract tests and P02 has file-backed storage acceptance tes
 
 Remaining empirical/configuration decisions are explicit: model/backend and tokenizer; concrete fixture instances and retained role prompts; calibrated limits/deadlines/retry allowance; independent block count with precision justification; useful-improvement and cost thresholds; and positive audit sample rates. These are development-pilot inputs, not authority or lifecycle policies for a developer to invent. Evaluation values must be fixed before held-out dispatch. The local Python/Pydantic/SQLite environment and P02 file-backed behavior have been tested; provider availability and complete experiment-machine readiness have not.
 
-Passing P01/P02 tests establishes only the reported contract and storage behavior. It does not establish containment, complete runtime charter enforcement, subjective welfare, or the research hypothesis. P02 is ready for owner acceptance; implementation of P03 requires separate authorization.
+Passing the required P01/P02 validations satisfies definition of done within the documented contract and storage envelope under Protocol section 9. P02 acceptance and handoff are complete under the owner's explicit delegation. This evidence does not establish containment, complete runtime charter enforcement, subjective welfare, or the research hypothesis. Implementation of P03 requires separate authorization.

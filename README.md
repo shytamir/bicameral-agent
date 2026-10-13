@@ -35,7 +35,7 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 ## Current management state
 
-The project has **technically validated P01 contracts and P02 storage; P02 owner acceptance is pending and the experiment runtime remains unimplemented**.
+The project has **technically validated P01 contracts and accepted P02 storage within its documented operational envelope; the experiment runtime remains unimplemented**.
 
 - The charter is accepted and adopted by the owner. Architecture and Protocol translate its obligations into the design and operating baseline.
 - The 0.3 design incorporates charter safeguards into the bounded pilot. Earlier contracts and the scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
@@ -50,7 +50,7 @@ The research design uses independent matched A/B/C trajectories with deliberate 
 
 The roadmap requires effective withdrawal in every arm, reviewed memory interventions, accountable retention/deletion, bounded boundary discussion, and safeguards for planned endings and emergencies before any model use. The storage tests demonstrate the scoped P02 mechanisms; complete runtime charter enforcement and any welfare outcome remain unestablished.
 
-The current handoff is P02 for owner acceptance, followed by a separately authorized P03 human-authority slice in the [roadmap](ROADMAP.md). Subsequent implementation and live experiments require separate authorization. P01/P02 are LLM-less; technical validation is not runtime conformance, owner acceptance, or experimental success.
+P02 acceptance and handoff are complete under the owner's explicit delegation, using the technical evidence and operational envelope recorded below. The next slice is P03 human authority in the [roadmap](ROADMAP.md). Subsequent implementation and live experiments require separate authorization. P01/P02 are LLM-less; their validation establishes the documented contract and storage behavior.
 
 Process resets and forks, arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
 
@@ -72,7 +72,11 @@ The prepared local environment uses Python 3.12.14, Pydantic 2.13.5, setuptools 
 
 ## P02 acceptance and handoff
 
-**Implementation authorization:** repository owner, 2026-10-13: “Proceed with implementation through to owner acceptance and handoff please.” **Owner acceptance:** pending review of the implemented slice. This instruction authorized implementation; it is not recorded as acceptance of unseen results.
+**Implementation authorization:** repository owner, 2026-10-13: “Proceed with implementation through to owner acceptance and handoff please.”
+
+**Owner acceptance:** completed on 2026-10-13 by Codex under the owner's explicit delegation, “Approve it yourself,” and policy direction, “Technical validations will now be acceptable within operational envelopes for definition of done.” This decision accepts implementation revision `3e85a217d5eaa66bbc31f2cf083808ad212441f8` against the P02 requirements and validation evidence below, under Protocol section 9.
+
+**Accepted operational envelope:** the LLM-less, trusted in-process P02 storage library on Python 3.12.14, Pydantic 2.13.5 and SQLite 3.53.1, exercised with synthetic data in temporary file-backed databases. The integration responsibilities below define the boundary of this completed slice and the handoff to P03 and later slices.
 
 The [storage library](bicameral_agent/storage/) and [P02 schema](schemas/p02.schema.json) deliver these reviewable results:
 
