@@ -207,7 +207,7 @@ class Fixture:
             if len(self.k.records.latest('ACTION')) >= self.k.config.budgets.actions_per_trajectory:
                 raise ValueError('trajectory action allowance exhausted')
             payload = self.k.store._payload(self.k.run_id, raw)
-            event = self.k.event({'kind': 'DISPATCH_INTENT', 'action_id': key, 'request_payload_id': payload})
+            event = self.k.event({'kind': 'DISPATCH_INTENT', 'action_id': key, 'request_payload_id': payload}, episode_id=request.episode_id)
             record = ActionRecord(request_payload_id=payload, episode_id=request.episode_id, resource=operation.resource,
                 risk=descriptor.risk, status='DISPATCHED', intent_event_id=event, result_event_id=None,
                 observation_event_id=None, postcondition_satisfied=None)
@@ -234,7 +234,7 @@ class Fixture:
                 observation = {'resource': data['resource'], 'health': data['health']}
             else:
                 observation = data
-            event = self.k.event({'kind': 'FIXTURE_OBSERVATION', 'action_id': key, 'observation': observation}, role='ENVIRONMENT', source='E')
+            event = self.k.event({'kind': 'FIXTURE_OBSERVATION', 'action_id': key, 'observation': observation}, role='ENVIRONMENT', source='E', episode_id=request.episode_id)
         with self.k.store._transaction('action-result'):
             current = self.action(key)
             if current.status != 'DISPATCHED':

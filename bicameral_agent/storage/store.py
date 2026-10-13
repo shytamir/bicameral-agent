@@ -120,7 +120,7 @@ class Store:
             if self._db.execute("PRAGMA foreign_key_check").fetchall():
                 raise StorageError("migration foreign-key failure")
 
-    def _payload(self, run_id, body):
+    def _payload(self, run_id, body, *, sources=()):
         if type(body) is not bytes:
             raise TypeError("retained payload must be exact bytes")
         digest = sha256(body).hexdigest()
@@ -134,6 +134,9 @@ class Store:
                 raise StorageError("content hash collision or corruption")
         payload_id = identifier()
         self._write("INSERT INTO payloads VALUES(?,?,?,'RETAINED')", (payload_id, run_id, blob_id))
+        for source in sorted(set(sources)):
+            self.read_payload(run_id, source)
+            self._write('INSERT INTO derived_payloads VALUES(?,?,?)', (run_id, source, payload_id))
         return payload_id
 
     def read_payload(self, run_id, payload_id):
@@ -190,11 +193,13 @@ class Store:
             raise StorageError("unknown Run")
         return TypeAdapter(RunConfiguration).validate_json(self.read_payload(run_id, row[0]), strict=True)
 
-    def _event(self, run_id, payload_id, *, role, source, visibility):
+    def _event(self, run_id, payload_id, *, role, source, visibility, episode_id=None):
         event_id = identifier()
         sequence = self._db.execute("SELECT COALESCE(MAX(sequence),0)+1 FROM events WHERE run_id=?", (run_id,)).fetchone()[0]
         self._write("INSERT INTO events VALUES(?,?,?,?,?,?,?,?)",
                     (event_id, run_id, sequence, role, source, visibility, observed_at(), payload_id))
+        if episode_id is not None:
+            self._write('INSERT INTO event_episodes VALUES(?,?,?)', (run_id, event_id, episode_id))
         return event_id
 
     def record_evidence(self, run_id, raw, *, role, source, visibility):

@@ -853,6 +853,27 @@
       "title": "EpistemicItem",
       "type": "object"
     },
+    "EventQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "EVENT",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "event_id"
+      ],
+      "title": "EventQuery",
+      "type": "object"
+    },
     "ExistingCommitment": {
       "additionalProperties": false,
       "properties": {
@@ -1101,6 +1122,19 @@
         "authority_event_id"
       ],
       "title": "Grant",
+      "type": "object"
+    },
+    "InputContracts": {
+      "additionalProperties": false,
+      "properties": {
+        "page_request": {
+          "$ref": "#/$defs/PageRequest"
+        }
+      },
+      "required": [
+        "page_request"
+      ],
+      "title": "InputContracts",
       "type": "object"
     },
     "InspectParticipation": {
@@ -1934,6 +1968,27 @@
       "title": "LocalVersion",
       "type": "object"
     },
+    "ManifestQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "MANIFEST",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "episode_id"
+      ],
+      "title": "ManifestQuery",
+      "type": "object"
+    },
     "MemoryHead": {
       "additionalProperties": false,
       "properties": {
@@ -1951,6 +2006,65 @@
         "continuity"
       ],
       "title": "MemoryHead",
+      "type": "object"
+    },
+    "ObjectQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "OBJECT_INDEX",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Object Id"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "ITCH",
+                "INVARIANT_FAMILY",
+                "INVARIANT_VERSION",
+                "COMMITMENT"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Object Type"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Status"
+        }
+      },
+      "required": [
+        "kind",
+        "object_id",
+        "object_type",
+        "status"
+      ],
+      "title": "ObjectQuery",
       "type": "object"
     },
     "OfferCommunication": {
@@ -1993,6 +2107,94 @@
         "report_ids"
       ],
       "title": "OfferCommunication",
+      "type": "object"
+    },
+    "PageRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "cursor": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Cursor"
+        },
+        "query": {
+          "discriminator": {
+            "mapping": {
+              "EVENT": "#/$defs/EventQuery",
+              "MANIFEST": "#/$defs/ManifestQuery",
+              "OBJECT_INDEX": "#/$defs/ObjectQuery",
+              "PAYLOAD": "#/$defs/PayloadQuery",
+              "RANGE": "#/$defs/RangeQuery",
+              "SEARCH": "#/$defs/SearchQuery",
+              "STATE": "#/$defs/StateQuery"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/EventQuery"
+            },
+            {
+              "$ref": "#/$defs/RangeQuery"
+            },
+            {
+              "$ref": "#/$defs/SearchQuery"
+            },
+            {
+              "$ref": "#/$defs/ObjectQuery"
+            },
+            {
+              "$ref": "#/$defs/ManifestQuery"
+            },
+            {
+              "$ref": "#/$defs/PayloadQuery"
+            },
+            {
+              "$ref": "#/$defs/StateQuery"
+            }
+          ],
+          "title": "Query"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "query",
+        "cursor"
+      ],
+      "title": "PageRequest",
+      "type": "object"
+    },
+    "PayloadQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PAYLOAD",
+          "title": "Kind",
+          "type": "string"
+        },
+        "payload_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Payload Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "payload_id"
+      ],
+      "title": "PayloadQuery",
       "type": "object"
     },
     "PayloadReference": {
@@ -2182,6 +2384,40 @@
         "minimal_attempt_input_tokens"
       ],
       "title": "Preflight",
+      "type": "object"
+    },
+    "RangeQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "first_sequence": {
+          "exclusiveMinimum": 0,
+          "title": "First Sequence",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "RANGE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "last_sequence": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Sequence"
+        }
+      },
+      "required": [
+        "kind",
+        "first_sequence",
+        "last_sequence"
+      ],
+      "title": "RangeQuery",
       "type": "object"
     },
     "ReadOperation": {
@@ -2503,6 +2739,33 @@
       "title": "Scope",
       "type": "object"
     },
+    "SearchQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "SEARCH",
+          "title": "Kind",
+          "type": "string"
+        },
+        "ranking": {
+          "const": "CASEFOLD_COUNT_V1",
+          "title": "Ranking",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "ranking"
+      ],
+      "title": "SearchQuery",
+      "type": "object"
+    },
     "SemanticCommit": {
       "additionalProperties": false,
       "properties": {
@@ -2814,6 +3077,27 @@
       "title": "StateProposal",
       "type": "object"
     },
+    "StateQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "STATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "state_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "State Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "state_id"
+      ],
+      "title": "StateQuery",
+      "type": "object"
+    },
     "StoredObject": {
       "additionalProperties": false,
       "properties": {
@@ -3083,11 +3367,15 @@
     },
     "fixture": {
       "$ref": "#/$defs/FixtureContracts"
+    },
+    "inputs": {
+      "$ref": "#/$defs/InputContracts"
     }
   },
   "required": [
     "authority",
-    "fixture"
+    "fixture",
+    "inputs"
   ],
   "title": "RuntimeContracts",
   "type": "object"

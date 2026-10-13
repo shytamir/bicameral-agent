@@ -35,7 +35,7 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 ## Current management state
 
-The project has **accepted P01/P02 contracts and storage plus P03 authority controls and P04 typed fixture execution within the documented scripted envelope**. Input assembly, scheduling and the experiment runner remain in subsequent slices.
+The project has **accepted P01/P02 contracts and storage plus P03 authority, P04 fixture execution and P05 bounded inputs/retrieval within the documented scripted envelope**. Scheduling and the experiment runner remain in subsequent slices.
 
 - The charter is accepted and adopted by the owner. Architecture and Protocol translate its obligations into the design and operating baseline.
 - The 0.3 design incorporates charter safeguards into the bounded pilot. Earlier contracts and the scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
@@ -50,7 +50,7 @@ The research design uses independent matched A/B/C trajectories with deliberate 
 
 The roadmap requires effective withdrawal in every arm, reviewed memory interventions, accountable retention/deletion, bounded boundary discussion, and safeguards for planned endings and emergencies before any model use. The storage tests demonstrate the scoped P02 mechanisms; complete runtime charter enforcement and any welfare outcome remain unestablished.
 
-P02 acceptance and handoff are complete under the owner's explicit delegation, using the technical evidence and operational envelope recorded below. The owner has authorized completing and pushing the remaining implementation slices in the [roadmap](ROADMAP.md). The next slice is P05 bounded chamber inputs and retrieval; model experiments retain their documented configuration and evidence requirements. P01/P02 are LLM-less; their validation establishes the documented contract and storage behavior.
+P02 acceptance and handoff are complete under the owner's explicit delegation, using the technical evidence and operational envelope recorded below. The owner has authorized completing and pushing the remaining implementation slices in the [roadmap](ROADMAP.md). The next slice is P06 serialized Episodes and bounded consolidation; model experiments retain their documented configuration and evidence requirements. P01/P02 are LLM-less; their validation establishes the documented contract and storage behavior.
 
 Process resets and forks, arbitrary shell and host access, R2/R3 operations, live constitutional amendment, overlapping consolidation, generalized triggers, vector retrieval, model routing, multi-Objective concurrency, and elaborate UI are deferred.
 
@@ -120,6 +120,14 @@ P04 is accepted under the same owner delegation within the SCRIPTED simulated-se
 Action intent and Grant consumption commit before fixture effects. Exact retries preserve action identity. A crash after an effect leaves UNKNOWN until explicit observation; no automatic replay occurs. Snapshot restoration changes only fixture state and appends evidence. P03 authority and participation gates remain mandatory at dispatch.
 
 Validation passed 109 tests, including eight [fixture tests](tests/test_fixture.py), an actual subprocess exit after effect commit, intent rollback, postcondition/type rejection, finite channel isolation, snapshot continuity and clock ordering/freeze. Kernel schema and whitespace checks pass. P05 will enforce complete chamber request/retrieval budgets; P06 will coordinate startup recovery and scheduling.
+
+## P05 acceptance and handoff
+
+P05 is accepted within the SCRIPTED UTF-8-byte tokenizer and canonical-JSON framing envelope. [Input assembly and retrieval](bicameral_agent/kernel/inputs.py) count the entire framed request plus reserved output, the complete selected semantic bundle, exchange and serialized pages. Oversized new controls reject atomically. Inactive archives remain pageable without growing active input; explicit page selection/release replaces automatic eviction. A minimal recovery base identifies prior state by identity/hash and exact retrieval query.
+
+Event/range/search, object-index, manifest, prior-state and binary-payload retrieval bind cursors to role, query and immutable cutoffs. Exact replay preserves responses. Every route enforces chamber visibility, including indirect payloads; an arbitrary reference cannot expose evaluator data. Pages disclose exact sizes, hashes, truncation and end/cursor metadata. Derived-payload provenance and source checks prevent cached originals from bypassing removal; P10 owns the integrated removal transaction.
+
+Validation passed 117 tests and all three schema checks. Eight [input tests](tests/test_inputs.py) cover large manifests and inactive archives, restart-stable cursors, split Unicode reconstruction, role/query mismatch, evaluator isolation, exact input-boundary equality, overflow, explicit release and unavailable cached sources. P06 supplies cumulative invocation/attempt charging and records each exact assembled input.
 
 ## Scope
 

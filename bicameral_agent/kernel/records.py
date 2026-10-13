@@ -20,12 +20,12 @@ class Records:
         row = self.row(kind, key)
         return row['revision'] if row else 0
 
-    def put(self, kind, key, value, *, expected):
+    def put(self, kind, key, value, *, expected, sources=()):
         if not self.store._db.in_transaction:
             raise StorageError('Kernel records require a transaction')
         if self.revision(kind, key) != expected:
             raise ValueError('stale Kernel record')
-        payload = self.store._payload(self.run_id, canonical_bytes(value))
+        payload = self.store._payload(self.run_id, canonical_bytes(value), sources=sources)
         self.store._write('INSERT INTO kernel_records(run_id,kind,id,revision,payload_id) VALUES(?,?,?,?,?)',
                           (self.run_id, kind, key, expected + 1, payload))
 

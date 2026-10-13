@@ -113,7 +113,16 @@ KERNEL_RECORDS = (
     """CREATE TRIGGER kernel_record_delete BEFORE DELETE ON kernel_records
         BEGIN SELECT RAISE(ABORT,'append-only Kernel record'); END""",
 )
-MIGRATIONS = (INITIAL, KERNEL_RECORDS)
+RETRIEVAL_PROVENANCE = (
+    """CREATE TABLE derived_payloads(run_id TEXT NOT NULL, source_id TEXT NOT NULL, target_id TEXT NOT NULL,
+        PRIMARY KEY(run_id,source_id,target_id), CHECK(source_id != target_id),
+        FOREIGN KEY(run_id,source_id) REFERENCES payloads(run_id,id),
+        FOREIGN KEY(run_id,target_id) REFERENCES payloads(run_id,id)) STRICT""",
+    """CREATE TABLE event_episodes(run_id TEXT NOT NULL, event_id TEXT NOT NULL, episode_id TEXT NOT NULL,
+        PRIMARY KEY(run_id,event_id), FOREIGN KEY(run_id,event_id) REFERENCES events(run_id,id),
+        FOREIGN KEY(run_id,episode_id) REFERENCES control_heads(run_id,id)) STRICT""",
+)
+MIGRATIONS = (INITIAL, KERNEL_RECORDS, RETRIEVAL_PROVENANCE)
 
 def checksum(statements):
     return sha256("\n".join(statements).encode()).hexdigest()

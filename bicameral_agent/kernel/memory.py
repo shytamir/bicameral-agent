@@ -66,7 +66,8 @@ class Memory:
                                                    run.task_tick, identifier, self.prior())
         bundle = canonical_bytes({'continuity': resolution.proposal.continuity.model_dump(mode='json'),
                                   'selected_objects': [final[r.object_id].model_dump(mode='json')
-                                                       for r in resolution.proposal.continuity.selected_objects]})
+                                                       for r in resolution.proposal.continuity.selected_objects],
+                                  'inapplicable_count': 0, 'change_cursor': None})
         if len(bundle) > self.k.config.budgets.active_semantic_tokens:
             raise ValueError('scripted byte-token semantic budget')
         state_id = identifier()

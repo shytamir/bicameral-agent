@@ -2,7 +2,7 @@
 
 **Version:** 0.3-design
 
-**Status:** P01-P04 have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. Complete input accounting, scheduling and experiment conformance remain in subsequent authorized slices.
+**Status:** P01-P05 have synthetic technical validation and delegated owner acceptance within their documented operational envelopes. Cumulative invocation accounting, scheduling and experiment conformance remain in subsequent authorized slices.
 
 ## 1. Contract boundary
 

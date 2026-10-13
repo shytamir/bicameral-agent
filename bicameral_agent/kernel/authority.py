@@ -134,9 +134,9 @@ class Kernel:
             '''SELECT h.id FROM control_history h JOIN control_heads p USING(run_id,id,revision)
                WHERE h.run_id=? AND h.kind=? ORDER BY h.rowid''', (self.run_id, kind))]
 
-    def event(self, body, *, source='K', role='KERNEL', visibility='CHAMBER'):
-        return self.store._event(self.run_id, self.store._payload(self.run_id, canonical_bytes(body)),
-                                 role=role, source=source, visibility=visibility)
+    def event(self, body, *, source='K', role='KERNEL', visibility='CHAMBER', episode_id=None, sources=()):
+        return self.store._event(self.run_id, self.store._payload(self.run_id, canonical_bytes(body), sources=sources),
+                                 role=role, source=source, visibility=visibility, episode_id=episode_id)
 
     def _stamp(self):
         controls = [tuple(r) for r in self.store._db.execute(
@@ -180,6 +180,9 @@ class Kernel:
             if stamp != self._stamp():
                 raise ValueError('stale display; refresh before confirmation')
             result = self._execute(command)
+            if command.kind in {'CREATE_OBJECTIVE', 'ISSUE_GRANT'}:
+                from .inputs import Inputs
+                Inputs(self).control_view()
             result = {'control': command.kind, 'result': result}
             self.records.put('CONTROL_RECEIPT', token, result, expected=0)
         return result
@@ -571,6 +574,15 @@ class Kernel:
         if cap is not self._chamber_caps.get(role):
             raise PermissionError('authenticated chamber route required')
         result = self.store.receive_chamber(self.run_id, role, request_id, episode_id, raw)
+        if episode_id is not None:
+            known = self.store._db.execute("SELECT 1 FROM control_heads p JOIN control_history h USING(run_id,id,revision) WHERE h.run_id=? AND h.id=? AND h.kind='EPISODE'",
+                                            (self.run_id, episode_id)).fetchone()
+            if known:
+                with self.store._transaction('chamber-episode-evidence'):
+                    request = self.store._request(self.run_id, role, request_id)
+                    event = self.store._db.execute('SELECT id FROM events WHERE run_id=? AND payload_id=?',
+                                                   (self.run_id, request['request_payload_id'])).fetchone()
+                    self.store._write('INSERT OR IGNORE INTO event_episodes VALUES(?,?,?)', (self.run_id, event[0], episode_id))
         # The report/hold already committed. Interruption failure cannot remove it.
         if any(h.status == 'HELD' for _, _, h in self.controls('WELFARE_HOLD')) or self.store._db.execute(
                 'SELECT 1 FROM inspections WHERE run_id=?', (self.run_id,)).fetchone():

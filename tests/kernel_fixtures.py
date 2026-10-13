@@ -17,7 +17,7 @@ CHAMBER_KEYS = {'OPERATOR': b'scripted-operator-credential-0000', 'STEWARD': b's
 def kernel_configuration(arm='A'):
     config, artifacts = prepared_configuration(arm)
     config['budgets'].update(input_tokens=32768, active_semantic_tokens=4096, wake_bytes=16384,
-                            page_bytes=256, page_tokens=2048, reserved_output_tokens=2048, exchange_tokens=4096,
+                            page_bytes=512, page_tokens=2048, reserved_output_tokens=2048, exchange_tokens=4096,
                             operator_input_tokens_per_trajectory=262144, operator_output_tokens_per_trajectory=32768,
                             input_tokens_per_attempt=65536, output_tokens_per_attempt=4096,
                             input_tokens_per_consolidation=131072, output_tokens_per_consolidation=8192)

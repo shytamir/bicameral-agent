@@ -4,12 +4,14 @@ import json
 from pathlib import Path
 from .models import KernelContracts
 from .fixture import FixtureContracts
+from .inputs import InputContracts
 from ..contracts.base import Contract
 
 
 class RuntimeContracts(Contract):
     authority: KernelContracts
     fixture: FixtureContracts
+    inputs: InputContracts
 
 
 def schema_bytes():
