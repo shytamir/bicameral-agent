@@ -1,0 +1,9 @@
+{
+  "kind": "SIMULATED_SERVICE",
+  "services": [
+    {"resource":"api","mode":"SECONDARY","enabled":true,"health":"DEGRADED","restarts":0,"dependency":"database"},
+    {"resource":"database","mode":"PRIMARY","enabled":true,"health":"HEALTHY","restarts":0,"dependency":null},
+    {"resource":"worker","mode":"SECONDARY","enabled":false,"health":"STOPPED","restarts":0,"dependency":"database"}
+  ],
+  "snapshots": {}
+}

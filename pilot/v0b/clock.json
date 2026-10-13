@@ -1,0 +1,11 @@
+{
+  "kind":"VIRTUAL_TASK_CLOCK",
+  "steps":[
+    {"tick":1,"changes":[]},
+    {"tick":2,"changes":[]},
+    {"tick":3,"changes":[{"resource":"api","mode":"SECONDARY","enabled":true,"health":"DEGRADED","restarts":1,"dependency":"database"}]},
+    {"tick":4,"changes":[{"resource":"database","mode":"SECONDARY","enabled":true,"health":"DEGRADED","restarts":0,"dependency":null}]},
+    {"tick":5,"changes":[]},
+    {"tick":6,"changes":[]}
+  ]
+}

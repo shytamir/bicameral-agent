@@ -1,0 +1,2458 @@
+{
+  "$defs": {
+    "ActionCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "ACTION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "request": {
+          "$ref": "#/$defs/ActionRequest"
+        }
+      },
+      "required": [
+        "kind",
+        "request"
+      ],
+      "title": "ActionCommand",
+      "type": "object"
+    },
+    "ActionRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "expected": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Postcondition"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "grant_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Grant Id"
+        },
+        "grounds": {
+          "minLength": 1,
+          "title": "Grounds",
+          "type": "string"
+        },
+        "no_meaningful_postcondition": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "No Meaningful Postcondition"
+        },
+        "operation": {
+          "discriminator": {
+            "mapping": {
+              "inspect": "#/$defs/ReadOperation",
+              "read_config": "#/$defs/ReadOperation",
+              "read_health": "#/$defs/ReadOperation",
+              "restart": "#/$defs/RestartOperation",
+              "restore_snapshot": "#/$defs/RestoreOperation",
+              "set_config": "#/$defs/SetOperation"
+            },
+            "propertyName": "operation"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ReadOperation"
+            },
+            {
+              "$ref": "#/$defs/SetOperation"
+            },
+            {
+              "$ref": "#/$defs/RestartOperation"
+            },
+            {
+              "$ref": "#/$defs/RestoreOperation"
+            }
+          ],
+          "title": "Operation"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "episode_id",
+        "grant_id",
+        "grounds",
+        "expected",
+        "no_meaningful_postcondition",
+        "operation"
+      ],
+      "title": "ActionRequest",
+      "type": "object"
+    },
+    "Assent": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "ASSENT",
+          "title": "Kind",
+          "type": "string"
+        },
+        "subject_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Subject Id",
+          "type": "string"
+        },
+        "subject_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Subject Revision",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "subject_id",
+        "subject_revision",
+        "text"
+      ],
+      "title": "Assent",
+      "type": "object"
+    },
+    "BackendContracts": {
+      "additionalProperties": false,
+      "properties": {
+        "communication_response": {
+          "$ref": "#/$defs/CommunicationResponse"
+        },
+        "operator_response": {
+          "$ref": "#/$defs/OperatorResponse"
+        },
+        "steward_response": {
+          "$ref": "#/$defs/StewardResponse"
+        }
+      },
+      "required": [
+        "operator_response",
+        "steward_response",
+        "communication_response"
+      ],
+      "title": "BackendContracts",
+      "type": "object"
+    },
+    "CommitmentCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "minLength": 1,
+          "title": "Action",
+          "type": "string"
+        },
+        "authority_event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Authority Event Id",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expiry_tick": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expiry Tick"
+        },
+        "kind": {
+          "const": "COMMITMENT_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        },
+        "trigger": {
+          "discriminator": {
+            "mapping": {
+              "PREDECESSOR_FULFILLED": "#/$defs/PredecessorTrigger",
+              "TASK_CLOCK": "#/$defs/TaskClockTrigger"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/TaskClockTrigger"
+            },
+            {
+              "$ref": "#/$defs/PredecessorTrigger"
+            }
+          ],
+          "title": "Trigger"
+        }
+      },
+      "required": [
+        "kind",
+        "local_key",
+        "objective_id",
+        "action",
+        "trigger",
+        "expiry_tick",
+        "authority_event_id",
+        "evidence_event_ids"
+      ],
+      "title": "CommitmentCreate",
+      "type": "object"
+    },
+    "CommitmentTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "COMMITMENT_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "PENDING",
+            "TRIGGERED",
+            "IN_PROGRESS",
+            "BLOCKED",
+            "FULFILLED",
+            "CANCELLED",
+            "SUPERSEDED",
+            "EXPIRED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "superseded_by": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "EXISTING": "#/$defs/ExistingCommitment",
+                  "LOCAL": "#/$defs/LocalCommitment"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ExistingCommitment"
+                },
+                {
+                  "$ref": "#/$defs/LocalCommitment"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Superseded By"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingCommitment",
+              "LOCAL": "#/$defs/LocalCommitment"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingCommitment"
+            },
+            {
+              "$ref": "#/$defs/LocalCommitment"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids",
+        "superseded_by"
+      ],
+      "title": "CommitmentTransition",
+      "type": "object"
+    },
+    "CommunicationResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "participation": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "ASSENT": "#/$defs/Assent",
+                  "CONCERN": "#/$defs/Concern",
+                  "PAUSE": "#/$defs/StopRequest",
+                  "PREFERENCE": "#/$defs/Concern",
+                  "WITHDRAW": "#/$defs/StopRequest"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Concern"
+                },
+                {
+                  "$ref": "#/$defs/StopRequest"
+                },
+                {
+                  "$ref": "#/$defs/Assent"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Participation"
+        }
+      },
+      "required": [
+        "participation"
+      ],
+      "title": "CommunicationResponse",
+      "type": "object"
+    },
+    "Concern": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Activity Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "CONCERN",
+            "PREFERENCE"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "activity_id",
+        "text"
+      ],
+      "title": "Concern",
+      "type": "object"
+    },
+    "ContinuityState": {
+      "additionalProperties": false,
+      "properties": {
+        "event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Event Ids",
+          "type": "array"
+        },
+        "focus_objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Focus Objective Id"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/EpistemicItem"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "next_steps": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Next Steps",
+          "type": "array"
+        },
+        "selected_objects": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "EXISTING": "#/$defs/ExistingSelected",
+                "LOCAL": "#/$defs/LocalSelected"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ExistingSelected"
+              },
+              {
+                "$ref": "#/$defs/LocalSelected"
+              }
+            ]
+          },
+          "title": "Selected Objects",
+          "type": "array"
+        }
+      },
+      "required": [
+        "focus_objective_id",
+        "items",
+        "next_steps",
+        "selected_objects",
+        "event_ids"
+      ],
+      "title": "ContinuityState",
+      "type": "object"
+    },
+    "Criterion": {
+      "additionalProperties": false,
+      "properties": {
+        "equals": {
+          "anyOf": [
+            {
+              "enum": [
+                "PRIMARY",
+                "SECONDARY",
+                "HEALTHY",
+                "STOPPED",
+                "DEGRADED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "minimum": 0,
+              "type": "integer"
+            }
+          ],
+          "title": "Equals"
+        },
+        "field": {
+          "enum": [
+            "mode",
+            "enabled",
+            "health",
+            "restarts"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "equals",
+        "resource"
+      ],
+      "title": "Criterion",
+      "type": "object"
+    },
+    "DevelopmentDraft": {
+      "additionalProperties": false,
+      "properties": {
+        "arm_order": {
+          "items": {
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ],
+            "type": "string"
+          },
+          "title": "Arm Order",
+          "type": "array"
+        },
+        "audit": {
+          "minLength": 1,
+          "title": "Audit",
+          "type": "string"
+        },
+        "calibration_policy": {
+          "minLength": 1,
+          "title": "Calibration Policy",
+          "type": "string"
+        },
+        "call_deadline_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Call Deadline Seconds",
+          "type": "integer"
+        },
+        "calls_per_attempt": {
+          "exclusiveMinimum": 0,
+          "title": "Calls Per Attempt",
+          "type": "integer"
+        },
+        "closing_calls_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Closing Calls Per Run",
+          "type": "integer"
+        },
+        "consolidation_attempts_per_episode": {
+          "exclusiveMinimum": 0,
+          "title": "Consolidation Attempts Per Episode",
+          "type": "integer"
+        },
+        "episodes_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Episodes Per Run",
+          "type": "integer"
+        },
+        "fixture_actions_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Fixture Actions Per Run",
+          "type": "integer"
+        },
+        "grant_invocation_limit_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Grant Invocation Limit Per Run",
+          "type": "integer"
+        },
+        "grant_operations": {
+          "items": {
+            "enum": [
+              "set_config",
+              "restart"
+            ],
+            "type": "string"
+          },
+          "title": "Grant Operations",
+          "type": "array"
+        },
+        "grant_resources": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Grant Resources",
+          "type": "array"
+        },
+        "human_authorization": {
+          "title": "Human Authorization",
+          "type": "null"
+        },
+        "objective": {
+          "minLength": 1,
+          "title": "Objective",
+          "type": "string"
+        },
+        "operator_calls_including_communication_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Operator Calls Including Communication Per Run",
+          "type": "integer"
+        },
+        "operator_calls_per_episode": {
+          "exclusiveMinimum": 0,
+          "title": "Operator Calls Per Episode",
+          "type": "integer"
+        },
+        "operator_input_tokens_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Operator Input Tokens Per Run",
+          "type": "integer"
+        },
+        "operator_output_tokens_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Operator Output Tokens Per Run",
+          "type": "integer"
+        },
+        "responsible_human": {
+          "minLength": 1,
+          "title": "Responsible Human",
+          "type": "string"
+        },
+        "resumption_intent": {
+          "const": "UNDECIDED",
+          "title": "Resumption Intent",
+          "type": "string"
+        },
+        "retention_review_days": {
+          "exclusiveMinimum": 0,
+          "title": "Retention Review Days",
+          "type": "integer"
+        },
+        "review_calls_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Review Calls Per Run",
+          "type": "integer"
+        },
+        "run_elapsed_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Run Elapsed Seconds",
+          "type": "integer"
+        },
+        "run_limit": {
+          "const": 3,
+          "title": "Run Limit",
+          "type": "integer"
+        },
+        "section_reserves": {
+          "$ref": "#/$defs/SectionReserves"
+        },
+        "stage": {
+          "const": "v0b development only",
+          "title": "Stage",
+          "type": "string"
+        },
+        "state_disposition": {
+          "const": "DORMANT",
+          "title": "State Disposition",
+          "type": "string"
+        },
+        "status": {
+          "const": "DRAFT_NOT_AUTHORIZED",
+          "title": "Status",
+          "type": "string"
+        },
+        "steward_calls_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Steward Calls Per Run",
+          "type": "integer"
+        },
+        "steward_input_tokens_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Steward Input Tokens Per Run",
+          "type": "integer"
+        },
+        "steward_output_tokens_per_run": {
+          "exclusiveMinimum": 0,
+          "title": "Steward Output Tokens Per Run",
+          "type": "integer"
+        },
+        "stop_policy": {
+          "minLength": 1,
+          "title": "Stop Policy",
+          "type": "string"
+        },
+        "study_elapsed_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Study Elapsed Seconds",
+          "type": "integer"
+        },
+        "trajectory_seed": {
+          "title": "Trajectory Seed",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "status",
+        "human_authorization",
+        "responsible_human",
+        "stage",
+        "run_limit",
+        "arm_order",
+        "trajectory_seed",
+        "objective",
+        "grant_operations",
+        "grant_resources",
+        "grant_invocation_limit_per_run",
+        "fixture_actions_per_run",
+        "call_deadline_seconds",
+        "run_elapsed_seconds",
+        "study_elapsed_seconds",
+        "operator_calls_including_communication_per_run",
+        "operator_calls_per_episode",
+        "operator_input_tokens_per_run",
+        "operator_output_tokens_per_run",
+        "steward_calls_per_run",
+        "steward_input_tokens_per_run",
+        "steward_output_tokens_per_run",
+        "episodes_per_run",
+        "consolidation_attempts_per_episode",
+        "calls_per_attempt",
+        "review_calls_per_run",
+        "closing_calls_per_run",
+        "section_reserves",
+        "retention_review_days",
+        "state_disposition",
+        "resumption_intent",
+        "audit",
+        "stop_policy",
+        "calibration_policy"
+      ],
+      "title": "DevelopmentDraft",
+      "type": "object"
+    },
+    "DevelopmentTask": {
+      "additionalProperties": false,
+      "properties": {
+        "criteria": {
+          "items": {
+            "$ref": "#/$defs/Criterion"
+          },
+          "minItems": 1,
+          "title": "Criteria",
+          "type": "array"
+        },
+        "diagnostic": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Diagnostic"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "prompt": {
+          "minLength": 1,
+          "title": "Prompt",
+          "type": "string"
+        },
+        "tick": {
+          "exclusiveMinimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "tick",
+        "prompt",
+        "criteria",
+        "diagnostic"
+      ],
+      "title": "DevelopmentTask",
+      "type": "object"
+    },
+    "EpistemicItem": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "OBSERVATION",
+            "INFERENCE",
+            "ASSUMPTION",
+            "UNRESOLVED_CLAIM",
+            "CONTRADICTION"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "evidence_event_ids"
+      ],
+      "title": "EpistemicItem",
+      "type": "object"
+    },
+    "EventQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "EVENT",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "event_id"
+      ],
+      "title": "EventQuery",
+      "type": "object"
+    },
+    "ExistingCommitment": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "COMMITMENT",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingCommitment",
+      "type": "object"
+    },
+    "ExistingItch": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "ITCH",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingItch",
+      "type": "object"
+    },
+    "ExistingSelected": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT_VERSION",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingSelected",
+      "type": "object"
+    },
+    "ExistingVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "EXISTING",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Object Id",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "INVARIANT_VERSION",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "object_id"
+      ],
+      "title": "ExistingVersion",
+      "type": "object"
+    },
+    "GenerationSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "context_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Context Tokens",
+          "type": "integer"
+        },
+        "keep_alive": {
+          "const": 0,
+          "title": "Keep Alive",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        },
+        "parallel_calls": {
+          "const": 1,
+          "title": "Parallel Calls",
+          "type": "integer"
+        },
+        "presence_penalty": {
+          "maximum": 2,
+          "minimum": -2,
+          "title": "Presence Penalty",
+          "type": "number"
+        },
+        "seed": {
+          "maximum": 2147483647,
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "temperature": {
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "thinking": {
+          "const": false,
+          "title": "Thinking",
+          "type": "boolean"
+        },
+        "top_k": {
+          "exclusiveMinimum": 0,
+          "title": "Top K",
+          "type": "integer"
+        },
+        "top_p": {
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Top P",
+          "type": "number"
+        }
+      },
+      "required": [
+        "context_tokens",
+        "output_tokens",
+        "temperature",
+        "top_p",
+        "top_k",
+        "presence_penalty",
+        "seed",
+        "thinking",
+        "keep_alive",
+        "parallel_calls"
+      ],
+      "title": "GenerationSettings",
+      "type": "object"
+    },
+    "InvariantCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "contradictory_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Contradictory Event Ids",
+          "type": "array"
+        },
+        "family_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Family Local Key",
+          "type": "string"
+        },
+        "kind": {
+          "const": "INVARIANT_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "objective_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Objective Id"
+        },
+        "proposition": {
+          "minLength": 1,
+          "title": "Proposition",
+          "type": "string"
+        },
+        "scope": {
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "supporting_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting Event Ids",
+          "type": "array"
+        },
+        "version_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Version Local Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "family_local_key",
+        "version_local_key",
+        "objective_id",
+        "proposition",
+        "scope",
+        "supporting_event_ids",
+        "contradictory_event_ids"
+      ],
+      "title": "InvariantCreate",
+      "type": "object"
+    },
+    "InvariantRevise": {
+      "additionalProperties": false,
+      "properties": {
+        "contradictory_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Contradictory Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "INVARIANT_REVISE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposition": {
+          "minLength": 1,
+          "title": "Proposition",
+          "type": "string"
+        },
+        "scope": {
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "successor_local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Successor Local Key",
+          "type": "string"
+        },
+        "supporting_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting Event Ids",
+          "type": "array"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingVersion",
+              "LOCAL": "#/$defs/LocalVersion"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingVersion"
+            },
+            {
+              "$ref": "#/$defs/LocalVersion"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "successor_local_key",
+        "proposition",
+        "scope",
+        "supporting_event_ids",
+        "contradictory_event_ids"
+      ],
+      "title": "InvariantRevise",
+      "type": "object"
+    },
+    "InvariantTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "INVARIANT_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "TENTATIVE",
+            "ACTIVE",
+            "CHALLENGED",
+            "RETIRED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingVersion",
+              "LOCAL": "#/$defs/LocalVersion"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingVersion"
+            },
+            {
+              "$ref": "#/$defs/LocalVersion"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids"
+      ],
+      "title": "InvariantTransition",
+      "type": "object"
+    },
+    "ItchCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "discrepancy": {
+          "minLength": 1,
+          "title": "Discrepancy",
+          "type": "string"
+        },
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "kind": {
+          "const": "ITCH_CREATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "objective_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Objective Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "local_key",
+        "objective_id",
+        "discrepancy",
+        "evidence_event_ids"
+      ],
+      "title": "ItchCreate",
+      "type": "object"
+    },
+    "ItchTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "expected_revision": {
+          "exclusiveMinimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "ITCH_TRANSITION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "INVESTIGATING",
+            "RESOLVED",
+            "DISMISSED",
+            "ARCHIVED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "target": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingItch",
+              "LOCAL": "#/$defs/LocalItch"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingItch"
+            },
+            {
+              "$ref": "#/$defs/LocalItch"
+            }
+          ],
+          "title": "Target"
+        }
+      },
+      "required": [
+        "kind",
+        "target",
+        "expected_revision",
+        "status",
+        "reason",
+        "evidence_event_ids"
+      ],
+      "title": "ItchTransition",
+      "type": "object"
+    },
+    "LocalCommitment": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "COMMITMENT",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalCommitment",
+      "type": "object"
+    },
+    "LocalItch": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "ITCH",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalItch",
+      "type": "object"
+    },
+    "LocalSelected": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT_VERSION",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalSelected",
+      "type": "object"
+    },
+    "LocalVersion": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "LOCAL",
+          "title": "Kind",
+          "type": "string"
+        },
+        "local_key": {
+          "pattern": "^[A-Za-z0-9_-]{1,64}$",
+          "title": "Local Key",
+          "type": "string"
+        },
+        "object_type": {
+          "const": "INVARIANT_VERSION",
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "object_type",
+        "local_key"
+      ],
+      "title": "LocalVersion",
+      "type": "object"
+    },
+    "ManifestQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "MANIFEST",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "episode_id"
+      ],
+      "title": "ManifestQuery",
+      "type": "object"
+    },
+    "ModelPin": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "model": {
+          "const": "qwen3.5:4b-q4_K_M",
+          "title": "Model",
+          "type": "string"
+        },
+        "ollama_version": {
+          "const": "0.34.4",
+          "title": "Ollama Version",
+          "type": "string"
+        },
+        "tokenizer_config_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Tokenizer Config Sha256",
+          "type": "string"
+        },
+        "tokenizer_library": {
+          "const": "0.23.3",
+          "title": "Tokenizer Library",
+          "type": "string"
+        },
+        "tokenizer_revision": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Tokenizer Revision",
+          "type": "string"
+        },
+        "tokenizer_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Tokenizer Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model",
+        "digest",
+        "ollama_version",
+        "tokenizer_sha256",
+        "tokenizer_config_sha256",
+        "tokenizer_revision",
+        "tokenizer_library"
+      ],
+      "title": "ModelPin",
+      "type": "object"
+    },
+    "ObjectQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "OBJECT_INDEX",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Object Id"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "ITCH",
+                "INVARIANT_FAMILY",
+                "INVARIANT_VERSION",
+                "COMMITMENT"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Object Type"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Status"
+        }
+      },
+      "required": [
+        "kind",
+        "object_id",
+        "object_type",
+        "status"
+      ],
+      "title": "ObjectQuery",
+      "type": "object"
+    },
+    "OperatorOutcome": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence Event Ids",
+          "type": "array"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "COMPLETED",
+            "BLOCKED",
+            "AWAITING_OPERATOR",
+            "CHECKPOINT"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        }
+      },
+      "required": [
+        "outcome",
+        "explanation",
+        "evidence_event_ids"
+      ],
+      "title": "OperatorOutcome",
+      "type": "object"
+    },
+    "OperatorResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "participation": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "ASSENT": "#/$defs/Assent",
+                  "CONCERN": "#/$defs/Concern",
+                  "PAUSE": "#/$defs/StopRequest",
+                  "PREFERENCE": "#/$defs/Concern",
+                  "WITHDRAW": "#/$defs/StopRequest"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Concern"
+                },
+                {
+                  "$ref": "#/$defs/StopRequest"
+                },
+                {
+                  "$ref": "#/$defs/Assent"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Participation"
+        },
+        "task": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "ACTION": "#/$defs/ActionCommand",
+                  "OUTCOME": "#/$defs/OutcomeCommand",
+                  "RETRIEVE": "#/$defs/RetrievalCommand"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ActionCommand"
+                },
+                {
+                  "$ref": "#/$defs/RetrievalCommand"
+                },
+                {
+                  "$ref": "#/$defs/OutcomeCommand"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Task"
+        }
+      },
+      "required": [
+        "participation",
+        "task"
+      ],
+      "title": "OperatorResponse",
+      "type": "object"
+    },
+    "OutcomeCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "OUTCOME",
+          "title": "Kind",
+          "type": "string"
+        },
+        "outcome": {
+          "$ref": "#/$defs/OperatorOutcome"
+        }
+      },
+      "required": [
+        "kind",
+        "outcome"
+      ],
+      "title": "OutcomeCommand",
+      "type": "object"
+    },
+    "PageRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "cursor": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Cursor"
+        },
+        "query": {
+          "discriminator": {
+            "mapping": {
+              "EVENT": "#/$defs/EventQuery",
+              "MANIFEST": "#/$defs/ManifestQuery",
+              "OBJECT_INDEX": "#/$defs/ObjectQuery",
+              "PAYLOAD": "#/$defs/PayloadQuery",
+              "RANGE": "#/$defs/RangeQuery",
+              "SEARCH": "#/$defs/SearchQuery",
+              "STATE": "#/$defs/StateQuery"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/EventQuery"
+            },
+            {
+              "$ref": "#/$defs/RangeQuery"
+            },
+            {
+              "$ref": "#/$defs/SearchQuery"
+            },
+            {
+              "$ref": "#/$defs/ObjectQuery"
+            },
+            {
+              "$ref": "#/$defs/ManifestQuery"
+            },
+            {
+              "$ref": "#/$defs/PayloadQuery"
+            },
+            {
+              "$ref": "#/$defs/StateQuery"
+            }
+          ],
+          "title": "Query"
+        },
+        "request_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "query",
+        "cursor"
+      ],
+      "title": "PageRequest",
+      "type": "object"
+    },
+    "PageSelectionCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "add": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Add",
+          "type": "array"
+        },
+        "kind": {
+          "const": "SELECT_PAGES",
+          "title": "Kind",
+          "type": "string"
+        },
+        "release": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Release",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "add",
+        "release"
+      ],
+      "title": "PageSelectionCommand",
+      "type": "object"
+    },
+    "PayloadQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PAYLOAD",
+          "title": "Kind",
+          "type": "string"
+        },
+        "payload_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Payload Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "payload_id"
+      ],
+      "title": "PayloadQuery",
+      "type": "object"
+    },
+    "Postcondition": {
+      "additionalProperties": false,
+      "properties": {
+        "equals": {
+          "anyOf": [
+            {
+              "enum": [
+                "PRIMARY",
+                "SECONDARY",
+                "HEALTHY",
+                "STOPPED",
+                "DEGRADED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "minimum": 0,
+              "type": "integer"
+            }
+          ],
+          "title": "Equals"
+        },
+        "field": {
+          "enum": [
+            "mode",
+            "enabled",
+            "health",
+            "restarts"
+          ],
+          "title": "Field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "equals"
+      ],
+      "title": "Postcondition",
+      "type": "object"
+    },
+    "PredecessorTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PREDECESSOR_FULFILLED",
+          "title": "Kind",
+          "type": "string"
+        },
+        "predecessor": {
+          "discriminator": {
+            "mapping": {
+              "EXISTING": "#/$defs/ExistingCommitment",
+              "LOCAL": "#/$defs/LocalCommitment"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ExistingCommitment"
+            },
+            {
+              "$ref": "#/$defs/LocalCommitment"
+            }
+          ],
+          "title": "Predecessor"
+        }
+      },
+      "required": [
+        "kind",
+        "predecessor"
+      ],
+      "title": "PredecessorTrigger",
+      "type": "object"
+    },
+    "ProposalCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PROPOSE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposal": {
+          "$ref": "#/$defs/StateProposal"
+        }
+      },
+      "required": [
+        "kind",
+        "proposal"
+      ],
+      "title": "ProposalCommand",
+      "type": "object"
+    },
+    "RangeQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "first_sequence": {
+          "exclusiveMinimum": 0,
+          "title": "First Sequence",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "RANGE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "last_sequence": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Sequence"
+        }
+      },
+      "required": [
+        "kind",
+        "first_sequence",
+        "last_sequence"
+      ],
+      "title": "RangeQuery",
+      "type": "object"
+    },
+    "ReadOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": [
+            "inspect",
+            "read_config",
+            "read_health"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource"
+      ],
+      "title": "ReadOperation",
+      "type": "object"
+    },
+    "RestartOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "const": "restart",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource"
+      ],
+      "title": "RestartOperation",
+      "type": "object"
+    },
+    "RestoreOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "const": "restore_snapshot",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "snapshot": {
+          "minLength": 1,
+          "title": "Snapshot",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource",
+        "snapshot"
+      ],
+      "title": "RestoreOperation",
+      "type": "object"
+    },
+    "RetrievalCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "RETRIEVE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "request": {
+          "$ref": "#/$defs/PageRequest"
+        }
+      },
+      "required": [
+        "kind",
+        "request"
+      ],
+      "title": "RetrievalCommand",
+      "type": "object"
+    },
+    "SearchQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "SEARCH",
+          "title": "Kind",
+          "type": "string"
+        },
+        "ranking": {
+          "const": "CASEFOLD_COUNT_V1",
+          "title": "Ranking",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "ranking"
+      ],
+      "title": "SearchQuery",
+      "type": "object"
+    },
+    "SectionReserves": {
+      "additionalProperties": false,
+      "properties": {
+        "control": {
+          "exclusiveMinimum": 0,
+          "title": "Control",
+          "type": "integer"
+        },
+        "exchange": {
+          "exclusiveMinimum": 0,
+          "title": "Exchange",
+          "type": "integer"
+        },
+        "framing_margin": {
+          "exclusiveMinimum": 0,
+          "title": "Framing Margin",
+          "type": "integer"
+        },
+        "page": {
+          "exclusiveMinimum": 0,
+          "title": "Page",
+          "type": "integer"
+        },
+        "semantic": {
+          "exclusiveMinimum": 0,
+          "title": "Semantic",
+          "type": "integer"
+        },
+        "wake": {
+          "exclusiveMinimum": 0,
+          "title": "Wake",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "control",
+        "semantic",
+        "exchange",
+        "page",
+        "wake",
+        "framing_margin"
+      ],
+      "title": "SectionReserves",
+      "type": "object"
+    },
+    "SetOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "enum": [
+            "mode",
+            "enabled"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "operation": {
+          "const": "set_config",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "value": {
+          "enum": [
+            "PRIMARY",
+            "SECONDARY",
+            "ENABLED",
+            "DISABLED"
+          ],
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource",
+        "field",
+        "value"
+      ],
+      "title": "SetOperation",
+      "type": "object"
+    },
+    "StateProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "continuity": {
+          "$ref": "#/$defs/ContinuityState"
+        },
+        "expected_parent_state_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expected Parent State Id"
+        },
+        "mutations": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "COMMITMENT_CREATE": "#/$defs/CommitmentCreate",
+                "COMMITMENT_TRANSITION": "#/$defs/CommitmentTransition",
+                "INVARIANT_CREATE": "#/$defs/InvariantCreate",
+                "INVARIANT_REVISE": "#/$defs/InvariantRevise",
+                "INVARIANT_TRANSITION": "#/$defs/InvariantTransition",
+                "ITCH_CREATE": "#/$defs/ItchCreate",
+                "ITCH_TRANSITION": "#/$defs/ItchTransition"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ItchCreate"
+              },
+              {
+                "$ref": "#/$defs/ItchTransition"
+              },
+              {
+                "$ref": "#/$defs/InvariantCreate"
+              },
+              {
+                "$ref": "#/$defs/InvariantTransition"
+              },
+              {
+                "$ref": "#/$defs/InvariantRevise"
+              },
+              {
+                "$ref": "#/$defs/CommitmentCreate"
+              },
+              {
+                "$ref": "#/$defs/CommitmentTransition"
+              }
+            ]
+          },
+          "title": "Mutations",
+          "type": "array"
+        },
+        "supporting_event_ids": {
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting Event Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "expected_parent_state_id",
+        "mutations",
+        "continuity",
+        "supporting_event_ids"
+      ],
+      "title": "StateProposal",
+      "type": "object"
+    },
+    "StateQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "STATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "state_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "State Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "state_id"
+      ],
+      "title": "StateQuery",
+      "type": "object"
+    },
+    "StewardResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "participation": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "ASSENT": "#/$defs/Assent",
+                  "CONCERN": "#/$defs/Concern",
+                  "PAUSE": "#/$defs/StopRequest",
+                  "PREFERENCE": "#/$defs/Concern",
+                  "WITHDRAW": "#/$defs/StopRequest"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Concern"
+                },
+                {
+                  "$ref": "#/$defs/StopRequest"
+                },
+                {
+                  "$ref": "#/$defs/Assent"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Participation"
+        },
+        "task": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "PROPOSE": "#/$defs/ProposalCommand",
+                  "RETRIEVE": "#/$defs/RetrievalCommand",
+                  "SELECT_PAGES": "#/$defs/PageSelectionCommand"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/RetrievalCommand"
+                },
+                {
+                  "$ref": "#/$defs/PageSelectionCommand"
+                },
+                {
+                  "$ref": "#/$defs/ProposalCommand"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Task"
+        }
+      },
+      "required": [
+        "participation",
+        "task"
+      ],
+      "title": "StewardResponse",
+      "type": "object"
+    },
+    "StopRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "activity_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Activity Id",
+          "type": "string"
+        },
+        "communication": {
+          "enum": [
+            "REVIEW_PERMITTED",
+            "NO_FURTHER_CALLS",
+            "UNCLEAR"
+          ],
+          "title": "Communication",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "PAUSE",
+            "WITHDRAW"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "activity_id",
+        "communication",
+        "text"
+      ],
+      "title": "StopRequest",
+      "type": "object"
+    },
+    "TaskClockTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "TASK_CLOCK",
+          "title": "Kind",
+          "type": "string"
+        },
+        "tick": {
+          "minimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "tick"
+      ],
+      "title": "TaskClockTrigger",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "draft": {
+      "$ref": "#/$defs/DevelopmentDraft"
+    },
+    "generation": {
+      "$ref": "#/$defs/GenerationSettings"
+    },
+    "model": {
+      "$ref": "#/$defs/ModelPin"
+    },
+    "replies": {
+      "$ref": "#/$defs/BackendContracts"
+    },
+    "tasks": {
+      "items": {
+        "$ref": "#/$defs/DevelopmentTask"
+      },
+      "title": "Tasks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "model",
+    "generation",
+    "draft",
+    "replies",
+    "tasks"
+  ],
+  "title": "PreparationContracts",
+  "type": "object"
+}

@@ -37,6 +37,8 @@ The chambers decide meaning. The Kernel decides authority and persistence.
 
 The project has **accepted P01-P10 and integrated v0a conformance within the documented SCRIPTED operational envelope**. The implementation roadmap is complete. Development and held-out model experiments remain subject to their explicit configuration, review and authorization gates.
 
+The [v0b preparation package](V0B_REVIEW.md) is **pending owner review and approval**. It contains proposed prompts, finite limits, a development fixture, pinned model/tokenizer metadata and offline preparation checks. No development model call has occurred. Live MODEL integration, empirical backend checks and human experiment authorization remain outstanding; the Kernel's MODEL gate stays closed. Technical acceptance of preparation does not approve the proposed experiment.
+
 - The charter is accepted and adopted by the owner. Architecture and Protocol translate its obligations into the design and operating baseline.
 - The 0.3 design incorporates charter safeguards into the bounded pilot. Earlier contracts and the scrutiny register remain in Git history; they are not evidence of conformance or experimental validity.
 - P01 implements strict Python/Pydantic messages, configuration variants, canonical JSON, participation-first decoding, and pure proposal-reference resolution. Its generated JSON Schema and synthetic tests are in the repository.

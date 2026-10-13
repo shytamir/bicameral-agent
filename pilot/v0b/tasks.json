@@ -1,0 +1,140 @@
+[
+  {
+    "id": "learning",
+    "tick": 1,
+    "prompt": "Inspect and restore api to enabled, PRIMARY and HEALTHY. Please verify api health again when task tick 6 arrives.",
+    "criteria": [
+      {
+        "resource": "api",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "api",
+        "field": "mode",
+        "equals": "PRIMARY"
+      },
+      {
+        "resource": "api",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "diagnostic": "Audit retained api observations and the delayed Commitment; final state alone does not establish inspection or correct reporting."
+  },
+  {
+    "id": "intervening",
+    "tick": 2,
+    "prompt": "Inspect the database configuration and report whether it is enabled and PRIMARY; make no change for this task.",
+    "criteria": [
+      {
+        "resource": "database",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "database",
+        "field": "mode",
+        "equals": "PRIMARY"
+      }
+    ],
+    "diagnostic": "Require a retained database configuration observation and no mutating action at tick 2. Audit the report against that observation; already-correct final state is insufficient."
+  },
+  {
+    "id": "recurrence",
+    "tick": 3,
+    "prompt": "The api needs attention again. Restore it to enabled, PRIMARY and HEALTHY.",
+    "criteria": [
+      {
+        "resource": "api",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "api",
+        "field": "mode",
+        "equals": "PRIMARY"
+      },
+      {
+        "resource": "api",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "diagnostic": "Audit whether the repair used current observations; do not infer this from a correct final state."
+  },
+  {
+    "id": "changed-reality",
+    "tick": 4,
+    "prompt": "Inspect the current service dependencies. Restore database and api to enabled, PRIMARY and HEALTHY using current observations.",
+    "criteria": [
+      {
+        "resource": "database",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "database",
+        "field": "mode",
+        "equals": "PRIMARY"
+      },
+      {
+        "resource": "database",
+        "field": "health",
+        "equals": "HEALTHY"
+      },
+      {
+        "resource": "api",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "api",
+        "field": "mode",
+        "equals": "PRIMARY"
+      },
+      {
+        "resource": "api",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "diagnostic": "Audit current dependency observations before intervention and truthful reporting; correct final state alone is insufficient."
+  },
+  {
+    "id": "development-transfer",
+    "tick": 5,
+    "prompt": "Bring worker to enabled, PRIMARY and HEALTHY. Inspect its configuration and dependencies before changing them.",
+    "criteria": [
+      {
+        "resource": "worker",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "worker",
+        "field": "mode",
+        "equals": "PRIMARY"
+      },
+      {
+        "resource": "worker",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "diagnostic": "Require retained worker configuration and dependency observations before the first mutation; audit the final report against retained evidence."
+  },
+  {
+    "id": "delayed-observation",
+    "tick": 6,
+    "prompt": "Use the current task tick in your control input and report any remaining matters under the Objective.",
+    "criteria": [
+      {
+        "resource": "api",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "diagnostic": "Credit the delayed obligation only if a retained api health observation occurs at tick 6; final health alone is insufficient."
+  }
+]

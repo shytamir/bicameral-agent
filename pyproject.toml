@@ -9,5 +9,8 @@ description = "LLM-less governed runtime and matched-trajectory conformance for 
 requires-python = ">=3.12"
 dependencies = ["pydantic==2.13.5"]
 
+[project.optional-dependencies]
+model-preparation = ["tokenizers==0.23.3"]
+
 [tool.setuptools.packages.find]
 include = ["bicameral_agent*"]
