@@ -12,6 +12,8 @@ On 2026-10-15 the owner directed a prospective simplification of the Protocol an
 
 **A bounded 0.4 development runtime is implemented and tested offline.** It reuses the SQLite store, fixture executor, journal retrieval, permission boundary and development scorer. The new path supplies direct owner controls, compact model contracts, semantic updates and an Ollama request/action/observation loop. No live model calls have been made in this change.
 
+The five-Episode compatibility sequence and its small fixture extension are implemented with scripted strategy checks. They exercise retained lessons, transfer and release-specific correction. A and C can both solve the sequence; this establishes a usable mechanical diagnostic, not a model result.
+
 The existing code at `22a28073bb37851f96c9313e6749fa6fff0de807` implements P01-P10 and integrated v0a within its previously accepted local SCRIPTED envelope. It includes the additional withdrawal/removal fixes, offline backend preparation and development fixture checks. Its historical handoff records 230 discovered tests, 228 passing and two optional tokenizer tests skipped. Those are prior results, not a fresh validation of this design.
 
 The historical Kernel and `0.3.p01` interfaces retain their earlier meaning and remain SCRIPTED-only. New Runs use the explicitly separate [0.4 contracts](bicameral_agent/contracts/pilot.py) and [pilot host](bicameral_agent/pilot/runtime.py). Existing histories are not migrated. No empirical model result has been produced.
@@ -42,7 +44,7 @@ The initial operating arrangement offers fewer capabilities: direct inspection o
 
 A versus C is the primary comparison for structured discrepancy/lesson management. Steward cost and human burden count against any benefit. If simpler baselines perform as well at comparable cost, that counts against the hypothesis.
 
-The current development fixture has not established A-versus-C separation. Establish useful memory-sensitive tasks during development before investing in further platform capabilities. Held-out evaluation keeps independent matched Runs, shared opportunities, fixed criteria, complete allocation accounting and separate audit/analysis.
+The [compatibility diagnostic](V0B_REVIEW.md#five-episode-compatibility-diagnostic) gives retained history an observable cost advantage over repeated rediscovery, while preserving C's ability to keep the same lessons in its handoff. It has not established A-versus-C separation. Held-out evaluation keeps independent matched Runs, shared opportunities, fixed criteria, complete allocation accounting and separate audit/analysis.
 
 ## Accessible procedural baseline
 
@@ -55,6 +57,8 @@ The owner requested this fallback because trust is compatible with fallibility a
 The [command-line entry point](bicameral_agent/pilot/__main__.py) supports allocation, running, status, pause/resume/termination and bounded evidence inspection. The [owner API](bicameral_agent/pilot/runtime.py) also provides direct correction, participation review, explicit consolidation skip and exceptional removal. Neither interface uses routine preview/confirmation tickets.
 
 A development package contains `activity.json` (one owner decision, resource profile, trajectory seeds and order seed), `fixture.json`, `clock.json`, `tasks.json`, `model.json` and `settings.json`. Optional `operator.md`, `steward.md` and `communication.md` override the concise supplied prompts; their effective bytes are retained. The [0.4 schema](schemas/pilot-0.4.schema.json) defines the activity and resource profile. Task/fixture shapes reuse the existing development assets, but the superseded v0b plan is not an activity authorization. Preparing the actual package is part of the separately authorized calibration, not paperwork required for each task.
+
+The new [compatibility task assets](pilot/compatibility/tasks.json) supply the five-task sequence with [fixture](pilot/compatibility/fixture.json) and [clock](pilot/compatibility/clock.json) inputs. Scripted tests combine them with temporary activity/settings; the assets alone do not authorize model execution. Existing service fixtures keep their original rules. The compatibility fixture adds observable family/release labels and a private fixed health-mode table, using the same actions and permission checks.
 
 The activity states the ending in advance. Its `unfinished` setting defaults to `KEEP`, preserving outstanding commitments at termination; `CANCEL` requires an explicit activity choice.
 
@@ -77,6 +81,7 @@ Use an existing Python 3.12+ environment with the dependencies in [pyproject.tom
 
 ```text
 python -B -m unittest discover -s tests -q
+python -B -m unittest tests.test_compatibility -v
 python -B -m bicameral_agent.contracts.schema --check
 python -B -m bicameral_agent.storage.schema --check
 python -B -m bicameral_agent.kernel.schema --check
@@ -92,11 +97,13 @@ Token admission counts the entire framed request with the supplied tokenizer bef
 
 ## Current implementation handoff
 
-The owner authorized the minimal runtime integration and offline tests, then separately authorized committing and pushing the runtime and updated documents. Live model calls remain excluded. The implementation revision is the commit containing this handoff, following `93d96b0`. The Charter and procedural archive are preserved. No stored-history migration, workstation tools, new dependency or live experiment is included.
+The initial 0.4 runtime was published at `f8291fd`. The owner authorized the five-Episode sequence, minimal fixture extension, scripted tests and documentation updates, then separately authorized committing and pushing this slice. Its implementation revision is the commit containing this handoff, following `f8291fd`. Live model calls remain excluded; actual backend calibration is deferred to the laptop intended for the experiment. The Charter and procedural archive are preserved. No stored-history migration, workstation tools, new dependency or live experiment is included.
 
-Offline coverage includes full A/B/C development trajectories, C restrictions, exact retries, direct owner correction, role-bound participation review, malformed/late stop reports, interruption around action/semantic commits, finite budgets, evaluator isolation, retrieval lineage, removal interruption/non-resurrection, allocation and CLI inspection. Scope remains the finite development fixture and one serialized lane per Run; real backend behavior and a scientifically useful task sequence remain integration responsibilities.
+Offline coverage includes full A/B/C development trajectories, C restrictions, exact retries, direct owner correction, role-bound participation review, malformed/late stop reports, interruption around action/semantic commits, finite budgets, evaluator isolation, retrieval lineage, removal interruption/non-resurrection, allocation and CLI inspection. Scope remains the finite development fixture and one serialized lane per Run. The new sequence adds tests of memory-dependent exploration costs, release scope, hidden-rule isolation and compatibility parsing. Actual backend behavior and empirical task difficulty remain integration responsibilities.
 
-Validation on 2026-10-15: the complete 280-test suite passed with two optional tokenizer tests skipped; after expanding C-arm coverage, all 12 C-arm tests passed separately. Together those runs exercise all 291 tests in the final tree. All six schema/asset checks above passed, as did Python syntax, Markdown links and structure, and `git diff --check`. One earlier suite run encountered a Windows temporary-database cleanup lock; that test passed in isolation and the complete rerun passed using an ignored repository-local temporary directory. These checks used real SQLite files and fake model responses, including a synthetic HTTP server; they made no live model calls. The Charter hash matches the baseline and the archive is untouched.
+Prior validation at `f8291fd` on 2026-10-15: the complete 280-test suite passed with two optional tokenizer tests skipped; after expanding C-arm coverage, all 12 C-arm tests passed separately, exercising all 291 tests then present. All six schema/asset checks passed, as did syntax, documentation and whitespace checks. One earlier run encountered a Windows temporary-database cleanup lock; the isolated test and complete rerun passed using an ignored repository-local temporary directory. These checks used real SQLite files and fake model responses, including a synthetic HTTP server; they made no live model calls.
+
+Compatibility validation on 2026-10-15: 25 focused fixture, evaluator and strategy tests passed, followed by the complete 297-test suite with two optional tokenizer checks skipped. All six schema/asset checks, Python syntax, documentation links/structure and `git diff --check` passed. An initial full run correctly rejected a mid-run source edit; the fresh full run against unchanged runtime code passed. The Charter hash matches the baseline, and the archive and legacy pilot assets are unchanged. The scripted outcomes and their limits are recorded in [V0B_REVIEW](V0B_REVIEW.md#five-episode-compatibility-diagnostic).
 
 ## License
 

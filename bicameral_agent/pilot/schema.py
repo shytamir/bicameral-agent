@@ -3,10 +3,17 @@ import argparse
 import json
 from pathlib import Path
 from ..contracts.pilot import PilotContracts
+from ..kernel.fixture import FixtureDefinition, ClockPlan
+from .fixture import CompatibilityDefinition, CompatibilityClock
+
+
+class DevelopmentContracts(PilotContracts):
+    fixture: FixtureDefinition | CompatibilityDefinition
+    clock: ClockPlan | CompatibilityClock
 
 
 def schema_bytes():
-    return (json.dumps(PilotContracts.model_json_schema(mode='validation'), sort_keys=True, indent=2,
+    return (json.dumps(DevelopmentContracts.model_json_schema(mode='validation'), sort_keys=True, indent=2,
                        ensure_ascii=False) + '\n').encode()
 
 

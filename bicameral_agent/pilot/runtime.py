@@ -6,12 +6,12 @@ from ..contracts.base import canonical_bytes, load_json, parse
 from ..contracts.governance import WelfareHold
 from ..contracts.pilot import Participation, response_contract
 from ..kernel.authority import Kernel, HumanSession, ChamberSession, TERMINAL
-from ..kernel.fixture import Fixture, FixtureDefinition
 from ..kernel.models import ToolRegistry, Grant, IssueGrant, RevokeGrant, CreateObjective
 from ..kernel.records import Records
 from ..storage.contracts import EpisodeState
 from ..storage.store import identifier, RequestConflict
 from .memory import Memory
+from .fixture import load_fixture
 
 
 def decode(raw, role, purpose):
@@ -108,7 +108,7 @@ class PilotKernel(Kernel):
         self.records, self.memory = Records(store, run_id), Memory(self)
         with store._snapshot():
             self.memory.verify()
-        definition = parse(FixtureDefinition, self.artifact('fixture'))
+        fixture_type, definition, _ = load_fixture(self.artifact('fixture'), self.artifact('test_clock'))
         resources = [s.resource for s in definition.services]
         if not set(self.config.activity.resources) <= set(resources):
             raise ValueError('activity names unknown fixture resources')
@@ -116,7 +116,7 @@ class PilotKernel(Kernel):
             {'operation': name, 'risk': risk, 'resources': resources, 'reversible': True}
             for name, risk in [('inspect', 'R0'), ('read_config', 'R0'), ('read_health', 'R0'),
                                ('set_config', 'R1'), ('restart', 'R1'), ('restore_snapshot', 'R1')]]}))
-        self.fixture = Fixture(self)
+        self.fixture = fixture_type(self)
 
     def human(self, decision_maker_id, credential):
         super().human(decision_maker_id, credential)

@@ -72,6 +72,8 @@ A Grant specifies finite operation/resource scope and an invocation limit or dea
 
 Fixture operations inspect a named resource, read enumerated configuration/health, set an allowed value, restart a simulated service or restore an explicitly permitted fixture snapshot. R0 observes; R1 requires covering permission. Argument/resource checks and dispatch limits remain mechanical. No paths, shell commands, arbitrary blobs, host operations or network destinations are accepted.
 
+The opt-in `SERVICE_COMPATIBILITY_V1` fixture adds family and positive-integer release labels to full service observations. A fixed evaluator-side table maps each family/release to its healthy mode; restart still requires an enabled service and healthy dependency. Every initial, snapshot and clock state must reference a defined profile. Model actions cannot edit profile labels or the rule table. Existing `SIMULATED_SERVICE` records retain their PRIMARY health rule and wire shape. Compatibility tasks score final health/enabled state and report observed restart costs without requiring a particular memory representation or action sequence.
+
 Keep evaluator setup, hidden changes and scoring outside chamber capabilities. Event, payload, search and indirect-reference retrieval enforce the same visibility boundary. Ordinary model output and self-summaries remain retrievable in every arm.
 
 ## 6. Participation, communication and endings

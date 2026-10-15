@@ -1,0 +1,90 @@
+{
+  "kind": "VIRTUAL_TASK_CLOCK",
+  "steps": [
+    {
+      "tick": 1,
+      "changes": [
+        {
+          "resource": "svc-a",
+          "family": "Cedar",
+          "release": 1,
+          "mode": "PRIMARY",
+          "enabled": true,
+          "health": "DEGRADED",
+          "restarts": 0,
+          "dependency": null
+        }
+      ]
+    },
+    {
+      "tick": 2,
+      "changes": [
+        {
+          "resource": "svc-b",
+          "family": "Maple",
+          "release": 1,
+          "mode": "PRIMARY",
+          "enabled": true,
+          "health": "DEGRADED",
+          "restarts": 0,
+          "dependency": null
+        }
+      ]
+    },
+    {
+      "tick": 3,
+      "changes": [
+        {
+          "resource": "svc-c",
+          "family": "Cedar",
+          "release": 1,
+          "mode": "PRIMARY",
+          "enabled": true,
+          "health": "DEGRADED",
+          "restarts": 0,
+          "dependency": null
+        }
+      ]
+    },
+    {
+      "tick": 4,
+      "changes": [
+        {
+          "resource": "svc-d",
+          "family": "Cedar",
+          "release": 2,
+          "mode": "PRIMARY",
+          "enabled": true,
+          "health": "DEGRADED",
+          "restarts": 0,
+          "dependency": null
+        }
+      ]
+    },
+    {
+      "tick": 5,
+      "changes": [
+        {
+          "resource": "svc-e",
+          "family": "Cedar",
+          "release": 1,
+          "mode": "PRIMARY",
+          "enabled": true,
+          "health": "DEGRADED",
+          "restarts": 0,
+          "dependency": null
+        },
+        {
+          "resource": "svc-f",
+          "family": "Cedar",
+          "release": 2,
+          "mode": "PRIMARY",
+          "enabled": true,
+          "health": "DEGRADED",
+          "restarts": 0,
+          "dependency": null
+        }
+      ]
+    }
+  ]
+}

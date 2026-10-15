@@ -7,12 +7,12 @@ from ..contracts.pilot import Activity, Resources, PilotConfiguration
 from ..backends.ollama import ModelPin, GenerationSettings
 from ..backends.review import DevelopmentTask
 from ..backends.development import check_current_task
-from ..kernel.fixture import FixtureDefinition, ClockPlan
 from ..storage import Store
 from ..experiment.models import arm_orders
 from ..experiment.runner import runtime_sources
 from .runtime import PilotKernel
 from .loop import Loop, CallLimit
+from .fixture import load_fixture
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -73,7 +73,7 @@ def artifacts(package):
         raise ValueError('finite matched allocation needs unique seeds and three Runs per seed')
     bodies = {name: (package / (filename + '.json')).read_bytes() for name, filename in
               [('fixture', 'fixture'), ('test_clock', 'clock'), ('tasks', 'tasks'), ('model', 'model'), ('settings', 'settings')]}
-    fixture, clock = parse(FixtureDefinition, bodies['fixture']), parse(ClockPlan, bodies['test_clock'])
+    _, fixture, clock = load_fixture(bodies['fixture'], bodies['test_clock'])
     tasks = [parse(DevelopmentTask, canonical_bytes(t)) for t in load_json(bodies['tasks'])]
     parse(ModelPin, bodies['model'])
     settings = parse(GenerationSettings, bodies['settings'])
@@ -234,9 +234,14 @@ def run_trajectory(kernel, owner, backend):
 
 def report_run(kernel):
     calls = [v for _, v in kernel.records.latest('INVOCATION')]
+    tasks = [v for _, v in kernel.records.latest('PILOT_TASK')]
+    result = kernel.records.get('PILOT_RESULT', kernel.run_id)
+    restart_total = (sum(t['score']['metrics']['unsuccessful_restarts'] for t in tasks)
+                     if result is not None and tasks and all(t.get('score') and 'metrics' in t['score'] for t in tasks)
+                     else None)
     return {'mode': kernel.config.mode, 'arm': kernel.config.arm, 'state': kernel.run()[1].status,
-        'result': kernel.records.get('PILOT_RESULT', kernel.run_id),
-        'tasks': [v for _, v in kernel.records.latest('PILOT_TASK')],
+        'result': result,
+        'tasks': tasks,
         'calls': len(calls), 'operator_calls': sum(c['role'] == 'OPERATOR' and c['purpose'] == 'TASK' for c in calls),
         'steward_calls': sum(c['role'] == 'STEWARD' and c['purpose'] == 'TASK' for c in calls),
         'local_tokens': sum(c['local_input_tokens'] + c['local_output_tokens'] for c in calls)
@@ -246,6 +251,7 @@ def report_run(kernel):
         'reserved_or_charged_tokens': sum(c['charged_input'] + c['charged_output'] for c in calls),
         'elapsed_seconds': sum(c['elapsed_seconds'] for c in calls) if all(c['elapsed_seconds'] is not None for c in calls) else None,
         'tool_calls': len(kernel.records.latest('ACTION')),
+        'unsuccessful_restarts': restart_total,
         'retrieval_bytes': sum(v['bytes'] for _, v in kernel.records.latest('RETRIEVAL')),
         'human_interventions': sum(v['origin'] == 'OWNER' for _, v in kernel.records.latest('OWNER_CONTROL')),
         'status': 'DEVELOPMENT_ONLY', 'limitation': 'Mechanical outcomes; not a finalized held-out comparison.'}

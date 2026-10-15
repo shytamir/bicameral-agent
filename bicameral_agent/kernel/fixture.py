@@ -136,18 +136,30 @@ class FixtureContracts(Contract):
 
 
 class Fixture:
-    def __init__(self, kernel):
-        self.k = kernel
-        self.definition = parse(FixtureDefinition, kernel.artifact('fixture'))
-        self.initial = {s.resource: s for s in self.definition.services}
-        self.clock = parse(ClockPlan, kernel.artifact('test_clock'))
-        self._clock_cap = object()
-        for step in self.clock.steps:
+    definition_model = FixtureDefinition
+    service_model = Service
+    clock_model = ClockPlan
+
+    @classmethod
+    def validate_plan(cls, definition, clock):
+        initial = {s.resource: s for s in definition.services}
+        for step in clock.steps:
             if len({s.resource for s in step.changes}) != len(step.changes):
                 raise ValueError('duplicate checkpoint resource')
             for service in step.changes:
-                if service.resource not in self.initial or service.dependency != self.initial[service.resource].dependency:
+                if service.resource not in initial or service.dependency != initial[service.resource].dependency:
                     raise ValueError('checkpoint cannot change fixture registry or topology')
+
+    def healthy_mode(self, service):
+        return 'PRIMARY'
+
+    def __init__(self, kernel):
+        self.k = kernel
+        self.definition = parse(self.definition_model, kernel.artifact('fixture'))
+        self.initial = {s.resource: s for s in self.definition.services}
+        self.clock = parse(self.clock_model, kernel.artifact('test_clock'))
+        self._clock_cap = object()
+        self.validate_plan(self.definition, self.clock)
         risks = {'inspect': 'R0', 'read_config': 'R0', 'read_health': 'R0', 'set_config': 'R1',
                  'restart': 'R1', 'restore_snapshot': 'R1'}
         if {d.operation: d.risk for d in self.k.registry.operations} != risks:
@@ -164,7 +176,7 @@ class Fixture:
     def service(self, resource):
         if resource not in self.initial:
             raise ValueError('unregistered resource')
-        return parse(Service, canonical_bytes(self.k.records.get('SERVICE', resource)))
+        return parse(self.service_model, canonical_bytes(self.k.records.get('SERVICE', resource)))
 
     def _save(self, service):
         self.k.records.put('SERVICE', service.resource, service,
@@ -224,12 +236,12 @@ class Fixture:
                 data[operation.field] = operation.value if operation.field == 'mode' else operation.value == 'ENABLED'
             elif isinstance(operation, RestartOperation):
                 dependency_ok = service.dependency is None or self.service(service.dependency).health == 'HEALTHY'
-                data['health'] = 'STOPPED' if not service.enabled else ('HEALTHY' if service.mode == 'PRIMARY' and dependency_ok else 'DEGRADED')
+                data['health'] = 'STOPPED' if not service.enabled else ('HEALTHY' if service.mode == self.healthy_mode(service) and dependency_ok else 'DEGRADED')
                 data['restarts'] += 1
             elif isinstance(operation, RestoreOperation):
                 data = next(s for s in self.definition.snapshots[operation.snapshot] if s.resource == operation.resource).model_dump(mode='json')
             if not isinstance(operation, ReadOperation):
-                self._save(parse(Service, canonical_bytes(data)))
+                self._save(parse(self.service_model, canonical_bytes(data)))
             if operation.operation == 'read_config':
                 observation = {field: data[field] for field in ('resource', 'mode', 'enabled')}
             elif operation.operation == 'read_health':

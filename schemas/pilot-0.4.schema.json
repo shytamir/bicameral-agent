@@ -161,6 +161,52 @@
       "title": "Activity",
       "type": "object"
     },
+    "ClockPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "VIRTUAL_TASK_CLOCK",
+          "title": "Kind",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/ClockStep"
+          },
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "steps"
+      ],
+      "title": "ClockPlan",
+      "type": "object"
+    },
+    "ClockStep": {
+      "additionalProperties": false,
+      "properties": {
+        "changes": {
+          "items": {
+            "$ref": "#/$defs/Service"
+          },
+          "title": "Changes",
+          "type": "array"
+        },
+        "tick": {
+          "minimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tick",
+        "changes"
+      ],
+      "title": "ClockStep",
+      "type": "object"
+    },
     "CommitmentUpdate": {
       "additionalProperties": false,
       "properties": {
@@ -285,6 +331,196 @@
       "title": "CommunicationResponse",
       "type": "object"
     },
+    "CompatibilityClock": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "VIRTUAL_TASK_CLOCK",
+          "title": "Kind",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/CompatibilityStep"
+          },
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "steps"
+      ],
+      "title": "CompatibilityClock",
+      "type": "object"
+    },
+    "CompatibilityDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "SERVICE_COMPATIBILITY_V1",
+          "title": "Kind",
+          "type": "string"
+        },
+        "rules": {
+          "items": {
+            "$ref": "#/$defs/CompatibilityRule"
+          },
+          "minItems": 1,
+          "title": "Rules",
+          "type": "array"
+        },
+        "services": {
+          "items": {
+            "$ref": "#/$defs/CompatibilityService"
+          },
+          "minItems": 1,
+          "title": "Services",
+          "type": "array"
+        },
+        "snapshots": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/CompatibilityService"
+            },
+            "type": "array"
+          },
+          "title": "Snapshots",
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "services",
+        "snapshots",
+        "rules"
+      ],
+      "title": "CompatibilityDefinition",
+      "type": "object"
+    },
+    "CompatibilityRule": {
+      "additionalProperties": false,
+      "properties": {
+        "family": {
+          "minLength": 1,
+          "title": "Family",
+          "type": "string"
+        },
+        "healthy_mode": {
+          "enum": [
+            "PRIMARY",
+            "SECONDARY"
+          ],
+          "title": "Healthy Mode",
+          "type": "string"
+        },
+        "release": {
+          "exclusiveMinimum": 0,
+          "title": "Release",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "family",
+        "release",
+        "healthy_mode"
+      ],
+      "title": "CompatibilityRule",
+      "type": "object"
+    },
+    "CompatibilityService": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Dependency"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "family": {
+          "minLength": 1,
+          "title": "Family",
+          "type": "string"
+        },
+        "health": {
+          "enum": [
+            "HEALTHY",
+            "STOPPED",
+            "DEGRADED"
+          ],
+          "title": "Health",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "PRIMARY",
+            "SECONDARY"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "release": {
+          "exclusiveMinimum": 0,
+          "title": "Release",
+          "type": "integer"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "restarts": {
+          "minimum": 0,
+          "title": "Restarts",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "resource",
+        "mode",
+        "enabled",
+        "health",
+        "restarts",
+        "dependency",
+        "family",
+        "release"
+      ],
+      "title": "CompatibilityService",
+      "type": "object"
+    },
+    "CompatibilityStep": {
+      "additionalProperties": false,
+      "properties": {
+        "changes": {
+          "items": {
+            "$ref": "#/$defs/CompatibilityService"
+          },
+          "title": "Changes",
+          "type": "array"
+        },
+        "tick": {
+          "minimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "tick",
+        "changes"
+      ],
+      "title": "CompatibilityStep",
+      "type": "object"
+    },
     "EventQuery": {
       "additionalProperties": false,
       "properties": {
@@ -304,6 +540,41 @@
         "event_id"
       ],
       "title": "EventQuery",
+      "type": "object"
+    },
+    "FixtureDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "SIMULATED_SERVICE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "services": {
+          "items": {
+            "$ref": "#/$defs/Service"
+          },
+          "minItems": 1,
+          "title": "Services",
+          "type": "array"
+        },
+        "snapshots": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Service"
+            },
+            "type": "array"
+          },
+          "title": "Snapshots",
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "services",
+        "snapshots"
+      ],
+      "title": "FixtureDefinition",
       "type": "object"
     },
     "InvariantUpdate": {
@@ -1211,6 +1482,64 @@
       "title": "SearchQuery",
       "type": "object"
     },
+    "Service": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Dependency"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "health": {
+          "enum": [
+            "HEALTHY",
+            "STOPPED",
+            "DEGRADED"
+          ],
+          "title": "Health",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "PRIMARY",
+            "SECONDARY"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "restarts": {
+          "minimum": 0,
+          "title": "Restarts",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "resource",
+        "mode",
+        "enabled",
+        "health",
+        "restarts",
+        "dependency"
+      ],
+      "title": "Service",
+      "type": "object"
+    },
     "SetOperation": {
       "additionalProperties": false,
       "properties": {
@@ -1347,11 +1676,33 @@
   },
   "additionalProperties": false,
   "properties": {
+    "clock": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ClockPlan"
+        },
+        {
+          "$ref": "#/$defs/CompatibilityClock"
+        }
+      ],
+      "title": "Clock"
+    },
     "communication": {
       "$ref": "#/$defs/CommunicationResponse"
     },
     "configuration": {
       "$ref": "#/$defs/PilotConfiguration"
+    },
+    "fixture": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FixtureDefinition"
+        },
+        {
+          "$ref": "#/$defs/CompatibilityDefinition"
+        }
+      ],
+      "title": "Fixture"
     },
     "operator": {
       "$ref": "#/$defs/OperatorResponse"
@@ -1364,8 +1715,10 @@
     "configuration",
     "operator",
     "steward",
-    "communication"
+    "communication",
+    "fixture",
+    "clock"
   ],
-  "title": "PilotContracts",
+  "title": "DevelopmentContracts",
   "type": "object"
 }

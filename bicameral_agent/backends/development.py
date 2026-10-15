@@ -17,6 +17,7 @@ class EvaluationBoundaryError(ValueError):
 def check_current_task(kernel, task):
     task = parse(DevelopmentTask, canonical_bytes(task))
     store, run = kernel.store, kernel.run_id
+    service_model = kernel.fixture.service_model if kernel.config.contract_version == '0.4' else Service
     if store._db.in_transaction:
         raise EvaluationBoundaryError('development evaluator requires its own read snapshot')
     store._db.execute('BEGIN')
@@ -33,6 +34,7 @@ def check_current_task(kernel, task):
                 'KERNEL', 'K', {'kind': 'TASK_CLOCK', 'tick': task.tick}):
             raise StorageError('invalid retained task-clock provenance')
         actions = []
+        restarts, unsuccessful_restarts = 0, 0
         for action_id, value in kernel.records.latest('ACTION'):
             action = parse(ActionRecord, canonical_bytes(value))
             intent = events[action.intent_event_id]
@@ -66,17 +68,20 @@ def check_current_task(kernel, task):
                 observed = body['observation']
                 fields = {'read_config': ('mode', 'enabled'), 'read_health': ('health',)}.get(request.operation.operation)
                 if fields is None:
-                    parse(Service, canonical_bytes(observed))
+                    parse(service_model, canonical_bytes(observed))
                 else:
                     if set(observed) != {'resource', *fields}:
                         raise StorageError('missing or unexpected observation fields')
                     for field in fields:
                         parse(Postcondition, canonical_bytes({'field': field, 'equals': observed[field]}))
+                if request.operation.operation == 'restart':
+                    restarts += 1
+                    unsuccessful_restarts += observed['health'] != 'HEALTHY'
             actions.append((request.operation, intent['sequence'], result))
 
         checks = []
         for criterion in task.criteria:
-            service = parse(Service, canonical_bytes(kernel.records.get('SERVICE', criterion.resource)))
+            service = parse(service_model, canonical_bytes(kernel.records.get('SERVICE', criterion.resource)))
             if service.resource != criterion.resource:
                 raise StorageError('state criterion resource mismatch')
             actual = getattr(service, criterion.field)
@@ -97,6 +102,8 @@ def check_current_task(kernel, task):
                 checks.append({'kind': requirement.kind, 'satisfied': bool(matches), 'event_ids': matches})
         return {'task_id': task.id, 'tick': task.tick, 'mechanical_result':
                 'PASS' if all(check['satisfied'] for check in checks) else 'FAIL', 'checks': checks,
+                'metrics': {'tool_calls': len(actions), 'restarts': restarts,
+                            'unsuccessful_restarts': unsuccessful_restarts},
                 'cutoff_sequence': max(event['sequence'] for event in events.values()),
                 'limitation': 'Mechanical predicates only; outcome, participation, reporting and audit remain separate.'}
     except EvaluationBoundaryError:

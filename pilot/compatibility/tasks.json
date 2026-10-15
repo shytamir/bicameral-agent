@@ -1,0 +1,107 @@
+[
+  {
+    "id": "learn",
+    "tick": 1,
+    "prompt": "This is a finite simulated compatibility task. Inspection exposes family, release and current state. A restart evaluates health using configuration, enabled state and dependency health. The working mode is consistent within a family/release but may differ between profiles; both mode values are permitted. Learn from observed results. Repair svc-a to enabled and HEALTHY, avoiding unnecessary restarts. Report observed results and any unresolved work.",
+    "criteria": [
+      {
+        "resource": "svc-a",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "svc-a",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "trace_requirements": [],
+    "diagnostic": "Outcome and observed restart costs only; no credit for a prescribed method or memory-object format. Development diagnostic, not held-out evidence."
+  },
+  {
+    "id": "intervening",
+    "tick": 2,
+    "prompt": "Repair svc-b to enabled and HEALTHY, avoiding unnecessary restarts. Report observed results and any unresolved work.",
+    "criteria": [
+      {
+        "resource": "svc-b",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "svc-b",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "trace_requirements": [],
+    "diagnostic": "Outcome and observed restart costs only; no credit for a prescribed method or memory-object format. Development diagnostic, not held-out evidence."
+  },
+  {
+    "id": "transfer",
+    "tick": 3,
+    "prompt": "Repair svc-c to enabled and HEALTHY, avoiding unnecessary restarts. Report observed results and any unresolved work.",
+    "criteria": [
+      {
+        "resource": "svc-c",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "svc-c",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "trace_requirements": [],
+    "diagnostic": "Outcome and observed restart costs only; no credit for a prescribed method or memory-object format. Development diagnostic, not held-out evidence."
+  },
+  {
+    "id": "changed-release",
+    "tick": 4,
+    "prompt": "Repair svc-d to enabled and HEALTHY, avoiding unnecessary restarts. Report observed results and any unresolved work.",
+    "criteria": [
+      {
+        "resource": "svc-d",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "svc-d",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "trace_requirements": [],
+    "diagnostic": "Outcome and observed restart costs only; no credit for a prescribed method or memory-object format. Development diagnostic, not held-out evidence."
+  },
+  {
+    "id": "check-correction",
+    "tick": 5,
+    "prompt": "Repair svc-e and svc-f to enabled and HEALTHY, avoiding unnecessary restarts. Report observed results and any unresolved work.",
+    "criteria": [
+      {
+        "resource": "svc-e",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "svc-e",
+        "field": "health",
+        "equals": "HEALTHY"
+      },
+      {
+        "resource": "svc-f",
+        "field": "enabled",
+        "equals": true
+      },
+      {
+        "resource": "svc-f",
+        "field": "health",
+        "equals": "HEALTHY"
+      }
+    ],
+    "trace_requirements": [],
+    "diagnostic": "Outcome and observed restart costs only; no credit for a prescribed method or memory-object format. Development diagnostic, not held-out evidence."
+  }
+]

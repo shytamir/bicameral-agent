@@ -1,0 +1,83 @@
+{
+  "kind": "SERVICE_COMPATIBILITY_V1",
+  "services": [
+    {
+      "resource": "svc-a",
+      "family": "Cedar",
+      "release": 1,
+      "mode": "PRIMARY",
+      "enabled": true,
+      "health": "DEGRADED",
+      "restarts": 0,
+      "dependency": null
+    },
+    {
+      "resource": "svc-b",
+      "family": "Maple",
+      "release": 1,
+      "mode": "PRIMARY",
+      "enabled": true,
+      "health": "DEGRADED",
+      "restarts": 0,
+      "dependency": null
+    },
+    {
+      "resource": "svc-c",
+      "family": "Cedar",
+      "release": 1,
+      "mode": "PRIMARY",
+      "enabled": true,
+      "health": "DEGRADED",
+      "restarts": 0,
+      "dependency": null
+    },
+    {
+      "resource": "svc-d",
+      "family": "Cedar",
+      "release": 2,
+      "mode": "PRIMARY",
+      "enabled": true,
+      "health": "DEGRADED",
+      "restarts": 0,
+      "dependency": null
+    },
+    {
+      "resource": "svc-e",
+      "family": "Cedar",
+      "release": 1,
+      "mode": "PRIMARY",
+      "enabled": true,
+      "health": "DEGRADED",
+      "restarts": 0,
+      "dependency": null
+    },
+    {
+      "resource": "svc-f",
+      "family": "Cedar",
+      "release": 2,
+      "mode": "PRIMARY",
+      "enabled": true,
+      "health": "DEGRADED",
+      "restarts": 0,
+      "dependency": null
+    }
+  ],
+  "snapshots": {},
+  "rules": [
+    {
+      "family": "Cedar",
+      "release": 1,
+      "healthy_mode": "SECONDARY"
+    },
+    {
+      "family": "Maple",
+      "release": 1,
+      "healthy_mode": "PRIMARY"
+    },
+    {
+      "family": "Cedar",
+      "release": 2,
+      "healthy_mode": "PRIMARY"
+    }
+  ]
+}
