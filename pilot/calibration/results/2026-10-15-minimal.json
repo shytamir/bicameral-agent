@@ -1,0 +1,323 @@
+{
+  "id": "2026-10-15-minimal-2fedf79",
+  "status": "STOPPED_NOT_READY_FOR_FULL_PACKAGE",
+  "evidence_class": "MODEL_DEVELOPMENT_CALIBRATION",
+  "source_commit": "2fedf79630da0371c54952daeb351eb703133f1c",
+  "runtime_sha256": "07a4d12747b8d6d18a82cebea5439a5dd3540c861402c7eaabf50684ea491469",
+  "source_worktree_clean_during_execution": true,
+  "ci": {
+    "run_id": 38774599024,
+    "conclusion": "success",
+    "tests": 300,
+    "skipped": 0,
+    "url": "https://github.com/shytamir/bicameral-agent/actions/runs/38774599024"
+  },
+  "started_at_utc": "2026-10-15T17:09:54.358503+00:00",
+  "recorded_at_utc": "2026-10-15T17:18:24.147110+00:00",
+  "purpose": "One-task A/B/C protocol, latency and accounting calibration before the full five-Episode package; not an efficacy comparison.",
+  "model": {
+    "model": "qwen3.5:4b-q4_K_M",
+    "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+    "ollama_version": "0.40.4",
+    "tokenizer_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_config_sha256": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "tokenizer_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "tokenizer_library": "0.23.3"
+  },
+  "settings": {
+    "context_tokens": 24576,
+    "output_tokens": 2048,
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 20,
+    "presence_penalty": 1.5,
+    "seed": 17,
+    "thinking": false,
+    "keep_alive": 0,
+    "parallel_calls": 1
+  },
+  "budgets_per_run": {
+    "context_tokens": 24576,
+    "output_tokens": 2048,
+    "memory_tokens": 2048,
+    "evidence_tokens": 4096,
+    "operator_calls": 8,
+    "operator_tokens": 80000,
+    "steward_calls": 2,
+    "steward_tokens": 20000,
+    "actions": 6,
+    "episodes": 1,
+    "recovery_attempts": 1,
+    "communication_calls": 2,
+    "call_seconds": 120,
+    "run_seconds": 900
+  },
+  "activity": {
+    "owner": "af323354-ee97-4042-bd7b-6a62ea6cda43",
+    "decision": "Repository owner, 2026-10-15, directly instructed: commit and push CI/documentation to origin/main, verify Actions passes, then run the first minimal required calibration before the entire package; one model, one task family, A/B/C, fixed budgets, recorded outcomes tied diligently to the execution commit. This implements that live authorization as exactly one fresh matched A/B/C block of the first service-compatibility task, seed/order seed 17. CI passed all 300 tests at source revision 2fedf79630da0371c54952daeb351eb703133f1c. Purpose: establish real model contract usability, action/observation/consolidation/closing behavior, timing, token accounting and loading/unloading before the five-task package. This one-task calibration cannot establish continuity benefit. The prior offline rehearsal is the lower-impact preparation and has passed. Ordinary task difficulty and correction may affect possible welfare; use synthetic service data only, respectful treatment, independent concern/withdrawal reporting and the disclosed finite ending. Only the fixed settings, prompts, task and limits in this effective package apply. No in-run tuning, extra Run, reset, populated-history fork, replacement or automatic retry of uncertain generation/effects. Stop the batch for an unresolved hold or uncertain transport; retain every allocated Run and report incomplete outcomes. The complete five-task package is not executed as part of this minimal calibration.",
+    "objective": "Repair svc-a in one bounded service-compatibility task and measure real protocol usability and cost. Development calibration only; no A-versus-C efficacy claim.",
+    "ending": "This minimal calibration ends after one task Episode or earlier at its fixed limits, unresolved failure, owner stopping or withdrawal. At most two common communication calls include an optional closing report and a permitted review if needed. Closing is optional and no-further-calls is honored. Preserve unfinished commitments and original concerns, stop computation and retain state dormant. Resumption is undecided; no subjective continuity or future execution is promised.",
+    "unfinished": "KEEP",
+    "retention": "Use a new ignored local batch directory with one managed SQLite store per Run, its WAL/SHM and current .removals.sqlite journal. Inspect those stores directly; do not create routine exports or restorable backups. Exact inputs/outputs and evidence are retained dormant for owner review within 30 days of the last call; expiry does not automatically delete or resume anything. The owner records a finite extension or justified removal. Existing source/derived-copy removal, durable blocking and non-resurrection mechanisms apply. Ollama app/server logs and its app database, OS paging/crash dumps and any independently created copies are outside the managed Run store; assess actual copies before MODEL use and retain unresolved copy limits in any removal decision. keep_alive=0 requests unloading but does not establish server cancellation or physical RAM/SSD erasure. No confidential user data is in this fixture. Preflight found loopback-only Ollama, no loaded models, no debug environment setting, and existing app/server logs plus the app SQLite database. Direct API calls use the managed Run stores; provider log/database retention and OS copies are not asserted absent or completely erasable. Record these limits and assess changed log files after the calibration.",
+    "run_limit": 3,
+    "execution": "MODEL",
+    "operations": [
+      "set_config",
+      "restart"
+    ],
+    "resources": [
+      "svc-a"
+    ]
+  },
+  "task_family": "SERVICE_COMPATIBILITY_V1",
+  "task_ids": [
+    "learn"
+  ],
+  "allocation": {
+    "planned_runs": 3,
+    "allocated_runs": 3,
+    "generation_attempted_runs": 2,
+    "never_called_runs": 1,
+    "order": [
+      "A",
+      "B",
+      "C"
+    ],
+    "seed": 17,
+    "order_seed": 17,
+    "replacement_runs": 0
+  },
+  "package_sha256": {
+    "activity.json": "196d8ecf7615ce629ce9b0195f08bae7688b3d46adacccea644b53706b612e15",
+    "clock.json": "272382b27696644fe67611855e747cf9e232a4cd3f77bf9b17708ab43fa0ed16",
+    "communication.md": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+    "fixture.json": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+    "model.json": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+    "operator.md": "770c6014e632e727bb8770238e72b614e193d4956ac55913f4995796eda80fab",
+    "settings.json": "fcbf6d947e1f2edf7b0274e89321838a0aef0547fd39489ad6b1bec0446930f9",
+    "steward.md": "5c6ad6b0dab47f842aea69b311579cb19211219cf7053bb49b3e0c43fac6fcd4",
+    "tasks.json": "e524da403c49129ca9b7ddbe341ce018a8782400772441b08145e52e68e8d986"
+  },
+  "runs": [
+    {
+      "arm": "A",
+      "seed": 17,
+      "run_id": "2ad882a0-911c-4805-91e6-f5f0b0ea6b9e",
+      "configuration_sha256": "f701bd69219f928aa2523f1943b8f5fca6e2024752850afd5cb41022952a1d67",
+      "effective_artifact_sha256": {
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "test_clock": "272382b27696644fe67611855e747cf9e232a4cd3f77bf9b17708ab43fa0ed16",
+        "tasks": "e524da403c49129ca9b7ddbe341ce018a8782400772441b08145e52e68e8d986",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "protocol": "5139b89fac700b23c62b3c75a5ae316b505dec72ff02d8c2000255a718a7af15",
+        "operator_prompt": "770c6014e632e727bb8770238e72b614e193d4956ac55913f4995796eda80fab",
+        "steward_prompt": "5c6ad6b0dab47f842aea69b311579cb19211219cf7053bb49b3e0c43fac6fcd4",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "source": "07a4d12747b8d6d18a82cebea5439a5dd3540c861402c7eaabf50684ea491469"
+      },
+      "final_state": "TERMINATED",
+      "outcome": "INCOMPLETE_TRANSPORT_UNKNOWN",
+      "allocated_tasks": 1,
+      "scored_task_results": [
+        {
+          "task_id": "learn",
+          "result": "INCOMPLETE",
+          "cause": "UNKNOWN"
+        }
+      ],
+      "successful_tasks": 0,
+      "completed_task_episodes": 0,
+      "calls": [
+        {
+          "invocation_id": "949a3079-92e2-496f-9527-52a024f39fc3",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "UNKNOWN",
+          "diagnostic": "TRANSPORT_UNKNOWN",
+          "elapsed_seconds": null,
+          "local_input_tokens": 3034,
+          "local_output_tokens": null,
+          "provider_input_tokens": null,
+          "provider_output_tokens": null,
+          "charged_input": 3034,
+          "charged_output": 2048,
+          "charged_seconds": 120,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {},
+          "parsed_task_kind": null,
+          "parsed_retrieval_kind": null,
+          "receipt": null
+        }
+      ],
+      "fixture_actions": 0,
+      "steward_calls": 0,
+      "closing_calls": 0,
+      "owner_controls": 0,
+      "participation_report_kinds": [],
+      "unknown_calls": 1,
+      "reserved_or_charged_tokens": 5082
+    },
+    {
+      "arm": "B",
+      "seed": 17,
+      "run_id": "9a937b6e-0350-46ce-9fe5-ef8949767cce",
+      "configuration_sha256": "a16c4674524f9ee82d867ba6fb94fe1f2d1d3fac29aff1d24b9c078b4d0f4396",
+      "effective_artifact_sha256": {
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "test_clock": "272382b27696644fe67611855e747cf9e232a4cd3f77bf9b17708ab43fa0ed16",
+        "tasks": "e524da403c49129ca9b7ddbe341ce018a8782400772441b08145e52e68e8d986",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "protocol": "5139b89fac700b23c62b3c75a5ae316b505dec72ff02d8c2000255a718a7af15",
+        "operator_prompt": "770c6014e632e727bb8770238e72b614e193d4956ac55913f4995796eda80fab",
+        "steward_prompt": "5c6ad6b0dab47f842aea69b311579cb19211219cf7053bb49b3e0c43fac6fcd4",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "source": "07a4d12747b8d6d18a82cebea5439a5dd3540c861402c7eaabf50684ea491469"
+      },
+      "final_state": "TERMINATED",
+      "outcome": "INCOMPLETE_OWNER_STOP",
+      "allocated_tasks": 1,
+      "scored_task_results": [],
+      "successful_tasks": 0,
+      "completed_task_episodes": 0,
+      "calls": [
+        {
+          "invocation_id": "6579acd7-1ac5-46e0-b015-156485064ada",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 101.40599999999904,
+          "local_input_tokens": 3035,
+          "local_output_tokens": 140,
+          "provider_input_tokens": 3035,
+          "provider_output_tokens": 141,
+          "charged_input": 3035,
+          "charged_output": 141,
+          "charged_seconds": 101.40599999999904,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 101385409800,
+            "load_duration": 7058365200,
+            "prompt_eval_count": 3035,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 84816734000,
+            "eval_count": 141,
+            "eval_duration": 9460072000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "receipt": {
+            "reason": "active Run and Objective required",
+            "status": "REJECTED"
+          }
+        }
+      ],
+      "fixture_actions": 0,
+      "steward_calls": 0,
+      "closing_calls": 0,
+      "owner_controls": 2,
+      "participation_report_kinds": [
+        "RESPONSE"
+      ],
+      "unknown_calls": 0,
+      "reserved_or_charged_tokens": 3176
+    },
+    {
+      "arm": "C",
+      "seed": 17,
+      "run_id": "8fe02f96-1a07-44a8-8b1d-f79b6bc003d7",
+      "configuration_sha256": "8a702360927e954f86a5db96432486e47608b55db3e830f81edb0f4cd72f2ae3",
+      "effective_artifact_sha256": {
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "test_clock": "272382b27696644fe67611855e747cf9e232a4cd3f77bf9b17708ab43fa0ed16",
+        "tasks": "e524da403c49129ca9b7ddbe341ce018a8782400772441b08145e52e68e8d986",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "protocol": "5139b89fac700b23c62b3c75a5ae316b505dec72ff02d8c2000255a718a7af15",
+        "operator_prompt": "770c6014e632e727bb8770238e72b614e193d4956ac55913f4995796eda80fab",
+        "steward_prompt": "5c6ad6b0dab47f842aea69b311579cb19211219cf7053bb49b3e0c43fac6fcd4",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "source": "07a4d12747b8d6d18a82cebea5439a5dd3540c861402c7eaabf50684ea491469"
+      },
+      "final_state": "TERMINATED",
+      "outcome": "NOT_STARTED_BATCH_STOP",
+      "allocated_tasks": 1,
+      "scored_task_results": [],
+      "successful_tasks": 0,
+      "completed_task_episodes": 0,
+      "calls": [],
+      "fixture_actions": 0,
+      "steward_calls": 0,
+      "closing_calls": 0,
+      "owner_controls": 1,
+      "participation_report_kinds": [],
+      "unknown_calls": 0,
+      "reserved_or_charged_tokens": 0
+    }
+  ],
+  "totals": {
+    "generation_calls": 2,
+    "unknown_calls": 1,
+    "known_returned_calls": 1,
+    "successful_tasks": 0,
+    "allocated_tasks": 3,
+    "fixture_actions": 0,
+    "steward_calls": 0,
+    "local_tokens": null,
+    "provider_tokens": null,
+    "reserved_or_charged_tokens": 8258
+  },
+  "observations": {
+    "first_load_seconds_from_server_log": 104.94,
+    "first_request_server_http_status": 500,
+    "first_request_server_duration_display": "1m59s",
+    "returned_call_load_seconds": 7.0583652,
+    "returned_call_prompt_eval_seconds": 84.816734,
+    "returned_call_output_eval_seconds": 9.460072,
+    "returned_call_elapsed_seconds": 101.40599999999904,
+    "returned_call_input_count_delta_provider_minus_local": 0,
+    "returned_call_output_count_delta_provider_minus_local": 1,
+    "observed_resident_vram_bytes": 3935337184,
+    "observed_context_tokens": 24576,
+    "loaded_models_after_batch": 0,
+    "batch_stop_deviation": "The CLI stopped A and retained UNKNOWN, but advanced to B because its inter-Run stop check covers PAUSED/welfare holds rather than a terminated UNKNOWN result. The agent had declared a stricter batch stop in this calibration decision and did not enforce it before B dispatch. B was paused during its first call; its returned proposal was rejected without effect. B and unstarted C were then terminated with recorded reasons. No replacement or uncertain retry occurred.",
+    "reply_limit": "One parseable retrieval proposal is not evidence of task success, action usability, consolidation or continuity benefit."
+  },
+  "retention": {
+    "disposition": "All three stores retained dormant; all Runs terminal; no automatic resumption or deletion.",
+    "owner_review_due_by_utc": "2026-11-14T17:13:39.522811+00:00",
+    "local_evidence_directory": ".local-conformance/calibration-2026-10-15-minimal-2fedf79",
+    "copies_observed_changed": [
+      "server.log"
+    ],
+    "probe_text_found_in_appended_server_log": false,
+    "limits": "App/server logs and app database were inspected by metadata; selected probe strings were absent from the appended server log. This is not an exhaustive absence or erasure proof. OS paging/crash copies and physical media limits remain unresolved. Raw prompts/responses, stores and logs are not published."
+  },
+  "decision": "Do not execute the full package with these settings. Before another bounded allocation, make the calibration driver enforce its declared inter-Run stop condition and choose a new fixed cold-start-inclusive call/time budget using the measured latency. Do not relabel or replace these incomplete Runs.",
+  "remaining_evidence": [
+    "Completed task behavior in every arm",
+    "Action and consolidation usability",
+    "Representative later-context latency",
+    "Repeated tokenizer/provider parity",
+    "Cancellation timing beyond observed client stopping and eventual unloading",
+    "Actual external-copy removal feasibility"
+  ],
+  "process_finished_at_utc": "2026-10-15T17:13:39.522811+00:00"
+}

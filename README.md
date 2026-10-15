@@ -6,7 +6,7 @@ A bounded experiment in whether memory across stateless model calls improves use
 
 **The 0.4 development runtime and five-Episode compatibility diagnostic are implemented and validated offline.** The runtime reuses the SQLite store, fixture executor, journal retrieval, permission boundary and development scorer. It provides direct owner controls, compact model contracts, semantic updates and a bounded Ollama request/action/observation loop.
 
-The laptop setup and [calibration package](pilot/calibration/activity.json) were published at `cc473f3`, following the diagnostic at `6fcc0c5` and runtime at `f8291fd`. The package remains **SCRIPTED**. No live model calls or MODEL allocations have been made; actual backend calibration awaits the owner's later live instruction.
+The laptop setup and [calibration package](pilot/calibration/activity.json) were published at `cc473f3`, following the diagnostic at `6fcc0c5` and runtime at `f8291fd`. Test CI and documentation consolidation were published at `2fedf79`. The first owner-authorized minimal MODEL calibration ran against that exact revision and stopped incomplete; the full five-Episode package remains **SCRIPTED** and has not run. See the [recorded calibration outcomes](#first-live-calibration).
 
 ## Active documents
 
@@ -41,7 +41,7 @@ Every Run has one managed store. SQLite WAL/SHM files and the `.removals.sqlite`
 
 The [calibration package](pilot/calibration/activity.json) reuses the [compatibility diagnostic](Experiment%20Architecture.md#61-five-episode-compatibility-diagnostic). Its activity file is the source of truth for the proposed limits, finite operations/resources, participation, retention and ending; [model.json](pilot/calibration/model.json), [settings.json](pilot/calibration/settings.json) and the package prompts record the effective preparation.
 
-The proposed later MODEL activity is one matched A/B/C block, five Episodes per Run, seed/order seed 17 and no replacement Runs. Independent ceilings bound calls, tokens, actions, context, recovery and time; the first exhausted ceiling stops work. These values remain uncalibrated. Before live allocation, the owner records the bounded live instruction in this same decision and changes `execution` to `MODEL`. There is no additional approval registry, and SCRIPTED stores are never relabelled as MODEL evidence.
+The proposed full MODEL activity is one matched A/B/C block, five Episodes per Run, seed/order seed 17 and no replacement Runs. Independent ceilings bound calls, tokens, actions, context, recovery and time; the first exhausted ceiling stops work. These values remain uncalibrated. Before full-package allocation, record its bounded live instruction and effective limits in the activity decision and select `MODEL`. There is no additional approval registry, and SCRIPTED stores are never relabelled as MODEL evidence. The first minimal calibration used a separate, retained one-task MODEL package derived from these assets.
 
 Use the existing pinned tokenizer files and a new ignored local batch directory. The package discloses finite activity, an optional closing opportunity, dormant retention with a review within 30 days of the last call, preserved unfinished commitments and known provider/log-copy limits. The `unfinished` default is `KEEP`; `CANCEL` requires an explicit activity choice.
 
@@ -56,6 +56,24 @@ The [scripted compatibility checks](tests/test_compatibility.py) produce these r
 | Keep the first family-wide rule despite a changed release | 3/5 | 3 | 18 |
 
 The first failed trial follows the chosen PRIMARY-first exploration rule; failure is not required by the task. These are mechanical controls showing a benefit from useful history and a cost from an overbroad lesson, not model performance or A-versus-C separation. Architecture section 6.1 owns the task design and interpretation. The allocation check also completes all 15 A/B/C task Episodes; B uses rediscovery as a control, not a competent optimized comparison.
+
+## First live calibration
+
+On 2026-10-15 the owner authorized a first minimal calibration after CI passed, before executing the full package. [The outcome record](pilot/calibration/results/2026-10-15-minimal.json) identifies execution commit **`2fedf79630da0371c54952daeb351eb703133f1c`**, runtime and effective-artifact hashes, the exact model/digest, fixed settings/budgets, all three allocations, accounting and disposition. It contains summary measurements; raw model output and stores remain local.
+
+One fresh A/B/C block used the first service-compatibility task, seed/order seed 17, Qwen `qwen3.5:4b-q4_K_M` and Ollama 0.40.4. Per Run, the fixed ceilings were 8 Operator calls, 2 Steward calls, 6 actions, 1 Episode, 120 seconds per call and 900 seconds per Run, with the existing context/output/memory settings. No tuning or replacement occurred.
+
+| Arm | Model calls | Observed outcome |
+|---|---:|---|
+| A | 1 | Transport outcome UNKNOWN near the fixed deadline; task incomplete |
+| B | 1 | Parseable reply in 101.406 seconds; owner pause rejected its proposal before any effect |
+| C | 0 | Allocated but never called after the batch stop |
+
+The first load took 104.94 seconds in the server log. B's returned call reported 7.058 seconds loading, 84.817 seconds processing 3,035 input tokens and 9.460 seconds generating 141 tokens. Its local input count matched the provider; its local output count was 140, one below the provider. A's unknown usage retains its reservation rather than becoming zero. Total reserved/charged tokens were 8,258; total actual tokens remain unknown. No fixture action, consolidation or task completion occurred, so these results cannot compare arm efficacy.
+
+The calibration decision called for a batch stop on uncertain transport, but the CLI advanced from terminated A to B: its inter-Run check covered paused Runs and welfare holds, not a terminated UNKNOWN result. The executing agent had not enforced that stricter calibration condition before dispatch. B was paused during its first call, then B and unstarted C were terminated with recorded reasons. All three allocations remain in the record, dormant and terminal; no calls were replayed. Ollama reported no loaded models afterward. Only the server log changed among the inspected app/log files; external-copy and physical-erasure limits remain explicit.
+
+**The full package is not ready on these limits.** Before another bounded allocation, enforce the declared batch-stop condition and choose a new fixed budget that includes the observed cold-start and response latency. Preserve this failed calibration rather than replacing or relabelling it. The retained activity requires owner review of dormant data within 30 days of the last call; the outcome record gives the due time.
 
 ## Validation
 
@@ -87,9 +105,9 @@ An additional offline rehearsal used the actual pinned tokenizer with scripted r
 
 The owner subsequently requested test-only CI and documentation consolidation, then authorized their publication. The revision containing this handoff follows `cc473f3`: it adds the workflow, gives each active document one responsibility and moves the superseded review/package into the archive. The only code changes redirect existing legacy checks and test fixtures to their archived paths.
 
-Consolidation validation on 2026-10-15 passed all **300 tests with no skips** on the same local Python 3.12 environment, all six schema/asset checks, `pip check`, Python syntax, workflow YAML, Markdown links/anchors/fences and `git diff --check`. Hash checks confirmed the Charter, existing ZIP/text snapshots and moved JSON are unchanged; archived Markdown retains its body with relocated links and an archive notice. The original manifest still correctly reports stale. The first GitHub-hosted Ubuntu run will be verified after publication.
+Consolidation validation on 2026-10-15 passed all **300 tests with no skips** on the same local Python 3.12 environment, all six schema/asset checks, `pip check`, Python syntax, workflow YAML, Markdown links/anchors/fences and `git diff --check`. Hash checks confirmed the Charter, existing ZIP/text snapshots and moved JSON are unchanged; archived Markdown retains its body with relocated links and an archive notice. The original manifest still correctly reports stale. [GitHub Actions run 38774599024](https://github.com/shytamir/bicameral-agent/actions/runs/38774599024) passed all 300 tests in 43.954 seconds on Ubuntu at `2fedf79`, before any model dispatch.
 
-Remaining integration responsibilities are actual provider token parity, model contract usability, GPU fit, speed, cancellation/unloading, real log/copy handling and competent prompts/retrieval for every arm. Current client cancellation bounds waiting but does not prove server cancellation; unknown usage remains reserved and uncertain actions/generation are not automatically replayed. The [Roadmap](ROADMAP.md) orders the remaining work. Live calls remain disabled in the prepared activity.
+The [first live calibration](#first-live-calibration) now provides limited loading, latency, token-accounting and unloading observations. Completed task/action/consolidation behavior, representative later-context performance, repeated token parity, cancellation timing, real copy-removal feasibility and competent prompts/retrieval for every arm remain unestablished. Client cancellation bounds waiting but does not prove server cancellation; unknown usage stays reserved and uncertain calls/actions are not replayed. The [Roadmap](ROADMAP.md) orders the remaining work. The complete prepared activity remains SCRIPTED; the separate minimal MODEL allocation has ended.
 
 ## License
 
