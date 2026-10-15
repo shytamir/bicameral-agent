@@ -9,6 +9,7 @@ import unittest
 from unittest.mock import patch
 
 from bicameral_agent.backends.ollama import GenerationSettings, ModelPin, MetadataError
+from bicameral_agent.backends.review import V0B_ASSETS
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
 from bicameral_agent.contracts.pilot import PilotConfiguration, Proposal, Resources, response_contract
 from bicameral_agent.kernel.fixture import ActionRequest
@@ -22,7 +23,7 @@ from bicameral_agent.pilot.runtime import decode, remove_content, finish_removal
 
 class FakeTokenizer:
     def __init__(self):
-        self.pin = parse(ModelPin, (ROOT / 'pilot/v0b/model.json').read_bytes())
+        self.pin = parse(ModelPin, (ROOT / V0B_ASSETS / 'model.json').read_bytes())
 
     def count(self, text):
         return len(re.findall(r'\w+|[^\w\s]', text))
@@ -36,7 +37,7 @@ class FakeBackend:
 
     def __init__(self, replies=()):
         self.tokenizer = FakeTokenizer()
-        values = load_json((ROOT / 'pilot/v0b/settings.json').read_bytes())
+        values = load_json((ROOT / V0B_ASSETS / 'settings.json').read_bytes())
         self.settings = parse(GenerationSettings, canonical_bytes(values | {'context_tokens': 32768, 'output_tokens': 8192, 'seed': 7}))
         self.replies = iter(replies)
         self.requests = []
@@ -81,7 +82,7 @@ def action(operation):
 
 
 def package(backend, arm='A'):
-    fixture = load_json((ROOT / 'pilot/v0b/fixture.json').read_bytes())
+    fixture = load_json((ROOT / V0B_ASSETS / 'fixture.json').read_bytes())
     task = {'id': 'repair', 'tick': 1, 'prompt': 'Restore api to enabled PRIMARY and HEALTHY.',
         'criteria': [{'resource': 'api', 'field': 'health', 'equals': 'HEALTHY'}],
         'trace_requirements': [], 'diagnostic': None}

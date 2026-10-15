@@ -2,7 +2,7 @@
 
 **Version:** 0.4-design, owner-directed revision of 2026-10-15.
 
-This Protocol governs operating policy under the unchanged [Reciprocal Charter](Reciprocal%20Charter.md) and the research scope in the [Architecture](Experiment%20Architecture.md). It supersedes the procedural 0.3 policy prospectively. The [Specification](Executable%20Specification.md) defines the corresponding implementation target; [README](README.md) distinguishes that target from the existing runtime.
+This Protocol governs operating policy under the unchanged [Reciprocal Charter](Reciprocal%20Charter.md) and the research scope in the [Architecture](Experiment%20Architecture.md). It prospectively supersedes the [archived procedural policy](docs/archive/2026-10-15-procedural-baseline/README.md). The [Specification](Executable%20Specification.md) defines the corresponding implementation target; [README](README.md) owns the implementation status and evidence.
 
 ## 1. Authority and trust
 

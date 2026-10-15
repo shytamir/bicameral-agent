@@ -1,4 +1,4 @@
-"""Prepare/recheck the draft v0b review package without any model invocation."""
+"""Prepare/recheck the archived v0b draft without any model invocation."""
 import argparse
 from hashlib import sha256
 import json
@@ -9,7 +9,7 @@ from ..contracts.base import canonical_bytes, load_json, parse
 from ..kernel.fixture import ClockPlan, FixtureDefinition
 from .ollama import MetadataClient, ModelPin, GenerationSettings, PinnedTokenizer, prepare_request, verify_identity
 from .replies import response_contract
-from .review import DevelopmentDraft, DevelopmentTask, PreparationContracts, check_manifest, manifest
+from .review import DevelopmentDraft, DevelopmentTask, PreparationContracts, V0B_ASSETS, check_manifest, manifest
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -29,7 +29,7 @@ def inspect_metadata(pin, client):
 
 
 def validate_assets(root):
-    assets = Path(root) / 'pilot/v0b'
+    assets = Path(root) / V0B_ASSETS
     pin = parse(ModelPin, (assets / 'model.json').read_bytes())
     settings = parse(GenerationSettings, (assets / 'settings.json').read_bytes())
     draft = parse(DevelopmentDraft, (assets / 'plan.json').read_bytes())
@@ -72,7 +72,7 @@ def validate_assets(root):
 
 def prepare(root, tokenizer_directory, *, client=None):
     root, tokenizer_directory = Path(root), Path(tokenizer_directory)
-    assets = root / 'pilot/v0b'
+    assets = root / V0B_ASSETS
     pin, settings, draft, _, _, _ = validate_assets(root)
     metadata = {'status': 'OFFLINE_ONLY; server identity was not rechecked'}
     if client is not None:
@@ -139,7 +139,7 @@ def main():
             raise ValueError('backend preparation schema drift')
         print('Backend preparation schema matches.')
     elif args.write_manifest:
-        target = ROOT / 'pilot/v0b/manifest.json'
+        target = ROOT / V0B_ASSETS / 'manifest.json'
         target.write_bytes(canonical_bytes(manifest(ROOT)) + b'\n')
         print('Draft review manifest written; no authorization or inference.')
     elif args.check_manifest:

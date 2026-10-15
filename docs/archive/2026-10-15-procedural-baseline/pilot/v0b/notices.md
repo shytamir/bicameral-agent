@@ -1,4 +1,4 @@
-> Historical 0.3 notices retained for offline reference. Superseded for the 0.4 design; not active notices. See [development direction](../../V0B_REVIEW.md) and the [exact baseline archive](../../docs/archive/2026-10-15-procedural-baseline/README.md). The proposed limits and procedures below belong to that earlier draft.
+> Historical 0.3 notices retained for offline reference. Superseded for the 0.4 design; not active notices. See [archived transition note](../../V0B_REVIEW.md) and the [exact baseline archive](../../README.md). The proposed limits and procedures below belong to that earlier draft.
 
 PROPOSED NOTICES — these take effect only after the owner's review, authorization and sealing of a concrete Run configuration.
 

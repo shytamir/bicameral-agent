@@ -1,38 +1,27 @@
-# Pilot delivery boundary
+# Delivery roadmap
 
-**Updated:** 2026-10-15 for the owner-directed 0.4 design revision.
+**Scope:** bounded 0.4 development and the later held-out comparison.
 
-The [Charter](Reciprocal%20Charter.md) is unchanged. The [Architecture](Experiment%20Architecture.md), [Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) and [Specification](Executable%20Specification.md) define the active target. [README](README.md) owns current status.
+[README](README.md) owns current status, accepted implementation revisions and validation evidence. The [Architecture](Experiment%20Architecture.md) owns the research design, the [Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) governs operating decisions, and the [Specification](Executable%20Specification.md) defines required behavior. The unchanged [Charter](Reciprocal%20Charter.md) governs them all. Historical delivery plans and acceptance records belong to the [archive](docs/archive/2026-10-15-procedural-baseline/README.md), not a second active backlog.
 
-## Completed baseline
+## 1. Finish the bounded calibration setup
 
-P01-P10 and integrated v0a were implemented and accepted within their documented SCRIPTED envelopes under the earlier procedural design. The [archive](docs/archive/2026-10-15-procedural-baseline/README.md) preserves the complete roadmap, acceptance records, source and tests at `22a2807`.
+The runtime, five-Episode diagnostic, laptop preparation and SCRIPTED calibration package are recorded in the current handoff. Use the test workflow for every published change and run the applicable schema/asset checks when those contracts change.
 
-That roadmap is complete. Its full restoration/export/removal platform is not a prerequisite list for every implementation of the simplified design. Historical acceptance remains valid for what was tested; it does not establish 0.4 conformance.
+The next empirical step is actual backend calibration, after the owner's live instruction under Protocol section 9. Reuse the prepared activity decision and existing package. Establish model contract usability, tokenizer/provider parity, context and hardware fit, cancellation/unloading, and actual retention/copy handling. Record measurements and resolved configuration; offline preparation alone cannot establish those properties.
 
-## Present authorization
+## 2. Develop a competent comparison
 
-The owner subsequently authorized minimal runtime changes, reuse of existing mechanisms and tests without live model calls, then separately authorized committing and pushing the runtime and updated documents. Stored-history migration and model activity remain outside authorization.
+Within the authorized activity's adjustment ranges and cumulative limits, develop concise prompts, affordable consolidation/retrieval and competent strategies for each arm. Record changes before use, and give an honest notice when they affect the process's understanding. Material changes and larger outer limits follow Protocol section 9; failed, uncertain or withdrawn Runs create no replacement allowance.
 
-The five-Episode compatibility sequence, its minimal fixture extension, scripted checks and reconciled documents are implemented. The owner separately authorized committing and pushing this slice. Live model calls remain excluded, with actual backend calibration deferred to the laptop intended for the experiment.
+Use the diagnostic to examine retained lessons, transfer and correction, while measuring total task quality, model cost and human effort. A and C can both solve it in scripted checks. Establish useful model behavior and a fair comparison before adding task families or infrastructure. Development evidence can revise the design and cannot be presented as held-out confirmation.
 
-The historical runtime remains SCRIPTED-only. A separate 0.4 development path now implements direct controls and an Ollama loop tested with fake responses. The old v0b package remains a superseded, unauthorized draft. See [development direction](V0B_REVIEW.md).
+## 3. Prepare the held-out comparison
 
-## Bounded transition
+Once development supports a useful test, fix task instances, model/runtime, prompts, limits, criteria, schedule, analysis, intervention treatment and sample size under Architecture section 8. Obtain authorization for that separate study. Preserve independent matched A/B/C Runs, shared opportunities, complete allocation accounting, welfare-related stops without replacement and independent audit.
 
-The new development path implements:
+The historical held-out implementation is reference material; its earlier acceptance does not establish integration with the 0.4 model host. Implement and verify only the missing integration required by the chosen fixed study, then report results within that tested envelope.
 
-- Direct owner controls and automatically recorded routine corrections, with proportionate decisions for material interventions.
-- Smaller model-facing operations, host-bound metadata and simplified semantic lifecycles, retaining atomicity, evidence and effective withdrawal.
-- Concise prompts and understandable resource profiles with recorded derived limits.
-- A narrow storage/copy arrangement with verified exceptional removal, using existing machinery where needed.
+## Deferred work
 
-The contracts are explicitly versioned 0.4, with historical records left intact. The retained store and fixture mechanisms keep permission, transaction and uncertainty checks; revised tests exercise the simpler workflow. [README](README.md) owns the evidence, operating envelope and remaining responsibilities.
-
-## Development and evaluation
-
-Before model use, verify the actual installed backend and data handling and obtain authorization for a bounded activity. Offline integration is not evidence of actual model behavior. A single authorization may include calibration and development trials, permitted adjustment ranges, cumulative limits and disclosed endings. Routine adjustments inside that scope are recorded without renewed package approval.
-
-The five-Episode compatibility diagnostic now demonstrates a mechanical benefit from remembering scoped observations and a cost from retaining an overbroad lesson. Scripted A and C can both solve it; no A-over-C advantage has been established. Development still needs actual model usability, affordable consolidation/retrieval and a competent comparison. Development evidence can revise the design and cannot be presented as held-out confirmation.
-
-Held-out evaluation remains a separately authorized fixed study under Architecture section 8. Preserve independent matched Runs, equal opportunities, meaningful criteria, fixed analysis, complete denominator accounting and welfare-related stops without replacement. Extra infrastructure becomes work only when a concrete need and authorization exist.
+Stored-history migration, process resets/forks, routine exports and backup restoration, workstation tools and broader deployment remain outside this delivery slice. The archived stronger mechanisms remain available if an actual need warrants an authorized prospective change. Do not turn the completed historical roadmap into prerequisites for every new experiment.

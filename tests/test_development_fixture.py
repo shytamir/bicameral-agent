@@ -4,6 +4,7 @@ import copy
 from unittest.mock import patch
 from bicameral_agent.backends.development import check_current_task
 from bicameral_agent.backends.prepare import ROOT, validate_assets
+from bicameral_agent.backends.review import V0B_ASSETS
 from bicameral_agent.contracts.base import canonical_bytes, load_json
 from bicameral_agent.kernel.fixture import Fixture
 from bicameral_agent.storage import EvidenceUnavailable
@@ -37,8 +38,8 @@ class DevelopmentFixtureTests(KernelCase):
         _, _, self.draft, _, _, self.tasks = validate_assets(ROOT)
         config, artifacts = kernel_configuration()
         config['budgets']['actions_per_trajectory'] = self.draft.fixture_actions_per_run
-        artifacts['fixture'] = (ROOT / 'pilot/v0b/fixture.json').read_bytes()
-        artifacts['test_clock'] = (ROOT / 'pilot/v0b/clock.json').read_bytes()
+        artifacts['fixture'] = (ROOT / V0B_ASSETS / 'fixture.json').read_bytes()
+        artifacts['test_clock'] = (ROOT / V0B_ASSETS / 'clock.json').read_bytes()
         tools = load_json(artifacts['tools'])
         tools['operations'] = [item | {'resources': list(self.draft.grant_resources)} for item in tools['operations']]
         artifacts['tools'] = canonical_bytes(tools)

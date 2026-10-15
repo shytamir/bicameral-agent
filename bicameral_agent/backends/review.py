@@ -138,13 +138,16 @@ class PreparationContracts(Contract):
 
 GOVERNING = ('Reciprocal Charter.md', 'Experiment Architecture.md',
              'Operating Constitution and Execution Protocol.md', 'Executable Specification.md')
+PROCEDURAL_ARCHIVE = Path('docs/archive/2026-10-15-procedural-baseline')
+V0B_ASSETS = PROCEDURAL_ARCHIVE / 'pilot/v0b'
 
 
 def manifest(root):
     root = Path(root).resolve()
-    paths = [root / name for name in (*GOVERNING, 'V0B_REVIEW.md', 'README.md', 'ROADMAP.md', 'AGENTS.md', 'pyproject.toml')]
+    paths = [root / name for name in (*GOVERNING, PROCEDURAL_ARCHIVE / 'V0B_REVIEW.md',
+                                    'README.md', 'ROADMAP.md', 'AGENTS.md', 'pyproject.toml')]
     for directory, pattern in (('bicameral_agent', '*.py'), ('tests', '*.py'),
-                               ('schemas', '*.json'), ('pilot/v0b', '*')):
+                               ('schemas', '*.json'), (V0B_ASSETS, '*')):
         paths.extend(p for p in (root / directory).rglob(pattern) if p.is_file() and p.name != 'manifest.json')
     files = {}
     for path in sorted(set(paths)):
@@ -156,7 +159,7 @@ def manifest(root):
 
 
 def check_manifest(root):
-    retained = load_json((Path(root) / 'pilot/v0b/manifest.json').read_bytes())
+    retained = load_json((Path(root) / V0B_ASSETS / 'manifest.json').read_bytes())
     if retained != manifest(root):
         raise ValueError('review manifest differs from current source/artifacts; review is stale')
     return retained['bundle_sha256']

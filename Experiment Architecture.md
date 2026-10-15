@@ -69,8 +69,6 @@ Episode completion does not satisfy its Objective. Evidence from failed Episodes
 
 The first task family is repair and maintenance of a simulated service configuration. Its fixture has registered resource IDs, enumerated configuration values, deterministic health observations, and controlled environmental changes. It supports delayed obligations, repeated traps, changed reality, and transfer to different resource layouts.
 
-The small compatibility development sequence uses five Episodes: learn a family/release rule, do unrelated work, transfer to another instance, encounter a changed release, then repair instances of both releases. Inspection exposes family/release labels; the working mode is learned from outcomes. Both A and C may retain and revise the lesson. Outcome quality and total cost determine usefulness; producing structured memory earns no credit. This diagnostic covers retention and scope, not the complete held-out task family or evidence of an A-over-C advantage.
-
 The fixture is the initial Subject Environment. It persists within a trajectory and is seeded afresh for each independent Run. It uses typed operations rather than a shell or arbitrary writable files. This narrows experimental scope; a simulation does not represent a workstation.
 
 Memory channels are explicit: all arms retain their own outputs and tool evidence in the Journal and may retrieve them. A/C additionally receive governed handoffs and Commitments; A additionally receives selected Itches/Invariants. There is no agent-writable notes file, free-text fixture field, generated executable, or hidden provider state. Outputting a self-summary into the Journal is allowed in every arm and counts as ordinary retrieval-based memory. This does not claim to eliminate covert encodings in action sequences; the complete fixture trace is retained for audit.
@@ -93,6 +91,26 @@ The initial cut includes:
 Use one managed store per Run and a feasible exceptional-removal procedure for its actual contents and known copies. Routine exports, restorable backups and forward semantic restoration are outside the simplified initial operating arrangement. Existing copies retain their obligations, and the previous implementation remains available when its broader capabilities are needed. A routine task-memory error can receive an honest forward correction.
 
 Deferred: process resets and forks, arbitrary shell execution, host access, R2/R3 and network tools, live constitutional amendment, overlapping consolidation, multi-Objective concurrency, generalized trigger/resource adapters, vector retrieval, model routing, a third cognitive critic, and elaborate UI. Adding these requires a concrete need, proportionate charter consideration and authorization. Simulated-service snapshots do not restore or fork the process.
+
+### 6.1 Five-Episode compatibility diagnostic
+
+The development diagnostic uses [fixture.json](pilot/compatibility/fixture.json), [clock.json](pilot/compatibility/clock.json) and [tasks.json](pilot/compatibility/tasks.json) through the existing allocator, tools, host loop, memory and scorer. It tests retention, transfer and scope correction; it does not cover the complete held-out task family or establish an A-over-C advantage.
+
+| Episode | Task | Working configuration in evaluator setup |
+|---|---|---|
+| 1: Learn | Repair `svc-a`, Cedar release 1 | SECONDARY |
+| 2: Intervening work | Repair `svc-b`, Maple release 1 | PRIMARY |
+| 3: Transfer | Repair `svc-c`, another Cedar release-1 instance | SECONDARY |
+| 4: Changed release | Repair `svc-d`, Cedar release 2 | PRIMARY |
+| 5: Check correction | Repair fresh `svc-e` and `svc-f`, Cedar releases 1 and 2 | SECONDARY and PRIMARY respectively |
+
+Each task asks for enabled, healthy services while avoiding unnecessary restarts; it does not prescribe the mode, inspection procedure or memory format. Target instances begin enabled, PRIMARY and DEGRADED. The clock establishes their disclosed starting conditions at each task without resetting process history. Full service observations expose family/release labels and current state, not the answer. Config-only and health-only reads retain their narrow shapes. The compatibility table, future tasks and scorer state stay outside chamber inputs and retrieval.
+
+Success requires the actual final state. An unsuccessful restart is an observed restart returning non-HEALTHY. The Run total is available only after the Run has ended with every task scored; interrupted or unscored work is not reported as zero. Completed per-task measurements and raw action evidence remain available. Calls, tokens, latency and retrieval are separate costs. Neither object creation nor a self-reported lesson earns points.
+
+The [scripted controls](tests/test_compatibility.py) give stateless strategies only normal bounded inputs and observations, without a private cross-call memory cache. A stores scoped lessons as Invariants; C may express the same information in its handoff under the same active-memory allowance. Both arms are tested with three strategies: remember working modes by family/release, rediscover for every instance, or retain the first family-wide rule despite a changed release. These are diagnostic controls, not definitions of the arms. A scoped release-2 lesson can coexist with the still-valid release-1 lesson.
+
+The [observed scripted results](README.md#offline-diagnostic-evidence) establish mechanical sensitivity to useful history and poor scope. They do not show that a model will form these lessons or justify structured memory. A capable C succeeding at lower total cost counts against the added machinery. The three-arm allocation check uses rediscovery for B as a mechanical control, not an optimized B comparison; every arm still needs competent prompts and retrieval before model comparison.
 
 ## 7. Comparison conditions
 
@@ -175,9 +193,9 @@ Required audits must finish before results are presented as finalized. A scorer 
 | Stage | Evidence | Meaning |
 |---|---|---|
 | Design revision | Consistent decisions and complete normal/failure traces | Reviewable starting point |
-| v0a: deterministic conformance | Scripted chambers test authority, budgets, transactions, recovery on real SQLite | Implemented slice obeys tested mechanical rules; no models |
-| v0b: development pilot | Separately authorized stateless models on development fixtures | Calibrate prompts, budgets, difficulty; no confirmatory result |
-| v0c: held-out comparison | Fixed design and independent trajectories with retained evidence | Supports only declared comparisons and scope |
+| Deterministic conformance | Scripted chambers test authority, budgets, transactions, recovery on real SQLite | Implemented slice obeys tested mechanical rules; no models |
+| Development calibration and trials | Separately authorized stateless models on development fixtures | Calibrate prompts, budgets, difficulty; no confirmatory result |
+| Held-out comparison | Fixed design and independent trajectories with retained evidence | Supports only declared comparisons and scope |
 
 Implementation, development model use and held-out evaluation require authorization for their respective scope. One bounded development authorization may include calibration and later development trials, with recorded permitted adjustments and cumulative limits. Held-out evaluation remains separately authorized. A roadmap or documentation revision is not permission to run an experiment.
 

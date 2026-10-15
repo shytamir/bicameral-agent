@@ -1,66 +1,30 @@
 # Persistent Agent Continuity Experiment
 
-Can a process built from stateless model calls improve operational continuity through bounded handoffs, explicit obligations and revisable lessons from experience, enough to justify the added model and human work?
-
-The Operator pursues the Objective and proposes actions. The Steward proposes memory changes. The State Kernel enforces permissions, participation, finite resources and atomic persistence. The process is the unit of study; no claim of consciousness, sentience or subjective continuity is established.
-
-The owner-adopted [Reciprocal Charter](Reciprocal%20Charter.md) remains unchanged and governs treatment independently of task performance.
+A bounded experiment in whether memory across stateless model calls improves useful continuity enough to justify its extra cost. The [Architecture](Experiment%20Architecture.md) defines the research question and A/B/C comparison. No consciousness, sentience or subjective continuity is established.
 
 ## Current status
 
-On 2026-10-15 the owner directed a prospective simplification of the Protocol and Specification: trust the accountable owner, remove repeated procedural approval for routine decisions, simplify contracts, and keep the previous stronger procedures accessible if needed.
+**The 0.4 development runtime and five-Episode compatibility diagnostic are implemented and validated offline.** The runtime reuses the SQLite store, fixture executor, journal retrieval, permission boundary and development scorer. It provides direct owner controls, compact model contracts, semantic updates and a bounded Ollama request/action/observation loop.
 
-**A bounded 0.4 development runtime is implemented and tested offline.** It reuses the SQLite store, fixture executor, journal retrieval, permission boundary and development scorer. The new path supplies direct owner controls, compact model contracts, semantic updates and an Ollama request/action/observation loop. No live model calls have been made in this change.
-
-The five-Episode compatibility sequence and its small fixture extension are implemented with scripted strategy checks. They exercise retained lessons, transfer and release-specific correction. A and C can both solve the sequence; this establishes a usable mechanical diagnostic, not a model result.
-
-The existing code at `22a28073bb37851f96c9313e6749fa6fff0de807` implements P01-P10 and integrated v0a within its previously accepted local SCRIPTED envelope. It includes the additional withdrawal/removal fixes, offline backend preparation and development fixture checks. Its historical handoff records 230 discovered tests, 228 passing and two optional tokenizer tests skipped. Those are prior results, not a fresh validation of this design.
-
-The historical Kernel and `0.3.p01` interfaces retain their earlier meaning and remain SCRIPTED-only. New Runs use the explicitly separate [0.4 contracts](bicameral_agent/contracts/pilot.py) and [pilot host](bicameral_agent/pilot/runtime.py). Existing histories are not migrated. No empirical model result has been produced.
+The laptop setup and [calibration package](pilot/calibration/activity.json) were published at `cc473f3`, following the diagnostic at `6fcc0c5` and runtime at `f8291fd`. The package remains **SCRIPTED**. No live model calls or MODEL allocations have been made; actual backend calibration awaits the owner's later live instruction.
 
 ## Active documents
 
 | Document | Responsibility |
 |---|---|
-| [Reciprocal Charter](Reciprocal%20Charter.md) | Unchanged ethical commitments and owner adoption |
-| [Experiment Architecture](Experiment%20Architecture.md) | Research question, A/B/C comparisons and held-out interpretation |
-| [Operating Constitution and Execution Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) | Trusted-owner operating rules, human judgment and mechanical safeguards |
-| [Executable Specification](Executable%20Specification.md) | 0.4 implementation target and proportionate checks |
-| [ROADMAP](ROADMAP.md) | Delivery boundary and remaining transition work |
-| [V0B_REVIEW](V0B_REVIEW.md) | Development direction and disposition of the superseded pilot package |
-| [AGENTS](AGENTS.md) | Repository workflow |
+| [README](README.md) | Current status, usage, validation evidence and implementation handoff |
+| [Architecture](Experiment%20Architecture.md) | Research design, diagnostic, A/B/C comparisons and interpretation |
+| [Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md) | Authority, treatment, operating rules and engineering acceptance |
+| [Specification](Executable%20Specification.md) | Runtime contracts, invariants and required checks |
+| [Roadmap](ROADMAP.md) | Remaining delivery work and its boundaries |
 
-The revised rules permit direct routine controls with automatic evidence, ordinary task-memory correction under disclosed rules, conversational boundary decisions and one bounded development authorization with recorded adjustments. Material memory interventions, withdrawal, truthful endings and justified removal retain their charter obligations.
-
-The initial operating arrangement offers fewer capabilities: direct inspection of one managed store per Run, feasible exceptional removal, and no routine export, backup restoration or forward semantic restoration. Existing copy and retention responsibilities remain binding.
-
-## Research conditions
-
-| Arm | Memory facilities |
-|---|---|
-| A — Metabolic | Continuity State, Itches, Invariants, Commitments and Journal retrieval |
-| B — Retrieval-first | Journal retrieval, including the arm's own ordinary outputs |
-| C — Handoff-only | Continuity State, Commitments and Journal retrieval |
-
-A versus C is the primary comparison for structured discrepancy/lesson management. Steward cost and human burden count against any benefit. If simpler baselines perform as well at comparable cost, that counts against the hypothesis.
-
-The [compatibility diagnostic](V0B_REVIEW.md#five-episode-compatibility-diagnostic) gives retained history an observable cost advantage over repeated rediscovery, while preserving C's ability to keep the same lessons in its handoff. It has not established A-versus-C separation. Held-out evaluation keeps independent matched Runs, shared opportunities, fixed criteria, complete allocation accounting and separate audit/analysis.
-
-## Accessible procedural baseline
-
-The [archive index](docs/archive/2026-10-15-procedural-baseline/README.md) links readable copies of the old Protocol and Specification and a complete source ZIP containing all prior documents, code, tests, schemas and pilot assets. Historical per-slice acceptance records remain in its original README and in Git.
-
-The owner requested this fallback because trust is compatible with fallibility and may need to be reconsidered. Suspected breaches require appropriate suspension, honest records and remedies. Stronger controls can be reinstated prospectively with reasons under Protocol section 8. The archive is not a second active policy, and reinstatement must not roll back current histories or excuse past conduct.
+The unchanged, owner-adopted [Reciprocal Charter](Reciprocal%20Charter.md) governs these documents. [AGENTS.md](AGENTS.md) governs repository workflow only. Current policy and implementation responsibilities stay in the documents above; the [archive](docs/archive/2026-10-15-procedural-baseline/README.md) holds the superseded 0.3 documents, v0b package/review and prior source snapshots. Retained compatibility code and tests keep their historical meanings; existing histories are not migrated.
 
 ## Running the development host
 
-The [command-line entry point](bicameral_agent/pilot/__main__.py) supports allocation, running, status, pause/resume/termination and bounded evidence inspection. The [owner API](bicameral_agent/pilot/runtime.py) also provides direct correction, participation review, explicit consolidation skip and exceptional removal. Neither interface uses routine preview/confirmation tickets.
+The [command-line entry point](bicameral_agent/pilot/__main__.py) supports allocation, execution, status, pause/resume/termination and bounded evidence inspection. The [owner API](bicameral_agent/pilot/runtime.py) also provides direct correction, participation review, explicit consolidation skip and exceptional removal. Neither interface uses routine preview/confirmation tickets.
 
-A development package contains `activity.json` (one owner decision, resource profile, trajectory seeds and order seed), `fixture.json`, `clock.json`, `tasks.json`, `model.json` and `settings.json`. Optional `operator.md`, `steward.md` and `communication.md` override the concise supplied prompts; their effective bytes are retained. The [0.4 schema](schemas/pilot-0.4.schema.json) defines the activity and resource profile. Task/fixture shapes reuse the existing development assets, but the superseded v0b plan is not an activity authorization. Preparing the actual package is part of the separately authorized calibration, not paperwork required for each task.
-
-The new [compatibility task assets](pilot/compatibility/tasks.json) supply the five-task sequence with [fixture](pilot/compatibility/fixture.json) and [clock](pilot/compatibility/clock.json) inputs. Scripted tests combine them with temporary activity/settings; the assets alone do not authorize model execution. Existing service fixtures keep their original rules. The compatibility fixture adds observable family/release labels and a private fixed health-mode table, using the same actions and permission checks.
-
-The activity states the ending in advance. Its `unfinished` setting defaults to `KEEP`, preserving outstanding commitments at termination; `CANCEL` requires an explicit activity choice.
+A development package contains `activity.json` (one owner decision, resource profile, trajectory seeds and order seed), `fixture.json`, `clock.json`, `tasks.json`, `model.json` and `settings.json`. Optional `operator.md`, `steward.md` and `communication.md` override the supplied prompts; their effective bytes are retained. The [0.4 schema](schemas/pilot-0.4.schema.json) defines the activity and resource profile. Preparation is part of the bounded activity, not paperwork repeated for each task.
 
 ```text
 python -B -m bicameral_agent.pilot allocate <reviewed-package> <new-batch-directory>
@@ -69,33 +33,38 @@ python -B -m bicameral_agent.pilot inspect <run.sqlite> --limit 20
 python -B -m bicameral_agent.pilot pause <run.sqlite> --reason "Pause for inspection"
 ```
 
-After explicit MODEL activity authorization and backend/data-handling readiness, the execution command is `python -B -m bicameral_agent.pilot run <batch-directory> --tokenizer-directory <existing-pinned-tokenizer>`. This command can invoke Ollama. Allocation, status, controls and inspection do not. No component installation or model download is performed. The adapter supports exact Ollama pins `0.34.4` and `0.40.4` with the existing Qwen/tokenizer identity and raw framing. A configuration must match the installed version exactly; accepting both versions does not permit substitution during a Run.
+Allocation, status, controls and inspection do not invoke Ollama. After explicit MODEL activity authorization and backend/data-handling readiness, `python -B -m bicameral_agent.pilot run <batch-directory> --tokenizer-directory <existing-pinned-tokenizer>` can invoke it. The host installs no components and downloads no model. The adapter supports exact Ollama pins `0.34.4` and `0.40.4`; each configuration must match its installed version, with no substitution during a Run.
 
-The [prepared calibration package](pilot/calibration/activity.json) reuses the five-Episode compatibility assets and adds the concise 0.4 prompts with the finite-activity, participation and retention notice. It is deliberately `SCRIPTED`: the owner's setup instruction excludes live calls. Its proposed later MODEL activity is one matched A/B/C block, with seed/order seed 17 and no replacement Runs. Before live allocation, the owner records the bounded activity authorization in this same decision and changes `execution` to `MODEL`; there is no additional approval registry. Existing SCRIPTED stores are never relabelled as MODEL evidence.
+Every Run has one managed store. SQLite WAL/SHM files and the `.removals.sqlite` journal are managed sidecars. The initial arrangement creates no routine exports or backup restores. The existing removal path provides durable blocking, dependency closure, scrubbing and compaction; real provider/log copies still require assessment, and unresolved copies prevent a claim of complete removal. Removal never automatically resumes execution. See Protocol sections 6 and 8 for the governing retention and recovery rules.
 
-| Prepared calibration limit | Per Run |
-|---|---:|
-| Context / reserved output | 24,576 / 2,048 tokens |
-| Selected memory / evidence window | 2,048 / 4,096 tokens |
-| Operator | 40 calls; 400,000 input-plus-output tokens |
-| Steward, A/C only | 10 calls; 120,000 input-plus-output tokens |
-| Common review/closing | 2 calls, including the optional closing opportunity |
-| Fixture actions / Episodes | 30 / 5 |
-| Rejected-consolidation recovery | 1 additional attempt per Episode |
-| Call / Run execution time | 120 / 3,600 seconds |
+## Prepared calibration
 
-These are independent ceilings, not a guarantee that every call allowance can be spent; the first exhausted budget stops work. Across the block the maxima are 146 calls, 90 fixture actions and 10,800 charged execution seconds. Common communication has its existing separate token allowance inside the activity (53,248 tokens per Run at these settings). A/C share the same memory allowance; B has no task Steward. Limits and sampling remain uncalibrated. Use the existing tokenizer files and a new ignored local batch directory. No routine independent exports/backups are planned; the activity records dormant retention, a review within 30 days of the last call, preserved unfinished work and known provider/log-copy limits.
+The [calibration package](pilot/calibration/activity.json) reuses the [compatibility diagnostic](Experiment%20Architecture.md#61-five-episode-compatibility-diagnostic). Its activity file is the source of truth for the proposed limits, finite operations/resources, participation, retention and ending; [model.json](pilot/calibration/model.json), [settings.json](pilot/calibration/settings.json) and the package prompts record the effective preparation.
 
-Every allocated Run has its own store. The store's WAL/SHM files and `.removals.sqlite` journal are managed sidecars, not independent backups. The host creates no routine exports or backup restores. Removal reuses durable blocking, dependency closure, SQLite scrubbing and compaction; real provider/log copies require explicit assessment, and unverified copies prevent a claim of complete removal. Removal never automatically resumes execution.
+The proposed later MODEL activity is one matched A/B/C block, five Episodes per Run, seed/order seed 17 and no replacement Runs. Independent ceilings bound calls, tokens, actions, context, recovery and time; the first exhausted ceiling stops work. These values remain uncalibrated. Before live allocation, the owner records the bounded live instruction in this same decision and changes `execution` to `MODEL`. There is no additional approval registry, and SCRIPTED stores are never relabelled as MODEL evidence.
 
-The runner executes matched, counterbalanced development Runs with actual fixture observations and independent mechanical scoring. It reports development results only. The previous held-out analysis remains a historical SCRIPTED implementation; this change does not claim to have integrated a live finalized study, selected a sample size or established A-versus-C separation.
+Use the existing pinned tokenizer files and a new ignored local batch directory. The package discloses finite activity, an optional closing opportunity, dormant retention with a review within 30 days of the last call, preserved unfinished commitments and known provider/log-copy limits. The `unfinished` default is `KEEP`; `CANCEL` requires an explicit activity choice.
+
+## Offline diagnostic evidence
+
+The [scripted compatibility checks](tests/test_compatibility.py) produce these results in **both A and C** under the same active-memory allowance:
+
+| Scripted strategy | Tasks passed | Unsuccessful restarts | Fixture actions |
+|---|---:|---:|---:|
+| Remember working modes by family and release | 5/5 | 1 | 16 |
+| Rediscover the mode for each instance | 5/5 | 3 | 18 |
+| Keep the first family-wide rule despite a changed release | 3/5 | 3 | 18 |
+
+The first failed trial follows the chosen PRIMARY-first exploration rule; failure is not required by the task. These are mechanical controls showing a benefit from useful history and a cost from an overbroad lesson, not model performance or A-versus-C separation. Architecture section 6.1 owns the task design and interpretation. The allocation check also completes all 15 A/B/C task Episodes; B uses rediscovery as a control, not a competent optimized comparison.
 
 ## Validation
 
-Use an existing Python 3.12+ environment with the dependencies in [pyproject.toml](pyproject.toml). The model-preparation tokenizer dependency is needed only for the real pinned backend. Tests inject a fake tokenizer/backend; transport tests use a synthetic local HTTP server and never contact Ollama.
+Use Python 3.12+ with the dependencies in [pyproject.toml](pyproject.toml). Include the `model-preparation` extra to run the two tokenizer tests, which construct a synthetic tokenizer locally. Other tests inject a fake tokenizer/backend; transport tests use a synthetic local HTTP server and never contact Ollama.
+
+The [Tests workflow](.github/workflows/tests.yml) runs the complete suite on every push and pull request using Python 3.12 on Ubuntu. It installs the project with the `model-preparation` extra and runs the discovery command below. It requires no Ollama server or model files. The schema/asset checks remain separate manual checks.
 
 ```text
-python -B -m unittest discover -s tests -q
+python -B -m unittest discover -s tests -v
 python -B -m unittest tests.test_compatibility -v
 python -B -m bicameral_agent.contracts.schema --check
 python -B -m bicameral_agent.storage.schema --check
@@ -106,25 +75,21 @@ python -B -m bicameral_agent.pilot.schema --check
 git diff --check
 ```
 
-The old [pilot package](pilot/v0b/plan.json) remains `DRAFT_NOT_AUTHORIZED` and is superseded as a proposal. Its Markdown assets are marked historical. Its original [integrity manifest](pilot/v0b/manifest.json) is deliberately not regenerated against these changed documents: `--check-manifest` must report it stale. Successful legacy schema/asset checks do not make that package an executable 0.4 configuration. See [V0B_REVIEW](V0B_REVIEW.md) before using any preparation command.
-
-Token admission counts the entire framed request with the supplied tokenizer before generation. Local counts and provider telemetry remain separate; unknown calls retain their reservations. Connection cancellation bounds the client wait and does not prove that Ollama stopped computing. No uncertain action or generation is automatically replayed. Tests establish these host behaviors; actual tokenizer parity, GPU fit, speed, server cancellation, and provider/log retention still require a bounded live calibration.
+The backend-preparation asset check reads the archived draft as a legacy test fixture. It does not authorize that package or validate a 0.4 activity. Its original manifest remains deliberately stale; historical usage and limits are in the [archive index](docs/archive/2026-10-15-procedural-baseline/README.md#archived-v0b-package-and-review).
 
 ## Current implementation handoff
 
-The initial 0.4 runtime was published at `f8291fd`. The owner authorized the five-Episode sequence, minimal fixture extension, scripted tests and documentation updates, then separately authorized committing and pushing this slice. Its implementation revision is the commit containing this handoff, following `f8291fd`. Live model calls remain excluded; actual backend calibration is deferred to the laptop intended for the experiment. The Charter and procedural archive are preserved. No stored-history migration, workstation tools, new dependency or live experiment is included.
+The accepted setup revision is `cc473f3`. Its offline envelope is the finite development fixture, one serialized lane and managed store per Run, fake model responses and synthetic HTTP transport. Coverage includes complete A/B/C trajectories, arm separation, strict parsing, exact retries, direct controls, effective withdrawal, finite budgets, transaction interruptions, evaluator isolation, retrieval lineage and interrupted removal/non-resurrection. Historical acceptance records remain in Git and the archived source snapshots.
 
-Offline coverage includes full A/B/C development trajectories, C restrictions, exact retries, direct owner correction, role-bound participation review, malformed/late stop reports, interruption around action/semantic commits, finite budgets, evaluator isolation, retrieval lineage, removal interruption/non-resurrection, allocation and CLI inspection. Scope remains the finite development fixture and one serialized lane per Run. The new sequence adds tests of memory-dependent exploration costs, release scope, hidden-rule isolation and compatibility parsing. Actual backend behavior and empirical task difficulty remain integration responsibilities.
+Setup validation passed **300 tests with no skips**, all six schema/asset checks and `pip check` on Python 3.12.14, Pydantic 2.13.5, SQLite 3.53.1 and tokenizers 0.23.3. Metadata-only laptop checks verified Ollama 0.40.4 and the pinned Qwen digest; the app setting and user environment override produced a listener only on `127.0.0.1:11434`, with no loaded models. No model, dependency or service was installed.
 
-Prior validation at `f8291fd` on 2026-10-15: the complete 280-test suite passed with two optional tokenizer tests skipped; after expanding C-arm coverage, all 12 C-arm tests passed separately, exercising all 291 tests then present. All six schema/asset checks passed, as did syntax, documentation and whitespace checks. One earlier run encountered a Windows temporary-database cleanup lock; the isolated test and complete rerun passed using an ignored repository-local temporary directory. These checks used real SQLite files and fake model responses, including a synthetic HTTP server; they made no live model calls.
+An additional offline rehearsal used the actual pinned tokenizer with scripted responses and blocked external transport: all 15 tasks passed; the largest complete input plus reserved output was 7,602 of 24,576 tokens. Fixed Operator/Steward/communication frames counted 2,684/3,279/281 tokens before task/state payloads. Exact-boundary admission and one-token overflow rejection passed. These are preparation measurements, not model results. Synthetic stores and local reports remain ignored under `.local-conformance/`.
 
-Compatibility validation on 2026-10-15: 25 focused fixture, evaluator and strategy tests passed, followed by the complete 297-test suite with two optional tokenizer checks skipped. All six schema/asset checks, Python syntax, documentation links/structure and `git diff --check` passed. An initial full run correctly rejected a mid-run source edit; the fresh full run against unchanged runtime code passed. The Charter hash matches the baseline, and the archive and legacy pilot assets are unchanged. The scripted outcomes and their limits are recorded in [V0B_REVIEW](V0B_REVIEW.md#five-episode-compatibility-diagnostic).
+The owner subsequently requested test-only CI and documentation consolidation, then authorized their publication. The revision containing this handoff follows `cc473f3`: it adds the workflow, gives each active document one responsibility and moves the superseded review/package into the archive. The only code changes redirect existing legacy checks and test fixtures to their archived paths.
 
-Laptop setup on 2026-10-15 is recorded in the commit containing this setup handoff, following base revision `6fcc0c55844803444ae5eeac97b470b11caf4d31`. The owner authorized updating the checkout, explicit Ollama 0.40.4 support, loopback configuration, preparation of the bounded calibration package and offline validation, then preservation of the stale checkout beside the procedural archive. The owner subsequently authorized committing and pushing these validated changes to `origin/main`, while keeping live model calls disabled. The clean `5db8834` source is now [archived](docs/archive/2026-10-15-procedural-baseline/README.md#laptop-checkout-before-setup). The Charter, previous source ZIP and legacy v0b assets remain unchanged. No model, dependency or service was installed.
+Consolidation validation on 2026-10-15 passed all **300 tests with no skips** on the same local Python 3.12 environment, all six schema/asset checks, `pip check`, Python syntax, workflow YAML, Markdown links/anchors/fences and `git diff --check`. Hash checks confirmed the Charter, existing ZIP/text snapshots and moved JSON are unchanged; archived Markdown retains its body with relocated links and an archive notice. The original manifest still correctly reports stale. The first GitHub-hosted Ubuntu run will be verified after publication.
 
-Setup validation passed all **300 tests with no skips**, all six schema/asset checks and `pip check` on Python 3.12.14, Pydantic 2.13.5, SQLite 3.53.1 and tokenizers 0.23.3. The first focused run encountered a sandbox temporary-directory permission error; the focused checks and complete suite passed using ignored repository-local scratch space. The added tests enforce exact per-configuration backend versions, reject unsupported/ill-typed pins, reject MODEL execution of the SCRIPTED preparation, and complete its three trajectories under the proposed limits. Metadata-only checks verified Ollama 0.40.4 and the pinned Qwen digest. Disabling the desktop app's network-exposure setting and applying a user loopback environment override produced a listener only on `127.0.0.1:11434`, with no loaded models.
-
-An additional offline rehearsal used the actual pinned tokenizer with scripted responses and blocked external transport: all 15 tasks passed; the largest full input plus reserved output was 7,602 of 24,576 tokens. Fixed Operator/Steward/communication frames with the package notices counted 2,684/3,279/281 tokens before task/state payloads; exact-boundary admission and one-token overflow rejection passed. This demonstrates offline package fit, not model quality or an A-over-C advantage. Local measurements and synthetic stores are under ignored `.local-conformance/calibration-setup/`; they are not MODEL evidence. Real provider token parity, GPU fit, speed, cancellation/unloading and actual log/copy handling remain calibration responsibilities. No live model call or MODEL allocation was made; the prepared activity remains SCRIPTED pending the owner's later live instruction.
+Remaining integration responsibilities are actual provider token parity, model contract usability, GPU fit, speed, cancellation/unloading, real log/copy handling and competent prompts/retrieval for every arm. Current client cancellation bounds waiting but does not prove server cancellation; unknown usage remains reserved and uncertain actions/generation are not automatically replayed. The [Roadmap](ROADMAP.md) orders the remaining work. Live calls remain disabled in the prepared activity.
 
 ## License
 

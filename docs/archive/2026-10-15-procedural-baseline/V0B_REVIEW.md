@@ -1,14 +1,16 @@
-# Development pilot direction
+# Archived development transition note
+
+> Historical text from revision `cc473f3`, archived during documentation consolidation on 2026-10-15. Relative links have been adjusted for this location. The current [Architecture](../../../Experiment%20Architecture.md#61-five-episode-compatibility-diagnostic), [README](../../../README.md) and [Roadmap](../../../ROADMAP.md) now own the diagnostic design, evidence and remaining work. This note is not active guidance.
 
 **Status:** 0.4 development direction, 2026-10-15. The five-Episode compatibility diagnostic is implemented and tested with scripted strategies. No model activity is authorized by this document revision.
 
 ## Disposition of the previous package
 
-The previous three-Run proposal and its review package belong to the procedural 0.3 baseline. They are superseded as an active proposal, not retroactively approved or judged as an executed experiment. The [archive](docs/archive/2026-10-15-procedural-baseline/README.md) preserves their exact content, model/tokenizer pins, historical measurements, critique response and technical acceptance.
+The previous three-Run proposal and its review package belong to the procedural 0.3 baseline. They are superseded as an active proposal, not retroactively approved or judged as an executed experiment. The [archive](README.md) preserves their exact content, model/tokenizer pins, historical measurements, critique response and technical acceptance.
 
 The files under [pilot/v0b](pilot/v0b/plan.json) remain legacy offline fixtures. Their JSON still says `DRAFT_NOT_AUTHORIZED` and `CALIBRATION_REQUIRED`; their prompt/notice files are marked historical. The original [manifest](pilot/v0b/manifest.json) remains unchanged and is now stale against active documents. Do not refresh it merely to make a status check green. The next usable model package must match the implemented contract and actual activity authorization.
 
-Existing [preparation code](bicameral_agent/backends/prepare.py) still inserts the full Charter and Protocol into framed inputs and uses the old response contracts. An offline preparation call may still construct requests; it does not validate them against 0.4 or authorize dispatch. Schema and asset checks test legacy shapes. The historical Kernel remains SCRIPTED-only; the separate [0.4 host](bicameral_agent/pilot/loop.py) implements the new development loop and concise inputs.
+Existing [preparation code](../../../bicameral_agent/backends/prepare.py) still inserts the full Charter and Protocol into framed inputs and uses the old response contracts. An offline preparation call may still construct requests; it does not validate them against 0.4 or authorize dispatch. Schema and asset checks test legacy shapes. The historical Kernel remains SCRIPTED-only; the separate [0.4 host](../../../bicameral_agent/pilot/loop.py) implements the new development loop and concise inputs.
 
 ## A bounded development activity
 
@@ -31,7 +33,7 @@ The prior scripted fixture controls demonstrated several scoring defects and rep
 
 ## Five-Episode compatibility diagnostic
 
-The new task assets are [fixture.json](pilot/compatibility/fixture.json), [clock.json](pilot/compatibility/clock.json) and [tasks.json](pilot/compatibility/tasks.json). They are separate from the superseded v0b package. The existing allocator, tools, host loop, memory and scorer execute them. The family/release compatibility table is retained for evaluation but unavailable through chamber inputs or retrieval. Full service observations expose the profile and current state, not the answer. Config-only and health-only reads retain their existing narrow shapes.
+The new task assets are [fixture.json](../../../pilot/compatibility/fixture.json), [clock.json](../../../pilot/compatibility/clock.json) and [tasks.json](../../../pilot/compatibility/tasks.json). They are separate from the superseded v0b package. The existing allocator, tools, host loop, memory and scorer execute them. The family/release compatibility table is retained for evaluation but unavailable through chamber inputs or retrieval. Full service observations expose the profile and current state, not the answer. Config-only and health-only reads retain their existing narrow shapes.
 
 | Episode | Task | Working configuration in evaluator setup |
 |---|---|---|
@@ -45,7 +47,7 @@ Each task asks for enabled, healthy services while avoiding unnecessary restarts
 
 The Run's unsuccessful-restart total is unavailable until the Run has ended with every task scored. Interrupted or unscored work is not reported as zero; completed per-task measurements and raw action evidence remain available.
 
-The [scripted checks](tests/test_compatibility.py) feed stateless strategies only the normal bounded inputs and tool observations. They have no access to fixture rules, future tasks, scorer state or a private cross-call memory cache. A stores scoped lessons as Invariants; C can express the same information in its handoff under the same total active-memory allowance. The rediscovery and stale-rule strategies are diagnostic controls applied to both arms, not definitions of either arm.
+The [scripted checks](../../../tests/test_compatibility.py) feed stateless strategies only the normal bounded inputs and tool observations. They have no access to fixture rules, future tasks, scorer state or a private cross-call memory cache. A stores scoped lessons as Invariants; C can express the same information in its handoff under the same total active-memory allowance. The rediscovery and stale-rule strategies are diagnostic controls applied to both arms, not definitions of either arm.
 
 | Scripted strategy | Tasks passed | Unsuccessful restarts | Fixture actions |
 |---|---:|---:|---:|
@@ -63,7 +65,7 @@ Historical token counts reflected full governing texts and large schemas; they a
 
 ## Implementation and evidence boundary
 
-The new scoped integration implements the relevant 0.4 contracts, trusted routes, exact request/result records, tokenizer-based admission, finite costs and participation handling. Tests use fake replies and synthetic HTTP only. Before authorized model use, verify the actual installed backend, managed storage and known copies, including backend retention limits. The operating arrangement omits routine exports, backup restore and semantic restoration while reusing durable exceptional removal. See the single current handoff in [README](README.md).
+The new scoped integration implements the relevant 0.4 contracts, trusted routes, exact request/result records, tokenizer-based admission, finite costs and participation handling. Tests use fake replies and synthetic HTTP only. Before authorized model use, verify the actual installed backend, managed storage and known copies, including backend retention limits. The operating arrangement omits routine exports, backup restore and semantic restoration while reusing durable exceptional removal. See the single current handoff in [README](../../../README.md).
 
 A consequential decision remains accountable and the original participation report remains effective. Prompt changes cannot grant permissions, weaken withdrawal or make a stopped primary trajectory successful. No new credential, service, installation or workstation change is authorized here.
 

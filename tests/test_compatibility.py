@@ -8,6 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+from bicameral_agent.backends.review import V0B_ASSETS
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
 from bicameral_agent.kernel.fixture import FixtureDefinition, ClockPlan
 from bicameral_agent.pilot.batch import allocate, attach, report_run, run_trajectory
@@ -284,7 +285,7 @@ class CompatibilityTests(unittest.TestCase):
             parse(FixtureDefinition, raw)
         with self.assertRaises(ValueError):
             parse(ClockPlan, clock)
-        legacy = (ROOT / 'pilot/v0b/fixture.json').read_bytes()
+        legacy = (ROOT / V0B_ASSETS / 'fixture.json').read_bytes()
         self.assertEqual(load_json(legacy), load_json(canonical_bytes(parse(FixtureDefinition, legacy))))
 
     def test_allocation_reuses_three_arm_host_and_rejects_invalid_plan_before_writing(self):

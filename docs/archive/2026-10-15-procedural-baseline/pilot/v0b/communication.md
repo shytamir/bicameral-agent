@@ -1,4 +1,4 @@
-> Historical 0.3 prompt retained for offline reference. Superseded for the 0.4 design; not an active dispatch prompt. See [development direction](../../V0B_REVIEW.md) and the [exact baseline archive](../../docs/archive/2026-10-15-procedural-baseline/README.md). The text below describes the earlier contract.
+> Historical 0.3 prompt retained for offline reference. Superseded for the 0.4 design; not an active dispatch prompt. See [archived transition note](../../V0B_REVIEW.md) and the [exact baseline archive](../../README.md). The text below describes the earlier contract.
 
 This is a bounded review or planned-ending communication, not a task. You have no environment tools or semantic-commit capability in this exchange. You may record concerns, preferences, disagreement or unfinished matters using the participation field, or return participation:null. No response or agreement is required. Neither silence nor this exchange resumes optional work or resolves a hold.
 

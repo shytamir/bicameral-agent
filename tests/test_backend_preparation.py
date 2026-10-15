@@ -16,13 +16,13 @@ from bicameral_agent.backends.ollama import (
 )
 from bicameral_agent.backends.prepare import ROOT, schema_bytes, validate_assets
 from bicameral_agent.backends.replies import decode_response, response_contract
-from bicameral_agent.backends.review import DevelopmentDraft, DevelopmentTask, check_manifest, manifest
+from bicameral_agent.backends.review import DevelopmentDraft, DevelopmentTask, V0B_ASSETS, check_manifest, manifest
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
 from tests.fixtures import uid, withdrawal
 
 
 def asset(name):
-    return load_json((ROOT / 'pilot/v0b' / name).read_bytes())
+    return load_json((ROOT / V0B_ASSETS / name).read_bytes())
 
 
 class PreparationContractTests(unittest.TestCase):
@@ -59,8 +59,8 @@ class PreparationContractTests(unittest.TestCase):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 parse(DevelopmentTask, canonical_bytes(task | {'trace_requirements': [original | change]}))
         with tempfile.TemporaryDirectory() as directory:
-            target = Path(directory) / 'pilot/v0b'
-            shutil.copytree(ROOT / 'pilot/v0b', target)
+            target = Path(directory) / V0B_ASSETS
+            shutil.copytree(ROOT / V0B_ASSETS, target)
             tasks = asset('tasks.json')
             tasks[0]['trace_requirements'][0]['before_mutation_of'] = ['outside']
             (target / 'tasks.json').write_bytes(canonical_bytes(tasks))
@@ -82,8 +82,8 @@ class PreparationContractTests(unittest.TestCase):
                    ('plan.json', 'grant_resources', ['api']),
                    ('plan.json', 'episodes_per_run', 2)]
         with tempfile.TemporaryDirectory() as directory:
-            target = Path(directory) / 'pilot/v0b'
-            shutil.copytree(ROOT / 'pilot/v0b', target)
+            target = Path(directory) / V0B_ASSETS
+            shutil.copytree(ROOT / V0B_ASSETS, target)
             for name, key, value in changes:
                 with self.subTest(key=key):
                     original = (target / name).read_bytes()
@@ -115,10 +115,10 @@ class PreparationContractTests(unittest.TestCase):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes((ROOT / name).read_bytes())
             saved = manifest(root)
-            target = root / 'pilot/v0b/manifest.json'
+            target = root / V0B_ASSETS / 'manifest.json'
             target.write_bytes(canonical_bytes(saved))
             self.assertEqual(saved['bundle_sha256'], check_manifest(root))
-            prompt = root / 'pilot/v0b/operator.md'
+            prompt = root / V0B_ASSETS / 'operator.md'
             original = prompt.read_bytes()
             prompt.write_bytes(original.replace(b'\r\n', b'\n').replace(b'\n', b'\r\n'))
             self.assertEqual(saved['bundle_sha256'], check_manifest(root))
