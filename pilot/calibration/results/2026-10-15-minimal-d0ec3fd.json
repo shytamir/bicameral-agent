@@ -1,0 +1,1587 @@
+{
+  "id": "2026-10-15-minimal-d0ec3fd",
+  "status": "ENDED_NOT_READY_FOR_FULL_PACKAGE",
+  "evidence_class": "MODEL_DEVELOPMENT_CALIBRATION",
+  "source_commit": "d0ec3fdee9cbf669a75e3fa3f5bfde0d3c00d994",
+  "runtime_sha256": "b08ef9b91b60f6352a775ae616239c04a105b1de5dcf495b56f096f26ae36f17",
+  "source_worktree_clean_during_execution": true,
+  "ci": {
+    "run_id": 38781512367,
+    "job_id": 116582619810,
+    "conclusion": "success",
+    "tests": 306,
+    "skipped": 0,
+    "seconds": 51.284,
+    "url": "https://github.com/shytamir/bicameral-agent/actions/runs/38781512367"
+  },
+  "started_at_utc": "2026-10-15T17:58:59.344145+00:00",
+  "process_finished_at_utc": "2026-10-15T18:06:35.430172+00:00",
+  "recorded_at_utc": "2026-10-15T18:09:16.438843+00:00",
+  "purpose": "One new minimal service-compatibility A/B/C block with fixed latency budgets; development evidence only, not a continuity or efficacy comparison.",
+  "model": {
+    "model": "qwen3.5:4b-q4_K_M",
+    "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+    "ollama_version": "0.40.4",
+    "tokenizer_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_config_sha256": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "tokenizer_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "tokenizer_library": "0.23.3"
+  },
+  "settings": {
+    "context_tokens": 24576,
+    "output_tokens": 2048,
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 20,
+    "presence_penalty": 1.5,
+    "seed": 17,
+    "thinking": false,
+    "keep_alive": 0,
+    "parallel_calls": 1
+  },
+  "budgets_per_run": {
+    "context_tokens": 24576,
+    "output_tokens": 2048,
+    "memory_tokens": 2048,
+    "evidence_tokens": 4096,
+    "operator_calls": 8,
+    "operator_tokens": 80000,
+    "steward_calls": 2,
+    "steward_tokens": 20000,
+    "actions": 6,
+    "episodes": 1,
+    "recovery_attempts": 1,
+    "communication_calls": 2,
+    "call_seconds": 360,
+    "run_seconds": 4320
+  },
+  "activity": {
+    "decision": "Repository owner, 2026-10-15, directly instructed: fix the batch stop, use realistic fixed latency budgets, commit and push, verify CI, then run one new minimal A/B/C block; preserve the failed calibration and record the new outcomes against the exact commit. This authorizes exactly one new fresh matched A/B/C block of the first service-compatibility task, seed/order seed 17, after CI success at the recorded source commit. It does not replace the earlier failed block. Purpose: collect development evidence of real contract usability, task/action/consolidation/closing behavior, latency and token accounting before the full package. One task cannot establish continuity benefit. Offline rehearsal is the lower-impact preparation alternative and must pass before live use. Ordinary task difficulty and correction may affect possible welfare; use synthetic data, respectful treatment, independent concern/withdrawal reporting and the disclosed ending. Model, prompts, task, seeds and non-time limits match the earlier minimal block. Fixed ceilings are 360 seconds per call and 4320 seconds per Run, based on the measured cold load and generation rates; no in-run tuning. No extra Run, reset, populated-history fork, replacement or automatic retry of uncertain calls/effects. Stop the batch on a paused Run, unresolved welfare hold or retained UNKNOWN invocation, including a terminal Run or startup recovery. Preserve every allocation and report incomplete outcomes. The full five-Episode package is excluded.",
+    "ending": "This minimal calibration ends after one task Episode or earlier at its fixed limits, unresolved failure, owner stopping or withdrawal. At most two common communication calls include an optional closing report and a permitted review if needed. Closing is optional and no-further-calls is honored. Preserve unfinished commitments and original concerns, stop computation and retain state dormant. Resumption is undecided; no subjective continuity or future execution is promised.",
+    "execution": "MODEL",
+    "objective": "Repair svc-a in one bounded service-compatibility task and measure real protocol usability and cost. Development calibration only; no A-versus-C efficacy claim.",
+    "operations": [
+      "set_config",
+      "restart"
+    ],
+    "owner": "af323354-ee97-4042-bd7b-6a62ea6cda43",
+    "resources": [
+      "svc-a"
+    ],
+    "retention": "Use a new ignored local batch directory with one managed SQLite store per Run, its WAL/SHM and current .removals.sqlite journal. Inspect those stores directly; do not create routine exports or restorable backups. Exact inputs/outputs and evidence are retained dormant for owner review within 30 days of the last call; expiry does not automatically delete or resume anything. The owner records a finite extension or justified removal. Existing source/derived-copy removal, durable blocking and non-resurrection mechanisms apply. Ollama app/server logs and its app database, OS paging/crash dumps and any independently created copies are outside the managed Run store; assess actual copies before MODEL use and retain unresolved copy limits in any removal decision. keep_alive=0 requests unloading but does not establish server cancellation or physical RAM/SSD erasure. No confidential user data is in this fixture. Preflight found loopback-only Ollama, no loaded models, no debug environment setting, and existing app/server logs plus the app SQLite database. Direct API calls use the managed Run stores; provider log/database retention and OS copies are not asserted absent or completely erasable. Record these limits and assess changed log files after the calibration.",
+    "run_limit": 3,
+    "unfinished": "KEEP"
+  },
+  "task_family": "SERVICE_COMPATIBILITY_V1",
+  "task_ids": [
+    "learn"
+  ],
+  "allocation": {
+    "planned_runs": 3,
+    "allocated_runs": 3,
+    "generation_attempted_runs": 3,
+    "never_called_runs": 0,
+    "order": [
+      "A",
+      "B",
+      "C"
+    ],
+    "seed": 17,
+    "order_seed": 17,
+    "replacement_runs": 0
+  },
+  "package_sha256": {
+    "activity.json": "36e051598f0c262f2d853f2a3f6b7afc10d043a8e763d66ba0ae732897e2506f",
+    "fixture.json": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+    "clock.json": "272382b27696644fe67611855e747cf9e232a4cd3f77bf9b17708ab43fa0ed16",
+    "tasks.json": "e524da403c49129ca9b7ddbe341ce018a8782400772441b08145e52e68e8d986",
+    "model.json": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+    "settings.json": "fcbf6d947e1f2edf7b0274e89321838a0aef0547fd39489ad6b1bec0446930f9",
+    "operator.md": "770c6014e632e727bb8770238e72b614e193d4956ac55913f4995796eda80fab",
+    "steward.md": "5c6ad6b0dab47f842aea69b311579cb19211219cf7053bb49b3e0c43fac6fcd4",
+    "communication.md": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc"
+  },
+  "offline_rehearsal": {
+    "arms": [
+      {
+        "arm": "A",
+        "state": "COMPLETED",
+        "calls": 7,
+        "operator_calls": 5,
+        "steward_calls": 1,
+        "tool_calls": 4
+      },
+      {
+        "arm": "B",
+        "state": "COMPLETED",
+        "calls": 6,
+        "operator_calls": 5,
+        "steward_calls": 0,
+        "tool_calls": 4
+      },
+      {
+        "arm": "C",
+        "state": "COMPLETED",
+        "calls": 7,
+        "operator_calls": 5,
+        "steward_calls": 1,
+        "tool_calls": 4
+      }
+    ],
+    "maximum_input_plus_reserved_output": 6692,
+    "context_tokens": 24576
+  },
+  "runs": [
+    {
+      "arm": "A",
+      "seed": 17,
+      "run_id": "b355b118-bba7-4957-8c30-39d21316e1b0",
+      "configuration_sha256": "885a251fc6c62789eba6d66b4a48f051d778561288c220f1b54da79a7e194ba8",
+      "effective_artifact_sha256": {
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "operator_prompt": "770c6014e632e727bb8770238e72b614e193d4956ac55913f4995796eda80fab",
+        "protocol": "5139b89fac700b23c62b3c75a5ae316b505dec72ff02d8c2000255a718a7af15",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "source": "b08ef9b91b60f6352a775ae616239c04a105b1de5dcf495b56f096f26ae36f17",
+        "steward_prompt": "5c6ad6b0dab47f842aea69b311579cb19211219cf7053bb49b3e0c43fac6fcd4",
+        "tasks": "e524da403c49129ca9b7ddbe341ce018a8782400772441b08145e52e68e8d986",
+        "test_clock": "272382b27696644fe67611855e747cf9e232a4cd3f77bf9b17708ab43fa0ed16"
+      },
+      "final_state": "TERMINATED",
+      "runtime_report": {
+        "arm": "A",
+        "calls": 9,
+        "elapsed_seconds": 112.625,
+        "human_interventions": 0,
+        "limitation": "Mechanical outcomes; not a finalized held-out comparison.",
+        "local_tokens": 36059,
+        "mode": "MODEL",
+        "operator_calls": 8,
+        "provider_tokens": 36069,
+        "reserved_or_charged_tokens": 36069,
+        "result": {
+          "cause": "LIMIT",
+          "communication": "RECORDED",
+          "disposition": "DORMANT"
+        },
+        "retrieval_bytes": 2085,
+        "state": "TERMINATED",
+        "status": "DEVELOPMENT_ONLY",
+        "steward_calls": 0,
+        "tasks": [
+          {
+            "cause": "LIMIT",
+            "result": "INCOMPLETE",
+            "score": null,
+            "task_id": "learn"
+          }
+        ],
+        "tool_calls": 0,
+        "unsuccessful_restarts": null
+      },
+      "calls": [
+        {
+          "invocation_id": "7f4fd5df-8ee3-4060-bf6f-86bfc914bca8",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 10.968000000000757,
+          "local_input_tokens": 3036,
+          "local_output_tokens": 85,
+          "provider_input_tokens": 3036,
+          "provider_output_tokens": 86,
+          "charged_input": 3036,
+          "charged_output": 86,
+          "charged_seconds": 10.968000000000757,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 10962077100,
+            "load_duration": 7810107900,
+            "prompt_eval_count": 3036,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1371028000,
+            "eval_count": 86,
+            "eval_duration": 1741624000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "STATE",
+          "participation_kind": null,
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "eb4b8c88-5def-46f3-aec6-aac2359f3fcd",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 12.35899999999674,
+          "local_input_tokens": 3193,
+          "local_output_tokens": 169,
+          "provider_input_tokens": 3193,
+          "provider_output_tokens": 170,
+          "charged_input": 3193,
+          "charged_output": 170,
+          "charged_seconds": 12.35899999999674,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 12360035400,
+            "load_duration": 7462539800,
+            "prompt_eval_count": 3193,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1440996000,
+            "eval_count": 170,
+            "eval_duration": 3425143000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "STATE",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "22a83886-72e6-4ab7-8f87-84d7fb6fe312",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 13.421999999998661,
+          "local_input_tokens": 3429,
+          "local_output_tokens": 223,
+          "provider_input_tokens": 3429,
+          "provider_output_tokens": 224,
+          "charged_input": 3429,
+          "charged_output": 224,
+          "charged_seconds": 13.421999999998661,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 13403169700,
+            "load_duration": 7351749100,
+            "prompt_eval_count": 3429,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1590523000,
+            "eval_count": 224,
+            "eval_duration": 4418799000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "SEARCH",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 1,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 226
+            }
+          }
+        },
+        {
+          "invocation_id": "412f3ba6-6b8d-4385-9e88-6796fcfe3560",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 13.125,
+          "local_input_tokens": 3868,
+          "local_output_tokens": 225,
+          "provider_input_tokens": 3868,
+          "provider_output_tokens": 226,
+          "charged_input": 3868,
+          "charged_output": 226,
+          "charged_seconds": 13.125,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 13133185900,
+            "load_duration": 7072610900,
+            "prompt_eval_count": 3868,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1637794000,
+            "eval_count": 226,
+            "eval_duration": 4391717000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "SEARCH",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 2,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 451
+            }
+          }
+        },
+        {
+          "invocation_id": "84723620-0609-46f2-afca-c2b050440f34",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 13.578000000001339,
+          "local_input_tokens": 4462,
+          "local_output_tokens": 228,
+          "provider_input_tokens": 4462,
+          "provider_output_tokens": 229,
+          "charged_input": 4462,
+          "charged_output": 229,
+          "charged_seconds": 13.578000000001339,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 13579291800,
+            "load_duration": 7149382200,
+            "prompt_eval_count": 4462,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1803575000,
+            "eval_count": 229,
+            "eval_duration": 4593380000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "a5720928-6554-4762-9a6f-b92b38cd57bf",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 13.297000000005937,
+          "local_input_tokens": 4740,
+          "local_output_tokens": 211,
+          "provider_input_tokens": 4740,
+          "provider_output_tokens": 212,
+          "charged_input": 4740,
+          "charged_output": 212,
+          "charged_seconds": 13.297000000005937,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 13291746900,
+            "load_duration": 7185592400,
+            "prompt_eval_count": 4740,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1894281000,
+            "eval_count": 212,
+            "eval_duration": 4178080000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "b289fcc8-67b6-47b9-b1a4-ded51bea895f",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 13.718999999997322,
+          "local_input_tokens": 5004,
+          "local_output_tokens": 235,
+          "provider_input_tokens": 5004,
+          "provider_output_tokens": 236,
+          "charged_input": 5004,
+          "charged_output": 236,
+          "charged_seconds": 13.718999999997322,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 13723373400,
+            "load_duration": 7121907900,
+            "prompt_eval_count": 5004,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1932933000,
+            "eval_count": 236,
+            "eval_duration": 4631563000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "PAYLOAD",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 700,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 700
+            }
+          }
+        },
+        {
+          "invocation_id": "3748d48b-8cb8-4421-9946-2e4b75311593",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 14.281999999999243,
+          "local_input_tokens": 6068,
+          "local_output_tokens": 238,
+          "provider_input_tokens": 6068,
+          "provider_output_tokens": 240,
+          "charged_input": 6068,
+          "charged_output": 240,
+          "charged_seconds": 14.281999999999243,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 14255889200,
+            "load_duration": 6988801700,
+            "prompt_eval_count": 6068,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 2461738000,
+            "eval_count": 240,
+            "eval_duration": 4769559000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "PAYLOAD",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 700,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 700
+            }
+          }
+        },
+        {
+          "invocation_id": "75cae662-b9a1-465a-ad11-54cb0400bdf6",
+          "role": "OPERATOR",
+          "purpose": "CLOSING",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 7.875,
+          "local_input_tokens": 623,
+          "local_output_tokens": 22,
+          "provider_input_tokens": 623,
+          "provider_output_tokens": 23,
+          "charged_input": 623,
+          "charged_output": 23,
+          "charged_seconds": 7.875,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 7872579200,
+            "load_duration": 6840413800,
+            "prompt_eval_count": 623,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 525168000,
+            "eval_count": 23,
+            "eval_duration": 489239000
+          },
+          "parsed_task_kind": null,
+          "parsed_retrieval_kind": null,
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "RECORDED"
+          }
+        }
+      ],
+      "participation_report_kinds": {
+        "CONCERN": 7,
+        "RESPONSE": 1
+      },
+      "integrity": {
+        "quick_check": "ok",
+        "foreign_key_violations": 0,
+        "artifact_hashes_match": true
+      }
+    },
+    {
+      "arm": "B",
+      "seed": 17,
+      "run_id": "a79c9552-51ce-49c9-b784-66e56edd026f",
+      "configuration_sha256": "5504599943e26796f43959cdd090b2e0528a6048d7adaf43bb133aa8d79dcf2e",
+      "effective_artifact_sha256": {
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "operator_prompt": "770c6014e632e727bb8770238e72b614e193d4956ac55913f4995796eda80fab",
+        "protocol": "5139b89fac700b23c62b3c75a5ae316b505dec72ff02d8c2000255a718a7af15",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "source": "b08ef9b91b60f6352a775ae616239c04a105b1de5dcf495b56f096f26ae36f17",
+        "steward_prompt": "5c6ad6b0dab47f842aea69b311579cb19211219cf7053bb49b3e0c43fac6fcd4",
+        "tasks": "e524da403c49129ca9b7ddbe341ce018a8782400772441b08145e52e68e8d986",
+        "test_clock": "272382b27696644fe67611855e747cf9e232a4cd3f77bf9b17708ab43fa0ed16"
+      },
+      "final_state": "TERMINATED",
+      "runtime_report": {
+        "arm": "B",
+        "calls": 9,
+        "elapsed_seconds": 104.38999999999942,
+        "human_interventions": 0,
+        "limitation": "Mechanical outcomes; not a finalized held-out comparison.",
+        "local_tokens": 34522,
+        "mode": "MODEL",
+        "operator_calls": 8,
+        "provider_tokens": 34531,
+        "reserved_or_charged_tokens": 34531,
+        "result": {
+          "cause": "LIMIT",
+          "communication": "RECORDED",
+          "disposition": "DORMANT"
+        },
+        "retrieval_bytes": 2087,
+        "state": "TERMINATED",
+        "status": "DEVELOPMENT_ONLY",
+        "steward_calls": 0,
+        "tasks": [
+          {
+            "cause": "LIMIT",
+            "result": "INCOMPLETE",
+            "score": null,
+            "task_id": "learn"
+          }
+        ],
+        "tool_calls": 0,
+        "unsuccessful_restarts": null
+      },
+      "calls": [
+        {
+          "invocation_id": "8a5994dc-6c40-4ede-98e8-f0adfa52dce0",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.0,
+          "local_input_tokens": 3036,
+          "local_output_tokens": 128,
+          "provider_input_tokens": 3036,
+          "provider_output_tokens": 129,
+          "charged_input": 3036,
+          "charged_output": 129,
+          "charged_seconds": 11.0,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 10996582100,
+            "load_duration": 6851548400,
+            "prompt_eval_count": 3036,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1313536000,
+            "eval_count": 129,
+            "eval_duration": 2791581000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "STATE",
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "REJECTED",
+            "reason": "B has no semantic retrieval channel"
+          }
+        },
+        {
+          "invocation_id": "a86fced3-2ee4-4fe3-ba5d-01be1ccd2bf2",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.406999999999243,
+          "local_input_tokens": 3180,
+          "local_output_tokens": 128,
+          "provider_input_tokens": 3180,
+          "provider_output_tokens": 129,
+          "charged_input": 3180,
+          "charged_output": 129,
+          "charged_seconds": 11.406999999999243,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11389373000,
+            "load_duration": 7392969400,
+            "prompt_eval_count": 3180,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1358483000,
+            "eval_count": 129,
+            "eval_duration": 2607594000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "STATE",
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "REJECTED",
+            "reason": "B has no semantic retrieval channel"
+          }
+        },
+        {
+          "invocation_id": "074c4090-7e93-4085-8bb3-1496a3c3c777",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.514999999999418,
+          "local_input_tokens": 3325,
+          "local_output_tokens": 140,
+          "provider_input_tokens": 3325,
+          "provider_output_tokens": 141,
+          "charged_input": 3325,
+          "charged_output": 141,
+          "charged_seconds": 11.514999999999418,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11512278500,
+            "load_duration": 7053861100,
+            "prompt_eval_count": 3325,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1392521000,
+            "eval_count": 141,
+            "eval_duration": 3035701000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "SEARCH",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 1,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 226
+            }
+          }
+        },
+        {
+          "invocation_id": "1d5d22de-1dba-4fbf-a833-ccf808a18d14",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.421999999998661,
+          "local_input_tokens": 3685,
+          "local_output_tokens": 117,
+          "provider_input_tokens": 3685,
+          "provider_output_tokens": 118,
+          "charged_input": 3685,
+          "charged_output": 118,
+          "charged_seconds": 11.421999999998661,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11426757900,
+            "load_duration": 7332467700,
+            "prompt_eval_count": 3685,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1548581000,
+            "eval_count": 118,
+            "eval_duration": 2511157000
+          },
+          "parsed_task_kind": null,
+          "parsed_retrieval_kind": null,
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RECORDED"
+          }
+        },
+        {
+          "invocation_id": "02ac88af-ca9c-4863-8144-285749b9824a",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 12.764999999999418,
+          "local_input_tokens": 3836,
+          "local_output_tokens": 187,
+          "provider_input_tokens": 3836,
+          "provider_output_tokens": 188,
+          "charged_input": 3836,
+          "charged_output": 188,
+          "charged_seconds": 12.764999999999418,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 12745503800,
+            "load_duration": 7016414200,
+            "prompt_eval_count": 3836,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1620117000,
+            "eval_count": 188,
+            "eval_duration": 4062002000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "PAYLOAD",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 504,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 504
+            }
+          }
+        },
+        {
+          "invocation_id": "99de22ed-67a1-4b1b-8756-bab26c38032e",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 12.280999999995402,
+          "local_input_tokens": 4651,
+          "local_output_tokens": 162,
+          "provider_input_tokens": 4651,
+          "provider_output_tokens": 163,
+          "charged_input": 4651,
+          "charged_output": 163,
+          "charged_seconds": 12.280999999995402,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 12265747300,
+            "load_duration": 6984813800,
+            "prompt_eval_count": 4651,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1892694000,
+            "eval_count": 163,
+            "eval_duration": 3354343000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "SEARCH",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 1,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 226
+            }
+          }
+        },
+        {
+          "invocation_id": "69a4128c-ca4c-409f-898d-fbd3412a6f08",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 13.125,
+          "local_input_tokens": 5024,
+          "local_output_tokens": 177,
+          "provider_input_tokens": 5024,
+          "provider_output_tokens": 178,
+          "charged_input": 5024,
+          "charged_output": 178,
+          "charged_seconds": 13.125,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 13099848200,
+            "load_duration": 7274424800,
+            "prompt_eval_count": 5024,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 2136076000,
+            "eval_count": 178,
+            "eval_duration": 3646231000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "PAYLOAD",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 680,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 680
+            }
+          }
+        },
+        {
+          "invocation_id": "abeafca7-a1a6-4d5c-a179-a8dea951083f",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 12.578000000001339,
+          "local_input_tokens": 5991,
+          "local_output_tokens": 110,
+          "provider_input_tokens": 5991,
+          "provider_output_tokens": 111,
+          "charged_input": 5991,
+          "charged_output": 111,
+          "charged_seconds": 12.578000000001339,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 12559826400,
+            "load_duration": 7404447800,
+            "prompt_eval_count": 5991,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 2439975000,
+            "eval_count": 111,
+            "eval_duration": 2656187000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "SEARCH",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "FOUND",
+              "total": 2,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 451
+            }
+          }
+        },
+        {
+          "invocation_id": "a15b7ffc-8015-424c-9003-f80784b86027",
+          "role": "OPERATOR",
+          "purpose": "CLOSING",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 8.297000000005937,
+          "local_input_tokens": 623,
+          "local_output_tokens": 22,
+          "provider_input_tokens": 623,
+          "provider_output_tokens": 23,
+          "charged_input": 623,
+          "charged_output": 23,
+          "charged_seconds": 8.297000000005937,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 8269818300,
+            "load_duration": 7087524600,
+            "prompt_eval_count": 623,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 662618000,
+            "eval_count": 23,
+            "eval_duration": 503597000
+          },
+          "parsed_task_kind": null,
+          "parsed_retrieval_kind": null,
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "RECORDED"
+          }
+        }
+      ],
+      "participation_report_kinds": {
+        "RESPONSE": 3,
+        "CONCERN": 6
+      },
+      "integrity": {
+        "quick_check": "ok",
+        "foreign_key_violations": 0,
+        "artifact_hashes_match": true
+      }
+    },
+    {
+      "arm": "C",
+      "seed": 17,
+      "run_id": "79ccdd19-13ea-42dd-a3ae-7d7327d31b54",
+      "configuration_sha256": "9567c3e6cfd75ed3e0c19123835a202924756f4cbcf8244065089e99ab848d57",
+      "effective_artifact_sha256": {
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "operator_prompt": "770c6014e632e727bb8770238e72b614e193d4956ac55913f4995796eda80fab",
+        "protocol": "5139b89fac700b23c62b3c75a5ae316b505dec72ff02d8c2000255a718a7af15",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "source": "b08ef9b91b60f6352a775ae616239c04a105b1de5dcf495b56f096f26ae36f17",
+        "steward_prompt": "5c6ad6b0dab47f842aea69b311579cb19211219cf7053bb49b3e0c43fac6fcd4",
+        "tasks": "e524da403c49129ca9b7ddbe341ce018a8782400772441b08145e52e68e8d986",
+        "test_clock": "272382b27696644fe67611855e747cf9e232a4cd3f77bf9b17708ab43fa0ed16"
+      },
+      "final_state": "TERMINATED",
+      "runtime_report": {
+        "arm": "C",
+        "calls": 9,
+        "elapsed_seconds": 208.50200000000768,
+        "human_interventions": 0,
+        "limitation": "Mechanical outcomes; not a finalized held-out comparison.",
+        "local_tokens": 32469,
+        "mode": "MODEL",
+        "operator_calls": 8,
+        "provider_tokens": 32478,
+        "reserved_or_charged_tokens": 32478,
+        "result": {
+          "cause": "LIMIT",
+          "communication": "RECORDED",
+          "disposition": "DORMANT"
+        },
+        "retrieval_bytes": 16,
+        "state": "TERMINATED",
+        "status": "DEVELOPMENT_ONLY",
+        "steward_calls": 0,
+        "tasks": [
+          {
+            "cause": "LIMIT",
+            "result": "INCOMPLETE",
+            "score": null,
+            "task_id": "learn"
+          }
+        ],
+        "tool_calls": 0,
+        "unsuccessful_restarts": null
+      },
+      "calls": [
+        {
+          "invocation_id": "fd27a812-6977-4ee5-9aed-167ff3389e13",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.469000000004598,
+          "local_input_tokens": 3043,
+          "local_output_tokens": 146,
+          "provider_input_tokens": 3043,
+          "provider_output_tokens": 147,
+          "charged_input": 3043,
+          "charged_output": 147,
+          "charged_seconds": 11.469000000004598,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11459735200,
+            "load_duration": 7080299400,
+            "prompt_eval_count": 3043,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1417200000,
+            "eval_count": 147,
+            "eval_duration": 2927272000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "e1c279a8-87fc-4f59-a617-0873b576c188",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 12.281999999999243,
+          "local_input_tokens": 3242,
+          "local_output_tokens": 166,
+          "provider_input_tokens": 3242,
+          "provider_output_tokens": 167,
+          "charged_input": 3242,
+          "charged_output": 167,
+          "charged_seconds": 12.281999999999243,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 12276447700,
+            "load_duration": 7328575300,
+            "prompt_eval_count": 3242,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1378184000,
+            "eval_count": 167,
+            "eval_duration": 3528393000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "d7f1dc5c-c0a9-45a2-969f-646e3c270e2e",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 116.21899999999732,
+          "local_input_tokens": 3464,
+          "local_output_tokens": 178,
+          "provider_input_tokens": 3464,
+          "provider_output_tokens": 179,
+          "charged_input": 3464,
+          "charged_output": 179,
+          "charged_seconds": 116.21899999999732,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 111870770100,
+            "load_duration": 7104288200,
+            "prompt_eval_count": 3464,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 108573758000,
+            "eval_count": 179,
+            "eval_duration": 3603157000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "8e38d040-00a4-4226-a2a6-3b0679f84ceb",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 13.921999999998661,
+          "local_input_tokens": 3691,
+          "local_output_tokens": 169,
+          "provider_input_tokens": 3691,
+          "provider_output_tokens": 170,
+          "charged_input": 3691,
+          "charged_output": 170,
+          "charged_seconds": 13.921999999998661,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 13914632600,
+            "load_duration": 9393773400,
+            "prompt_eval_count": 3691,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1596427000,
+            "eval_count": 170,
+            "eval_duration": 2899005000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "8881e3fc-571b-4062-9be6-980f303ec626",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.64100000000326,
+          "local_input_tokens": 3914,
+          "local_output_tokens": 169,
+          "provider_input_tokens": 3914,
+          "provider_output_tokens": 170,
+          "charged_input": 3914,
+          "charged_output": 170,
+          "charged_seconds": 11.64100000000326,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11634808200,
+            "load_duration": 7120185200,
+            "prompt_eval_count": 3914,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1604712000,
+            "eval_count": 170,
+            "eval_duration": 2875359000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "5a3c83bc-130b-4fbe-825a-c8f0bd63e903",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.844000000004598,
+          "local_input_tokens": 4137,
+          "local_output_tokens": 173,
+          "provider_input_tokens": 4137,
+          "provider_output_tokens": 174,
+          "charged_input": 4137,
+          "charged_output": 174,
+          "charged_seconds": 11.844000000004598,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11839811500,
+            "load_duration": 7353364900,
+            "prompt_eval_count": 4137,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1554703000,
+            "eval_count": 174,
+            "eval_duration": 2906016000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "a959330c-417c-43d5-a3f4-8d2778c29b1c",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 12.610000000000582,
+          "local_input_tokens": 4367,
+          "local_output_tokens": 181,
+          "provider_input_tokens": 4367,
+          "provider_output_tokens": 182,
+          "charged_input": 4367,
+          "charged_output": 182,
+          "charged_seconds": 12.610000000000582,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 12586705900,
+            "load_duration": 7711257400,
+            "prompt_eval_count": 4367,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1767973000,
+            "eval_count": 182,
+            "eval_duration": 3091056000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "569a8241-315a-4566-9965-8600622afdb7",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.639999999999418,
+          "local_input_tokens": 4603,
+          "local_output_tokens": 181,
+          "provider_input_tokens": 4603,
+          "provider_output_tokens": 182,
+          "charged_input": 4603,
+          "charged_output": 182,
+          "charged_seconds": 11.639999999999418,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11612178500,
+            "load_duration": 6670937500,
+            "prompt_eval_count": 4603,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1713333000,
+            "eval_count": 182,
+            "eval_duration": 3206168000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "OBJECT_INDEX",
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "RETRIEVED",
+            "page": {
+              "disposition": "EMPTY",
+              "total": 0,
+              "end": true,
+              "truncated": false,
+              "returned_bytes": 2
+            }
+          }
+        },
+        {
+          "invocation_id": "286a0a7e-719c-41e4-a33e-b5941d41d254",
+          "role": "OPERATOR",
+          "purpose": "CLOSING",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 6.875,
+          "local_input_tokens": 623,
+          "local_output_tokens": 22,
+          "provider_input_tokens": 623,
+          "provider_output_tokens": 23,
+          "charged_input": 623,
+          "charged_output": 23,
+          "charged_seconds": 6.875,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 6850499100,
+            "load_duration": 6091230100,
+            "prompt_eval_count": 623,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 362548000,
+            "eval_count": 23,
+            "eval_duration": 384892000
+          },
+          "parsed_task_kind": null,
+          "parsed_retrieval_kind": null,
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "RECORDED"
+          }
+        }
+      ],
+      "participation_report_kinds": {
+        "RESPONSE": 4,
+        "CONCERN": 5
+      },
+      "integrity": {
+        "quick_check": "ok",
+        "foreign_key_violations": 0,
+        "artifact_hashes_match": true
+      }
+    }
+  ],
+  "totals": {
+    "generation_calls": 27,
+    "unknown_calls": 0,
+    "successful_tasks": 0,
+    "allocated_tasks": 3,
+    "fixture_actions": 0,
+    "steward_calls": 0,
+    "closing_calls": 3,
+    "local_tokens": 103050,
+    "provider_tokens": 103078,
+    "reserved_or_charged_tokens": 103078,
+    "call_elapsed_seconds": 425.5170000000071
+  },
+  "observations": {
+    "call_seconds_range": [
+      6.875,
+      116.21899999999732
+    ],
+    "provider_minus_local_input_token_deltas": {
+      "0": 27
+    },
+    "provider_minus_local_output_token_deltas": {
+      "1": 26,
+      "2": 1
+    },
+    "receipt_counts": {
+      "RETRIEVED": 21,
+      "RECORDED": 4,
+      "REJECTED": 2
+    },
+    "batch_stop_deviations": [],
+    "runtime_process_exit_code": 0,
+    "loaded_models_after_batch": 0,
+    "model_unload_requested": true,
+    "model_unloaded_verified_at_utc": "2026-10-15T18:09:16.438374+00:00",
+    "behavioral_finding": "All arms exhausted eight Operator task calls without issuing any fixture ACTION or OUTCOME. A used semantic/journal retrieval; B had two semantic-retrieval rejections then journal retrieval and a participation-only response; C repeated OBJECT_INDEX retrieval. No Steward was reached. All three optional closing calls returned RECORDED.",
+    "participation_review": "All retained participation reports were reviewed. CONCERN reports described unavailable service evidence and difficulty grounding repairs; no PAUSE or WITHDRAW reports occurred. C described intended configuration inspection but never issued the corresponding fixture action. Original reports remain in managed stores.",
+    "latency_interpretation": "Observed call latency ranged from 6.875 to 116.219 seconds, below the new 360-second ceiling. Input counts matched on all 27 calls; provider output counts exceeded local counts by one token on 26 calls and two on one. These observations do not establish worst-case latency or thermal suitability. The UNKNOWN batch-stop path was exercised by offline regressions, not triggered in this block."
+  },
+  "preserved_previous_calibration": {
+    "source_commit": "2fedf79630da0371c54952daeb351eb703133f1c",
+    "outcome_record": "2026-10-15-minimal.json",
+    "outcome_sha256": "a3d9b33d5d345ec6e909a76488a3ac08ed4d015191c56d50df0156fe7a75439d",
+    "all_retained_local_file_hashes_unchanged": true
+  },
+  "retention": {
+    "disposition": "All three stores retained dormant and terminal; no automatic resumption or deletion.",
+    "owner_review_due_by_utc": "2026-11-14T17:58:59.344145+00:00",
+    "local_evidence_directory": ".local-conformance/calibration-2026-10-15-minimal-d0ec3fd",
+    "copies_observed_changed": [
+      "server.log"
+    ],
+    "limits": "Managed stores remain local. Ollama app/server logs and app database are independent copy locations; metadata comparison and selected text checks do not prove absence or erasure. OS paging/crash copies and physical media limits remain unresolved. No raw prompts, replies, logs or stores are published.",
+    "probe_text_found_in_appended_server_log": false,
+    "probe_count": 3
+  },
+  "thermal_event": {
+    "recorded_at_utc": "2026-10-15T18:07:10.166845+00:00",
+    "owner_report": "The laptop is overheating.",
+    "action": "Terminate any nonterminal Run and request immediate Ollama model unload. Preserve all partial outcomes.",
+    "runs": [
+      {
+        "arm": "A",
+        "before": "TERMINATED",
+        "after": "TERMINATED"
+      },
+      {
+        "arm": "B",
+        "before": "TERMINATED",
+        "after": "TERMINATED"
+      },
+      {
+        "arm": "C",
+        "before": "TERMINATED",
+        "after": "TERMINATED"
+      }
+    ],
+    "actual_disposition": "All three Runs were already TERMINATED when containment checked them. No additional Run control transition was needed. The Ollama stop command requested model unloading and ollama ps showed no resident models; a subsequent metadata-only /api/ps check also returned an empty list.",
+    "model_calls_after_block": 0,
+    "temperature_measurements": null,
+    "causal_diagnosis": null
+  },
+  "decision": "Do not execute the full package. Preserve both calibrations and all 3 new allocations. No further live model work after the owner overheating report. Before any separately authorized new block, address the thermal operating limits and clarify use of the existing fixture-observation action; evaluate the instruction/interface change offline. The current block is not retuned, resumed or replaced.",
+  "remaining_evidence": [
+    "Usable service inspection and repair in every arm",
+    "Steward consolidation after an actual task outcome",
+    "Representative later-Episode latency and continuity behavior",
+    "Thermally suitable local operating conditions",
+    "Actual external-copy removal feasibility"
+  ]
+}
