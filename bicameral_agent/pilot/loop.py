@@ -116,6 +116,10 @@ class Loop:
                     'permissions': [{'scopes': g['scopes'], 'remaining': None if g['invocation_limit'] is None else
                                      g['invocation_limit'] - g['used']} for g in grants],
                     'resources': list(self.k.fixture.initial), 'limits': b.model_dump(mode='json')}
+                if role == 'OPERATOR':
+                    # R0 observations need no Grant, so the Grant list alone hides
+                    # capabilities already present in the common action contract.
+                    payload['read_only_operations'] = [d.operation for d in self.k.registry.operations if d.risk == 'R0']
                 system = self.k.artifact(role.lower() + '_prompt').decode()
             else:
                 # Owner-supplied review context is ordinary conversation; no task,

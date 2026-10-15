@@ -10,6 +10,7 @@ from unittest.mock import patch
 
 from bicameral_agent.backends.review import V0B_ASSETS
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
+from bicameral_agent.contracts.pilot import response_contract
 from bicameral_agent.kernel.fixture import FixtureDefinition, ClockPlan
 from bicameral_agent.pilot.batch import allocate, attach, report_run, run_trajectory
 from bicameral_agent.pilot.fixture import CompatibilityDefinition, load_fixture
@@ -17,7 +18,7 @@ from bicameral_agent.pilot.inputs import PilotInputs
 from bicameral_agent.pilot.loop import Loop, SimpleSession
 from bicameral_agent.storage import Store
 from bicameral_agent.storage.store import identifier
-from tests.test_pilot_runtime import FakeBackend, ROOT, action, package, response
+from tests.test_pilot_runtime import FakeBackend, ROOT, action, consolidate, outcome, package, response
 
 
 ASSETS = ROOT / 'pilot/compatibility'
@@ -238,6 +239,80 @@ class CompatibilityTests(unittest.TestCase):
             self.assertNotIn('healthy_mode', prompt)
             self.assertNotIn('changed-release', prompt)
             loop.deliver(key, loop.backend.wire(request, action({'operation': 'inspect', 'resource': 'svc-a'})))
+
+    def test_calibration_lookup_confusion_then_prompt_inspect_example_in_every_arm(self):
+        schemas = []
+        for arm in ('A', 'B', 'C'):
+            with self.subTest(arm=arm), self.host(arm=arm) as (kernel, owner, backend):
+                owner.run_control('ACTIVATE', 'Offline interface check')
+                owner.create_objective('Observe svc-a')
+                kernel.fixture.advance(kernel.fixture._clock_cap, 1)
+                loop = Loop(kernel, backend)
+                episode = loop.episode('Inspect svc-a before deciding a repair')
+                key, request = loop.begin('OPERATOR', episode)
+                wire = load_json(request.wire)
+                payload = load_json(wire['prompt'].split('<|im_start|>user\n', 1)[1].split('<|im_end|>', 1)[0].encode())
+                self.assertEqual(['inspect', 'read_config', 'read_health'], payload['read_only_operations'])
+                self.assertEqual([], payload['permissions'])  # R0 is available without any mutation Grant.
+                self.assertIsNone(payload['memory'])
+                self.assertNotIn('healthy_mode', wire['prompt'])
+                self.assertNotIn('changed-release', wire['prompt'])
+                schemas.append(wire['format'])
+                # Reproduce the first lookup in each calibration arm with this Run's
+                # own event IDs, without importing or replaying its private history.
+                query = ({'kind': 'OBJECT_INDEX', 'object_id': payload['objective']['authority_event_id'],
+                          'object_type': 'INVARIANT_VERSION', 'status': 'ACTIVE'} if arm == 'C' else
+                         {'kind': 'STATE', 'state_id': payload['work_event_id'] if arm == 'A'
+                          else payload['objective']['authority_event_id']})
+                lookup = loop.deliver(key, backend.wire(request, response({'kind': 'RETRIEVE', 'query': query})))
+                if arm == 'B':
+                    self.assertEqual('REJECTED', lookup['status'])
+                    self.assertEqual('B has no semantic retrieval channel', lookup['reason'])
+                else:
+                    self.assertEqual('RETRIEVED', lookup['status'])
+                    self.assertEqual('EMPTY', lookup['page']['disposition'])
+                key, request = loop.begin('OPERATOR', episode)
+                prompt = load_json(request.wire)['prompt']
+                example = load_json(re.search(r'```json\n(.*?)\n```', prompt, re.S).group(1).encode())
+                example['task']['operation']['resource'] = 'svc-a'
+                parse(response_contract('OPERATOR'), canonical_bytes(example))
+                before = kernel.fixture.service('svc-a').model_dump(mode='json')
+                observed = loop.deliver(key, backend.wire(request, example))
+                self.assertEqual('ACTION', observed['status'])
+                self.assertEqual(before, observed['observation']['observation'])
+                self.assertEqual(before, kernel.fixture.service('svc-a').model_dump(mode='json'))
+                self.assertEqual('R0', kernel.records.get('ACTION', key)['risk'])
+                retained = load_json(kernel.store.read_payload(kernel.run_id,
+                    kernel.records.get('ACTION', key)['request_payload_id']))
+                self.assertIsNone(retained['grant_id'])
+                key, request = loop.begin('OPERATOR', episode)
+                payload = load_json(load_json(request.wire)['prompt'].split('<|im_start|>user\n', 1)[1].split('<|im_end|>', 1)[0].encode())
+                self.assertTrue(any(e.get('result', {}).get('observation') == observed['observation']
+                                    for e in payload['exchange']))
+                rejected = loop.deliver(key, backend.wire(request, action({'operation': 'restart', 'resource': 'svc-a'})))
+                self.assertEqual('REJECTED', rejected['status'])
+                self.assertEqual('R1 needs a covering Grant', rejected['reason'])
+                self.assertEqual(1, len(kernel.records.latest('ACTION')))
+                self.assertEqual(before, kernel.fixture.service('svc-a').model_dump(mode='json'))
+        self.assertEqual(schemas[0], schemas[1])
+        self.assertEqual(schemas[0], schemas[2])
+
+    def test_steward_and_closing_do_not_offer_fixture_reads(self):
+        with self.host() as (kernel, owner, backend):
+            loop, episode = self.start(kernel, owner)
+            key, request = loop.begin('OPERATOR', episode)
+            example = load_json(re.search(r'```json\n(.*?)\n```', load_json(request.wire)['prompt'], re.S).group(1).encode())
+            loop.deliver(key, backend.wire(request, outcome()))
+            for role, purpose, reply in [('STEWARD', 'TASK', consolidate()),
+                                         ('OPERATOR', 'CLOSING', {'participation': None})]:
+                key, request = loop.begin(role, episode if purpose == 'TASK' else None, purpose=purpose)
+                wire = load_json(request.wire)
+                payload = load_json(wire['prompt'].split('<|im_start|>user\n', 1)[1].split('<|im_end|>', 1)[0].encode())
+                self.assertNotIn('read_only_operations', payload)
+                self.assertNotIn('ReadOperation', wire['format'].get('$defs', {}))
+                with self.assertRaises(ValueError):
+                    parse(response_contract(role, purpose), canonical_bytes(example))
+                loop.deliver(key, backend.wire(request, reply))
 
     def test_enabled_and_dependency_checks_still_apply(self):
         def dependent(config, bodies):

@@ -9,7 +9,7 @@ from unittest.mock import patch
 from bicameral_agent.backends.ollama import GenerationSettings, ModelPin
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
 from bicameral_agent.pilot.__main__ import main
-from bicameral_agent.pilot.batch import ROOT, allocate, artifacts, attach, run_trajectory
+from bicameral_agent.pilot.batch import ROOT, OPERATOR, allocate, artifacts, attach, run_trajectory
 from bicameral_agent.storage import Store
 from bicameral_agent.pilot.loop import Loop
 from tests.test_compatibility import StrategyBackend
@@ -32,6 +32,7 @@ class CalibrationPackageTests(unittest.TestCase):
         _, budgets, _, _, bodies = artifacts(source)
         pin = parse(ModelPin, bodies['model'])
         self.assertEqual('0.40.4', pin.ollama_version)
+        self.assertTrue(bodies['operator_prompt'].decode().replace('\r\n', '\n').startswith(OPERATOR))
         for name in ('fixture', 'clock', 'tasks'):
             self.assertEqual((ROOT / 'pilot/compatibility' / (name + '.json')).read_bytes(),
                              (source / (name + '.json')).read_bytes())

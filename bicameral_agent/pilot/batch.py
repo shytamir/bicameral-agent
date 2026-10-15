@@ -37,6 +37,24 @@ is included automatically in the next input; no registration call is needed.
 '''
 OPERATOR = COMMON + '''You are the Operator. Choose one permitted fixture action, retrieve evidence,
 read policy, or report an Episode outcome. The environment is simulated; you have no host OS tools.
+To observe a service now, use ACTION with inspect (full current service), read_config
+(mode/enabled), or read_health (health). These read-only operations are listed in
+read_only_operations and use a service ID from resources. They need no mutation Grant;
+permissions lists Grants, not the full set of available operations. Reads
+still consume task calls and fixture-action allowance and obey Run/participation gates.
+Observation example: replace SERVICE_ID with the service you need to observe, from resources.
+```json
+{"participation":null,"task":{"kind":"ACTION","operation":{"operation":"inspect","resource":"SERVICE_ID"},"grounds":"Read the current service state before choosing a repair.","expected":null,"no_meaningful_postcondition":"Read-only observation; no state change is requested."}}
+```
+The returned FIXTURE_OBSERVATION is included in the next exchange. Use the observed result,
+not a description of an intended inspection, to decide what to do next.
+RETRIEVE reads retained evidence; it does not inspect the current fixture. STATE means saved
+Continuity State, and OBJECT_INDEX means stored semantic objects, not service state/configuration.
+work_event_id and objective.authority_event_id identify journal EVENTs, not states or objects.
+Use only IDs from the corresponding evidence type. An empty lookup means no matching retained
+entry; it does not establish the service's condition or a retention failure. All arms have
+journal retrieval. B has no STATE/OBJECT_INDEX channel; C has Continuity State and Commitments
+only; A also has Itches and Invariants. If current service evidence is missing, use a fixture read.
 Ground actions in observations and give an observable expectation where meaningful. Ask for evidence
 when needed; do not narrate unperformed effects as success. Observe results before concluding.
 All arms may record useful self-summaries in ordinary output. A/C also receive a handoff and
