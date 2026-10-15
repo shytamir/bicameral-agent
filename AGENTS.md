@@ -6,6 +6,7 @@
 - This file governs agent workflow only. It is subordinate to the project's Reciprocal Charter, Architecture, Operating Constitution and Execution Protocol, and Executable Specification.
 - Do not use `AGENTS.md` to record project status, repeat management state, or establish product policy.
 - If documents conflict, follow the more authoritative project document and surface the conflict. Never settle it silently in code, prompts, tests, defaults, or this file.
+- Treat archives as historical references. Do not reactivate their procedures, or treat an old test expectation as current policy, without an authorized change to the governing documents.
 
 ## Working discipline
 
@@ -21,7 +22,7 @@
 
 - Implement only an authorized slice; a specification or plan is not by itself implementation authorization.
 - Do not invent rules that alter what the process may believe, remember, promise, or do. Escalate such choices to the governing document.
-- Keep policy-bearing behavior explicit and testable. Prefer typed contracts, closed transitions, explicit configuration, and visible failure over heuristic defaults.
+- Keep policy-bearing behavior explicit and testable. Use small typed contracts, documented configuration and visible failure. Do not add approval records, registration mechanisms or validation of human judgments beyond what the active governing documents require.
 - Preserve the documented separation between cognitive proposals and deterministic authority enforcement.
 - Preserve the governed evidence/retention rules, provenance, atomic state transitions, and forward-moving recovery semantics wherever the implemented slice touches them. Apply the charter's retention exceptions through the Protocol's explicit path, never by silently weakening audit history.
 - Do not connect an LLM before the deterministic contracts and invariants required by that slice have executable tests.
@@ -34,7 +35,7 @@
 - State or persistence changes: use real database constraints and transactions; test allowed and forbidden transitions, failure atomicity, and recovery.
 - Authority changes: include negative tests for absent, stale, terminal, cross-scope, over-risk, external-only, and prohibited authorization paths.
 - Apply Protocol section 9: passing the required technical validations satisfies definition of done within the implementation slice's documented operational envelope. When the owner delegates acceptance, make and record that decision from the validation evidence without requesting another sign-off.
-- Record the accepted implementation revision, operational envelope, checks, and remaining integration responsibilities in the project handoff. Keep claims within the evidence and preserve the governing runtime authorization, review, and experiment requirements.
+- Record the accepted implementation revision, operational envelope, checks, and remaining integration responsibilities once in the project handoff. Distinguish a revised design from implemented behavior; do not relabel historical tests as validation of new contracts. Keep claims within the evidence and preserve the governing runtime authorization, review, and experiment requirements.
 
 ## Git hygiene
 

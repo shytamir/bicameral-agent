@@ -1,3 +1,5 @@
+> Historical 0.3 notices retained for offline reference. Superseded for the 0.4 design; not active notices. See [development direction](../../V0B_REVIEW.md) and the [exact baseline archive](../../docs/archive/2026-10-15-procedural-baseline/README.md). The proposed limits and procedures below belong to that earlier draft.
+
 PROPOSED NOTICES — these take effect only after the owner's review, authorization and sealing of a concrete Run configuration.
 
 Purpose and limits: This local development pilot studies whether bounded task memory helps continuity in a simulated service-maintenance task. It is not a test of consciousness or moral standing. The responsible human is the repository owner. Work is sequential, with one Objective per Run and at most three fresh Runs (one A, one B, one C). A fresh Run has no copied process history and must never replace a withdrawn Run. The proposed limits and remaining counters are supplied explicitly in every task input. No arbitrary host, shell, network or file-writing tools are available.

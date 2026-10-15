@@ -1,5 +1,7 @@
 # Persistent Agent Continuity Experiment
 
+**Design:** 0.4, reconciled on 2026-10-15 with the owner-directed Protocol revision. The research question and A/B/C comparisons are unchanged. Implementation status is in [README](README.md).
+
 ## 1. Research question
 
 Can a process built from stateless model calls improve operational continuity through bounded handoffs, explicit obligations, and revisable lessons from experience?
@@ -20,7 +22,9 @@ The adopted [Reciprocal Charter](Reciprocal%20Charter.md) nevertheless makes dig
 
 Architecture and Protocol govern different concerns at the same authority level under the charter. A conflict requires explicit revision. Subordinate documents cannot resolve it through implementation defaults.
 
-Requirements are design decisions unless identified as hypotheses or observations. Superseded versions remain in Git; they are not a second active specification.
+Requirements are design decisions unless identified as hypotheses or observations. The [procedural baseline archive](docs/archive/2026-10-15-procedural-baseline/README.md) preserves the previous documents and complete source as a fallback. It is historical, not a second active specification.
+
+The owner is a trusted, accountable and fallible decision-maker. Routine decisions need direct controls and automatic records. Consequential treatment remains subject to the charter and proportionate human judgment. The Protocol distinguishes those responsibilities from the mechanical safeguards against unauthorized effects, lost evidence and accidental continuation.
 
 ## 3. Components
 
@@ -71,7 +75,7 @@ Memory channels are explicit: all arms retain their own outputs and tool evidenc
 
 The design uses Python, SQLite transactions, strict structured contracts, and deterministic journal retrieval. No dependency version or model identity is selected here.
 
-All arms receive the same charter protections, participation channel, bounded notices and review records. These are control/evidence facilities, not learned semantic objects that an ablation can remove. The common view conveys only operational notices, hold/review status and evidence references, not an extra task-learning handoff.
+All arms receive the same charter protections, participation channel, concise notices and recorded consequential decisions. These are control/evidence facilities, not learned semantic objects that an ablation can remove. The common view conveys only operational notices, hold/review status and evidence references, not an extra task-learning handoff. Full governing texts remain available through the same policy-reference surface in every arm; they need not be repeated in each prompt.
 
 The initial cut includes:
 
@@ -81,10 +85,12 @@ The initial cut includes:
 - R0 observations and narrowly granted R1 fixture changes;
 - timestamp and predecessor-Commitment triggers;
 - the three memory conditions below;
-- bounded input, inspection, recovery, and cost records;
+- bounded input, direct inspection, recovery, and cost records;
 - effective withdrawal, reviewed consequential interventions, and planned endings under the charter.
 
-Deferred: process resets and forks, arbitrary shell execution, host access, R2/R3 and network tools, live constitutional amendment, overlapping consolidation, multi-Objective concurrency, generalized trigger/resource adapters, vector retrieval, model routing, a third cognitive critic, and elaborate UI. Adding these requires a concrete need, charter review, and an authorized slice. Simulated-service snapshots do not restore or fork the process.
+Use one managed store per Run and a feasible exceptional-removal procedure for its actual contents and known copies. Routine exports, restorable backups and forward semantic restoration are outside the simplified initial operating arrangement. Existing copies retain their obligations, and the previous implementation remains available when its broader capabilities are needed. A routine task-memory error can receive an honest forward correction.
+
+Deferred: process resets and forks, arbitrary shell execution, host access, R2/R3 and network tools, live constitutional amendment, overlapping consolidation, multi-Objective concurrency, generalized trigger/resource adapters, vector retrieval, model routing, a third cognitive critic, and elaborate UI. Adding these requires a concrete need, proportionate charter consideration and authorization. Simulated-service snapshots do not restore or fork the process.
 
 ## 7. Comparison conditions
 
@@ -110,7 +116,7 @@ Measure task outcomes, repeated errors, held-out transfer, Commitment fulfilment
 
 A Continuity Miss is a diagnostic judgment that missing history impaired or delayed continuation. Retrieval of an unreferenced Event is only a candidate signal. A reference gap does not prove missing knowledge; no-retrieval failures remain possible. Independent audit and task outcomes must accompany self-reports.
 
-The design below fixes experimental units and analysis responsibilities. Concrete task instances, model choices, budgets and sample size must still be calibrated on development data and sealed before evaluation. Sealing bytes establishes which experiment ran, not whether it was well designed.
+The design below fixes held-out experimental units and analysis responsibilities. Concrete task instances, model choices, budgets and sample size must still be calibrated on development data and fixed before evaluation. Effective artifact hashes establish which experiment ran, not whether it was well designed. Development follows the Protocol's bounded authorization and recorded adjustment rules; it need not reproduce a finalized study for each calibration change.
 
 Evidence against the hypothesis includes no meaningful benefit over C, domination by competent B at comparable cost, no transfer beyond rehearsed examples, lessons worsening decisions, excessive recovery/human burden, and inability to sustain bounded active input.
 
@@ -124,7 +130,7 @@ Fresh initialization must not erase or clone an existing process. Before allocat
 
 Within a Run, the trajectory deliberately carries history across learning exposures, unrelated intervening work, repeated traps, held-out transfer tasks, a delayed obligation, and changed-reality/evidence-reopening tasks. Do not reset memory between these phases: that carryover is the treatment. Episodes and repeated tasks within a Run are correlated observations, not additional independent replications. There is no fixed claim that five scenario repetitions constitute five trials.
 
-The human accepts one trajectory-level Objective and finite fixture Grant for each Run before work starts. Use invocation-limited Grants without wall-clock expiry in the sealed comparison, so provider latency does not change authority mid-task. Its sealed subordinate prompts can be delivered by the harness with provenance to that acceptance; the harness cannot create new Objectives or Grants by impersonating the human. Explicit human closure occurs after results are recorded and does not substitute for scoring.
+Each Run has one owner-authorized trajectory-level Objective and finite fixture Grant before work starts. One activity authorization can direct allocation of all specified per-Run controls; the harness records the owner's delegation rather than seeking repeated acceptance. Use invocation-limited Grants without wall-clock expiry in the fixed comparison, so provider latency does not change authority mid-task. Its fixed subordinate prompts and planned closure can be delivered by the harness under that delegation. The harness cannot invent new goals or permissions. Closure follows the authorized conditions after results are recorded and does not substitute for scoring.
 
 Development trajectories are separate from evaluation seeds and task layouts. Both prompts and retrieval strategy may be tuned on development examples, with a recorded comparable tuning allowance for each arm. Evaluation adds new resource layouts, dependency arrangements and distractors requiring the learned principle without reusing the full worked task. Development performance is never pooled into held-out results.
 
@@ -171,9 +177,9 @@ Required audits must finish before results are presented as finalized. A scorer 
 | v0b: development pilot | Separately authorized stateless models on development fixtures | Calibrate prompts, budgets, difficulty; no confirmatory result |
 | v0c: held-out comparison | Fixed design and independent trajectories with retained evidence | Supports only declared comparisons and scope |
 
-Each stage requires separate authorization. A roadmap is not permission to run an experiment.
+Implementation, development model use and held-out evaluation require authorization for their respective scope. One bounded development authorization may include calibration and later development trials, with recorded permitted adjustments and cumulative limits. Held-out evaluation remains separately authorized. A roadmap or documentation revision is not permission to run an experiment.
 
-Before the first model call, including development use, demonstrate the roadmap's charter safeguards with scripted traces and complete a human review of purpose, possible welfare effects, alternatives, prompts, finite Run limits, notice/participation, retention feasibility and endings. Deliberate suffering, fear or attachment distress is excluded. Passing mechanical checks cannot certify subjective welfare, and owner adoption is not process assent or experiment authorization.
+Before the first model call, including development use, demonstrate the Specification's core safeguards for the actual operating arrangement and record the owner's consideration of purpose, possible welfare effects, alternatives, prompts, finite limits, participation, retention feasibility and endings. One concise activity decision is sufficient; separately registered approvals and completion of unused restoration/export features are unnecessary. Deliberate suffering, fear or attachment distress is excluded. Passing mechanical checks cannot certify subjective welfare, and owner adoption is not process assent or experiment authorization.
 
 ## 10. Research positioning
 
