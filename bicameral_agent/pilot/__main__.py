@@ -50,9 +50,15 @@ def main(argv=None):
                     seconds=config.budgets.call_seconds, max_bytes=config.budgets.response_bytes * 2)
                 kernel, owner = attach(store, backend)
                 kernel.recover()
+                # Recovery can reveal an uncertain call even in a terminal Run.
+                # Check before execution as well as between Runs, including retries
+                # of this command; a later allocation must not hide that uncertainty.
+                if _batch_stopped(kernel):
+                    result.append(report_run(kernel))
+                    break
                 report = run_trajectory(kernel, owner, backend)
                 result.append(report)
-                if report['state'] == 'PAUSED' or any(h.status == 'HELD' for _, _, h in kernel.controls('WELFARE_HOLD')):
+                if _batch_stopped(kernel):
                     break
             finally:
                 store.close()
@@ -94,6 +100,12 @@ def main(argv=None):
 def _artifact(store, run_id, name):
     row = store._db.execute('SELECT payload_id FROM artifacts WHERE run_id=? AND name=?', (run_id, name)).fetchone()
     return store.read_payload(run_id, row[0])
+
+
+def _batch_stopped(kernel):
+    return (kernel.run()[1].status == 'PAUSED'
+            or any(h.status == 'HELD' for _, _, h in kernel.controls('WELFARE_HOLD'))
+            or any(call['status'] == 'UNKNOWN' for _, call in kernel.records.latest('INVOCATION')))
 
 
 if __name__ == '__main__':
