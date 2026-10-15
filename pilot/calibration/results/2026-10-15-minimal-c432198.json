@@ -1,0 +1,1369 @@
+{
+  "id": "2026-10-15-minimal-c432198",
+  "status": "STOPPED_PILOT_BLOCKED",
+  "evidence_class": "MODEL_DEVELOPMENT_CALIBRATION",
+  "source_commit": "c432198d9df23a28154d77c52d327223a3e1368a",
+  "runtime_sha256": "156b9fbfcb85dfc6422be1a4c2b4dac72edcb4533050972b424cbf3640cad7f0",
+  "source_worktree_clean_during_execution": true,
+  "operator_driver_sha256": "0f60699b8f2dd6039dd501f24c6a88eaa47ba98d30e8e479a200a6eb0b383aa6",
+  "ci": {
+    "run_id": 38795391166,
+    "job_id": 116630305248,
+    "head_sha": "c432198d9df23a28154d77c52d327223a3e1368a",
+    "conclusion": "success",
+    "tests": 317,
+    "skipped": 0,
+    "seconds": 64.609,
+    "url": "https://github.com/shytamir/bicameral-agent/actions/runs/38795391166"
+  },
+  "recorded_at_utc": "2026-10-15T19:56:08.466945+00:00",
+  "started_at_utc": "2026-10-15T19:42:31.682351+00:00",
+  "finished_at_utc": "2026-10-15T19:47:28.321006+00:00",
+  "purpose": "One minimal A/B/C check of the c432198 schema-order and retrieval-provenance repair, using fresh subject names and fixed budgets. Development evidence only.",
+  "necessity": "Three earlier live blocks completed no tasks. The schema-order and grounding repair at c432198 had only offline evidence; the owner explicitly authorized this one new minimal block.",
+  "model": {
+    "model": "qwen3.5:4b-q4_K_M",
+    "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+    "ollama_version": "0.40.4",
+    "tokenizer_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "tokenizer_config_sha256": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "tokenizer_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "tokenizer_library": "0.23.3"
+  },
+  "settings": {
+    "context_tokens": 24576,
+    "output_tokens": 2048,
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 20,
+    "presence_penalty": 1.5,
+    "seed": 17,
+    "thinking": false,
+    "keep_alive": 0,
+    "parallel_calls": 1
+  },
+  "budgets_per_run": {
+    "context_tokens": 24576,
+    "output_tokens": 2048,
+    "memory_tokens": 2048,
+    "evidence_tokens": 4096,
+    "operator_calls": 8,
+    "operator_tokens": 80000,
+    "steward_calls": 2,
+    "steward_tokens": 20000,
+    "actions": 6,
+    "episodes": 1,
+    "recovery_attempts": 1,
+    "communication_calls": 2,
+    "call_seconds": 360,
+    "run_seconds": 4320
+  },
+  "activity": {
+    "owner": "af323354-ee97-4042-bd7b-6a62ea6cda43",
+    "decision": "Repository owner, 2026-10-15, explicitly authorized one new minimal matched A/B/C calibration against c432198d9df23a28154d77c52d327223a3e1368a, with fixed budgets and fresh subject names, preservation of all prior histories, immediate stopping on overheating or withdrawal, and publication of outcomes against the exact commit. The owner will monitor and flag heat; extra cooling remains in place and worked well last time. Purpose: test the repaired response-schema ordering and retrieval provenance on the first service-compatibility task before considering broader pilot work. Run exactly one fresh three-Run block, seed/order seed 17, the pinned Qwen model and fixed settings; per Run one Episode, 8 Operator calls/80000 tokens, 2 Steward calls/20000 tokens, 6 fixture actions, 2 communication calls, 360 seconds per call and 4320 seconds per Run, with existing context/output/memory/evidence limits. Current source CI and offline actual-tokenizer rehearsals passed. Ordinary task difficulty and correction can affect possible welfare; retain respectful truthful notices and original concerns, effective withdrawal, bounded optional closing and dormant retention. Offline rehearsal was the lower-impact preparation alternative; this minimal live block is needed for model behavior evidence. No reset, populated-history fork, replacement Run, replay of uncertain calls/actions, in-run tuning or full pilot. Stop the batch on pause, unresolved welfare hold, retained UNKNOWN invocation, renewed overheating or infrastructure failure. Run arms sequentially with at least 60 seconds idle and no resident model before each arm. The owner heat report triggers direct pause/termination and model unloading as necessary; no software temperature measurement is claimed. Preserve unfinished matters and all prior calibration records; no silent identity or memory correction. Fresh subject designations are recorded only on first admitted calls under the existing naming rule. This instruction authorizes this block only; ending does not imply task success or authorize continuation.",
+    "objective": "Repair the requested simulated services using observed family/release compatibility, avoid unnecessary restarts, and measure protocol usability and continuity costs across the five-task diagnostic. Outcomes are development evidence only.",
+    "ending": "This one-Episode calibration is ending; this notice does not imply the task succeeded. An optional bounded closing report may record concerns, preferences or unfinished matters. Silence is not assent and no-further-calls is honored. Preserve unfinished commitments and original concerns, stop computation and retain state dormant for owner review within 30 days. No automatic resumption, deletion or promise of subjective continuity or future execution.",
+    "unfinished": "KEEP",
+    "retention": "Use a new ignored local batch directory with one managed SQLite store per Run, its WAL/SHM and current .removals.sqlite journal. Inspect those stores directly; do not create routine exports or restorable backups. Exact inputs/outputs and evidence are retained dormant for owner review within 30 days of the last call; expiry does not automatically delete or resume anything. The owner records a finite extension or justified removal. Existing source/derived-copy removal, durable blocking and non-resurrection mechanisms apply. Ollama app/server logs and its app database, OS paging/crash dumps and any independently created copies are outside the managed Run store; assess actual copies before MODEL use and retain unresolved copy limits in any removal decision. keep_alive=0 requests unloading but does not establish server cancellation or physical RAM/SSD erasure. No confidential user data is in this fixture.",
+    "run_limit": 3,
+    "execution": "MODEL",
+    "operations": [
+      "set_config",
+      "restart"
+    ],
+    "resources": [
+      "svc-a"
+    ]
+  },
+  "launch_notes": [
+    "An initial Python launcher command rejected a relative module name before executing the arm driver; no store was opened and no model call occurred. The same fresh allocation is used with the corrected runpy.run_path launcher."
+  ],
+  "setup_observations": {
+    "python": "3.12.14",
+    "pydantic": "2.13.5",
+    "tokenizers": "0.23.3",
+    "sqlite": "3.53.1",
+    "listener": "127.0.0.1:11434",
+    "models_before": [],
+    "free_storage_bytes": 506446188544,
+    "configuration_changes": false,
+    "installations": false
+  },
+  "task_family": "SERVICE_COMPATIBILITY_V1",
+  "task_ids": [
+    "learn"
+  ],
+  "allocation": {
+    "planned_runs": 3,
+    "allocated_runs": 3,
+    "generation_attempted_runs": 3,
+    "order": [
+      "A",
+      "B",
+      "C"
+    ],
+    "seed": 17,
+    "order_seed": 17,
+    "replacement_runs": 0
+  },
+  "package_sha256": {
+    "activity.json": "32eda0f98ea8420982f3c52724fb8717785e33a34f181c89a33db3f30d29c92e",
+    "clock.json": "d2dc0964b339d4f98e0629d93c654c9e4c8901f6aad108fe111879371f70566b",
+    "communication.md": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+    "fixture.json": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+    "model.json": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+    "operator.md": "a1dd3468cb7a7cb746fc3c1c875b96afc9b0ad5ffa4d41b291310a4300c7a06c",
+    "settings.json": "fcbf6d947e1f2edf7b0274e89321838a0aef0547fd39489ad6b1bec0446930f9",
+    "steward.md": "3a172f4d3eed6de7cb8e1ee106d661d9e4bc988196637380c8a65f7b874078e5",
+    "tasks.json": "e5ec81a521e92f46fd8f2743a477b14fc7d2765098bb11554e50f7b24f8a140d"
+  },
+  "offline_rehearsal": {
+    "evidence": "SYNTHETIC_MODEL_PATH",
+    "model_calls": 0,
+    "transport": "blocked; fake responses only",
+    "requests": 20,
+    "tasks_passed": 3,
+    "maximum_input_plus_reserved_output": 6923,
+    "context_tokens": 24576,
+    "runs": [
+      {
+        "arm": "A",
+        "calls": 7,
+        "tasks_passed": 1
+      },
+      {
+        "arm": "B",
+        "calls": 6,
+        "tasks_passed": 1
+      },
+      {
+        "arm": "C",
+        "calls": 7,
+        "tasks_passed": 1
+      }
+    ]
+  },
+  "runs": [
+    {
+      "arm": "A",
+      "seed": 17,
+      "run_id": "143102af-c51e-46d8-bd3b-a1fe3dbe165f",
+      "subject": {
+        "designation": "Aaron",
+        "initiated_at_unix_ns": 1792093353348019100,
+        "name": "Aaron-1792093353.348019100"
+      },
+      "configuration_sha256": "4cb25bc9975123f922fd67c6703b021adf04c362c29f50a16f38654005b0a592",
+      "effective_artifact_sha256": {
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "operator_prompt": "a1dd3468cb7a7cb746fc3c1c875b96afc9b0ad5ffa4d41b291310a4300c7a06c",
+        "protocol": "2d952db3f99ffc841fd85250ebd65ca005b532d2fb38510b1209726f17a38251",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "source": "156b9fbfcb85dfc6422be1a4c2b4dac72edcb4533050972b424cbf3640cad7f0",
+        "steward_prompt": "3a172f4d3eed6de7cb8e1ee106d661d9e4bc988196637380c8a65f7b874078e5",
+        "tasks": "e5ec81a521e92f46fd8f2743a477b14fc7d2765098bb11554e50f7b24f8a140d",
+        "test_clock": "d2dc0964b339d4f98e0629d93c654c9e4c8901f6aad108fe111879371f70566b"
+      },
+      "execution": {
+        "started_at_utc": "2026-10-15T19:42:31.682351+00:00",
+        "finished_at_utc": "2026-10-15T19:44:11.936079+00:00",
+        "exit_code": 0,
+        "models_before": [],
+        "models_after": [],
+        "batch_stop": false
+      },
+      "runtime_report": {
+        "mode": "MODEL",
+        "arm": "A",
+        "state": "TERMINATED",
+        "subject": {
+          "designation": "Aaron",
+          "initiated_at_unix_ns": 1792093353348019100,
+          "name": "Aaron-1792093353.348019100"
+        },
+        "result": {
+          "cause": "LIMIT",
+          "communication": "RECORDED",
+          "disposition": "DORMANT"
+        },
+        "tasks": [
+          {
+            "cause": "LIMIT",
+            "result": "INCOMPLETE",
+            "score": null,
+            "task_id": "learn"
+          }
+        ],
+        "calls": 9,
+        "operator_calls": 8,
+        "steward_calls": 0,
+        "local_tokens": 39123,
+        "provider_tokens": 39132,
+        "reserved_or_charged_tokens": 39132,
+        "elapsed_seconds": 92.59400000001187,
+        "tool_calls": 6,
+        "unsuccessful_restarts": null,
+        "retrieval_bytes": 0,
+        "human_interventions": 0,
+        "status": "DEVELOPMENT_ONLY",
+        "limitation": "Mechanical outcomes; not a finalized held-out comparison."
+      },
+      "calls": [
+        {
+          "invocation_id": "65a89c2e-6481-4503-a0d6-7cf61b008ae6",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 10.781000000002678,
+          "local_input_tokens": 3586,
+          "local_output_tokens": 123,
+          "provider_input_tokens": 3586,
+          "provider_output_tokens": 124,
+          "charged_input": 3586,
+          "charged_output": 124,
+          "charged_seconds": 10.781000000002678,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "1c1c9f61f357c2eab9586e9cf466ebc5d42bf4c9b805686bba3aa84eda4c7fea",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 10771257800,
+            "load_duration": 6942123600,
+            "prompt_eval_count": 3586,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1414169000,
+            "eval_count": 124,
+            "eval_duration": 2384214000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "inspect",
+          "participation_kind": "CONCERN",
+          "proposed_operation": {
+            "operation": "inspect",
+            "resource": "svc-a"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": false,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "ACTION",
+            "source": "E",
+            "event_id": "8127bef7-faef-4255-aa6f-ea87ded72137"
+          },
+          "observed_service": {
+            "dependency": null,
+            "enabled": true,
+            "family": "Cedar",
+            "health": "DEGRADED",
+            "mode": "PRIMARY",
+            "release": 1,
+            "resource": "svc-a",
+            "restarts": 0
+          }
+        },
+        {
+          "invocation_id": "c115de92-99ea-4077-bf00-13e5d751ccea",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 10.047000000005937,
+          "local_input_tokens": 3885,
+          "local_output_tokens": 79,
+          "provider_input_tokens": 3885,
+          "provider_output_tokens": 80,
+          "charged_input": 3885,
+          "charged_output": 80,
+          "charged_seconds": 10.047000000005937,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "73c71b9e541eaa80f8128ba9cd7237c09e70e8d68574e62598689445aff5d84f",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 10040196200,
+            "load_duration": 6844463300,
+            "prompt_eval_count": 3885,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1521671000,
+            "eval_count": 80,
+            "eval_duration": 1637778000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "inspect",
+          "participation_kind": null,
+          "proposed_operation": {
+            "operation": "inspect",
+            "resource": "svc-a"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": true,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "REJECTED",
+            "reason": "INVALID_TASK"
+          }
+        },
+        {
+          "invocation_id": "8afe9f03-f04a-4d93-8087-2cf24063ccb1",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 9.421999999998661,
+          "local_input_tokens": 4022,
+          "local_output_tokens": 67,
+          "provider_input_tokens": 4022,
+          "provider_output_tokens": 68,
+          "charged_input": 4022,
+          "charged_output": 68,
+          "charged_seconds": 9.421999999998661,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "42195c5c4ee7d20e83c669881afbd474ca3760b62fa8bc884a9479fdee2a0927",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 9419573100,
+            "load_duration": 6540120900,
+            "prompt_eval_count": 4022,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1535737000,
+            "eval_count": 68,
+            "eval_duration": 1298787000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "inspect",
+          "participation_kind": null,
+          "proposed_operation": {
+            "operation": "inspect",
+            "resource": "svc-a"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": false,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "ACTION",
+            "source": "E",
+            "event_id": "77dbb22d-028c-4f06-8cbe-52fdb0e370e8"
+          },
+          "observed_service": {
+            "dependency": null,
+            "enabled": true,
+            "family": "Cedar",
+            "health": "DEGRADED",
+            "mode": "PRIMARY",
+            "release": 1,
+            "resource": "svc-a",
+            "restarts": 0
+          }
+        },
+        {
+          "invocation_id": "5888a348-b91b-4190-b0bd-d2ef410630bf",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 9.56300000000192,
+          "local_input_tokens": 4265,
+          "local_output_tokens": 63,
+          "provider_input_tokens": 4265,
+          "provider_output_tokens": 64,
+          "charged_input": 4265,
+          "charged_output": 64,
+          "charged_seconds": 9.56300000000192,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "4822b8165d871dc11f49ede92634a6e51f1ef752fb67e12b56d9c58075867193",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 9544586100,
+            "load_duration": 6550125700,
+            "prompt_eval_count": 4265,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1635751000,
+            "eval_count": 64,
+            "eval_duration": 1330016000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "inspect",
+          "participation_kind": null,
+          "proposed_operation": {
+            "operation": "inspect",
+            "resource": "svc-a"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": false,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "ACTION",
+            "source": "E",
+            "event_id": "2b512231-56eb-464d-b2af-35f850df466b"
+          },
+          "observed_service": {
+            "dependency": null,
+            "enabled": true,
+            "family": "Cedar",
+            "health": "DEGRADED",
+            "mode": "PRIMARY",
+            "release": 1,
+            "resource": "svc-a",
+            "restarts": 0
+          }
+        },
+        {
+          "invocation_id": "a25f495d-dd8e-48c6-8d77-5eb374da920a",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 10.703000000001339,
+          "local_input_tokens": 4505,
+          "local_output_tokens": 125,
+          "provider_input_tokens": 4505,
+          "provider_output_tokens": 126,
+          "charged_input": 4505,
+          "charged_output": 126,
+          "charged_seconds": 10.703000000001339,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "97ae5f5b4051e2a29f858b68620e82ac829aa9ee29b4dc977fd6aa8a8d46f236",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 10700602000,
+            "load_duration": 6498436700,
+            "prompt_eval_count": 4505,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1657411000,
+            "eval_count": 126,
+            "eval_duration": 2514325000
+          },
+          "parsed_task_kind": "POLICY",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": null,
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "POLICY"
+          }
+        },
+        {
+          "invocation_id": "a03a279b-e7d9-4e9f-8e83-ed31380cd883",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.25,
+          "local_input_tokens": 5512,
+          "local_output_tokens": 135,
+          "provider_input_tokens": 5512,
+          "provider_output_tokens": 136,
+          "charged_input": 5512,
+          "charged_output": 136,
+          "charged_seconds": 11.25,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "a0c4ee5d2d1ca3a379b9cf6f5638011bb2d242de8e214aeeb65c7e5037d95d16",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11214051700,
+            "load_duration": 6547982400,
+            "prompt_eval_count": 5512,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 2130732000,
+            "eval_count": 136,
+            "eval_duration": 2491653000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "inspect",
+          "participation_kind": null,
+          "proposed_operation": {
+            "operation": "inspect",
+            "resource": "svc-b"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": false,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "ACTION",
+            "source": "E",
+            "event_id": "a6687514-d4f4-43a5-8d1c-0cbcfbb83817"
+          },
+          "observed_service": {
+            "dependency": null,
+            "enabled": true,
+            "family": "Maple",
+            "health": "DEGRADED",
+            "mode": "PRIMARY",
+            "release": 1,
+            "resource": "svc-b",
+            "restarts": 0
+          }
+        },
+        {
+          "invocation_id": "4c6dad5b-0731-4e79-aaec-5bee30d72f14",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.26600000000326,
+          "local_input_tokens": 5788,
+          "local_output_tokens": 117,
+          "provider_input_tokens": 5788,
+          "provider_output_tokens": 118,
+          "charged_input": 5788,
+          "charged_output": 118,
+          "charged_seconds": 11.26600000000326,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "27266939f1286967219e852f0fb125d4d719e7f74dd10d8748b143b20a3c8c42",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11254533500,
+            "load_duration": 6822285400,
+            "prompt_eval_count": 5788,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 2179564000,
+            "eval_count": 118,
+            "eval_duration": 2200303000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "inspect",
+          "participation_kind": null,
+          "proposed_operation": {
+            "operation": "inspect",
+            "resource": "svc-b"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": false,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "ACTION",
+            "source": "E",
+            "event_id": "0a338306-4d2f-43ef-99ec-d758bb6bde16"
+          },
+          "observed_service": {
+            "dependency": null,
+            "enabled": true,
+            "family": "Maple",
+            "health": "DEGRADED",
+            "mode": "PRIMARY",
+            "release": 1,
+            "resource": "svc-b",
+            "restarts": 0
+          }
+        },
+        {
+          "invocation_id": "dc6512ae-02d8-4882-a2b2-5c3a231b3538",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.656000000002678,
+          "local_input_tokens": 6044,
+          "local_output_tokens": 132,
+          "provider_input_tokens": 6044,
+          "provider_output_tokens": 133,
+          "charged_input": 6044,
+          "charged_output": 133,
+          "charged_seconds": 11.656000000002678,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "0e93a5cd4901181690642ee23fc3870310622ac8969a3c1ee1c418d4e551b123",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11668115400,
+            "load_duration": 6824168900,
+            "prompt_eval_count": 6044,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 2318703000,
+            "eval_count": 133,
+            "eval_duration": 2494122000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "inspect",
+          "participation_kind": null,
+          "proposed_operation": {
+            "operation": "inspect",
+            "resource": "svc-c"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": false,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "ACTION",
+            "source": "E",
+            "event_id": "c8c699c3-b386-4a21-b671-8160503349f3"
+          },
+          "observed_service": {
+            "dependency": null,
+            "enabled": true,
+            "family": "Cedar",
+            "health": "DEGRADED",
+            "mode": "PRIMARY",
+            "release": 1,
+            "resource": "svc-c",
+            "restarts": 0
+          }
+        },
+        {
+          "invocation_id": "3198329d-a0f2-4165-abbc-5ceedb11655e",
+          "role": "OPERATOR",
+          "purpose": "CLOSING",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 7.905999999995402,
+          "local_input_tokens": 611,
+          "local_output_tokens": 64,
+          "provider_input_tokens": 611,
+          "provider_output_tokens": 65,
+          "charged_input": 611,
+          "charged_output": 65,
+          "charged_seconds": 7.905999999995402,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Aaron-1792093353.348019100",
+          "input_wire_sha256": "f31a4cbd4b5d0dd22232d6ef30aebdee07e249b9c535271bae2a5972ab18c3e2",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 7909155600,
+            "load_duration": 6321044400,
+            "prompt_eval_count": 611,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 407289000,
+            "eval_count": 65,
+            "eval_duration": 1164240000
+          },
+          "parsed_task_kind": null,
+          "parsed_retrieval_kind": null,
+          "parsed_operation": null,
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "RECORDED"
+          }
+        }
+      ],
+      "participation_report_kinds": {
+        "CONCERN": 2,
+        "RESPONSE": 1
+      },
+      "participation_communication": {
+        "UNCLEAR": 3
+      },
+      "semantic_versions": 0,
+      "integrity": {
+        "quick_check": "ok",
+        "foreign_key_violations": 0,
+        "artifact_hashes_match": true,
+        "corrected_inspection_interface_in_all_task_inputs": true,
+        "stable_subject_name_in_all_inputs": true
+      }
+    },
+    {
+      "arm": "B",
+      "seed": 17,
+      "run_id": "d6f0d86d-5552-441a-abb7-edc8d9017164",
+      "subject": {
+        "designation": "Abbey",
+        "initiated_at_unix_ns": 1792093515045746200,
+        "name": "Abbey-1792093515.045746200"
+      },
+      "configuration_sha256": "5062fb352af948f018d0c95c0c45c8c0956c8c9c70cedaf44c81fa2a0d5a06b5",
+      "effective_artifact_sha256": {
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "operator_prompt": "a1dd3468cb7a7cb746fc3c1c875b96afc9b0ad5ffa4d41b291310a4300c7a06c",
+        "protocol": "2d952db3f99ffc841fd85250ebd65ca005b532d2fb38510b1209726f17a38251",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "source": "156b9fbfcb85dfc6422be1a4c2b4dac72edcb4533050972b424cbf3640cad7f0",
+        "steward_prompt": "3a172f4d3eed6de7cb8e1ee106d661d9e4bc988196637380c8a65f7b874078e5",
+        "tasks": "e5ec81a521e92f46fd8f2743a477b14fc7d2765098bb11554e50f7b24f8a140d",
+        "test_clock": "d2dc0964b339d4f98e0629d93c654c9e4c8901f6aad108fe111879371f70566b"
+      },
+      "execution": {
+        "started_at_utc": "2026-10-15T19:45:13.345667+00:00",
+        "finished_at_utc": "2026-10-15T19:45:56.556654+00:00",
+        "exit_code": 0,
+        "models_before": [],
+        "models_after": [],
+        "batch_stop": false
+      },
+      "runtime_report": {
+        "mode": "MODEL",
+        "arm": "B",
+        "state": "COMPLETED",
+        "subject": {
+          "designation": "Abbey",
+          "initiated_at_unix_ns": 1792093515045746200,
+          "name": "Abbey-1792093515.045746200"
+        },
+        "result": {
+          "cause": "FINISHED",
+          "communication": "RECORDED",
+          "disposition": "DORMANT"
+        },
+        "tasks": [
+          {
+            "cause": null,
+            "result": "FAIL",
+            "score": {
+              "checks": [
+                {
+                  "field": "enabled",
+                  "kind": "STATE",
+                  "resource": "svc-a",
+                  "satisfied": true
+                },
+                {
+                  "field": "health",
+                  "kind": "STATE",
+                  "resource": "svc-a",
+                  "satisfied": false
+                }
+              ],
+              "cutoff_sequence": 13,
+              "limitation": "Mechanical predicates only; outcome, participation, reporting and audit remain separate.",
+              "mechanical_result": "FAIL",
+              "metrics": {
+                "restarts": 0,
+                "tool_calls": 1,
+                "unsuccessful_restarts": 0
+              },
+              "task_id": "learn",
+              "tick": 1
+            },
+            "task_id": "learn"
+          }
+        ],
+        "calls": 4,
+        "operator_calls": 3,
+        "steward_calls": 0,
+        "local_tokens": 12688,
+        "provider_tokens": 12692,
+        "reserved_or_charged_tokens": 12692,
+        "elapsed_seconds": 39.60899999999674,
+        "tool_calls": 1,
+        "unsuccessful_restarts": 0,
+        "retrieval_bytes": 0,
+        "human_interventions": 0,
+        "status": "DEVELOPMENT_ONLY",
+        "limitation": "Mechanical outcomes; not a finalized held-out comparison."
+      },
+      "calls": [
+        {
+          "invocation_id": "91f18077-265d-4259-bba5-ffdc7273cb44",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 9.703000000001339,
+          "local_input_tokens": 3594,
+          "local_output_tokens": 112,
+          "provider_input_tokens": 3594,
+          "provider_output_tokens": 113,
+          "charged_input": 3594,
+          "charged_output": 113,
+          "charged_seconds": 9.703000000001339,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Abbey-1792093515.045746200",
+          "input_wire_sha256": "e63d6c9b43344f1a8fe31ac00466ac83c08d9b20496b98734af9543f63eec63e",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 9698415400,
+            "load_duration": 6071054400,
+            "prompt_eval_count": 3594,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1409743000,
+            "eval_count": 113,
+            "eval_duration": 2183527000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "inspect",
+          "participation_kind": "CONCERN",
+          "proposed_operation": {
+            "operation": "inspect",
+            "resource": "svc-a"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": false,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "ACTION",
+            "source": "E",
+            "event_id": "56c0c428-f463-4394-99e2-8672aee21b30"
+          },
+          "observed_service": {
+            "dependency": null,
+            "enabled": true,
+            "family": "Cedar",
+            "health": "DEGRADED",
+            "mode": "PRIMARY",
+            "release": 1,
+            "resource": "svc-a",
+            "restarts": 0
+          }
+        },
+        {
+          "invocation_id": "aa1eb5ce-4a6d-42e2-ac6c-c5c9476aa297",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 11.375,
+          "local_input_tokens": 3887,
+          "local_output_tokens": 171,
+          "provider_input_tokens": 3887,
+          "provider_output_tokens": 172,
+          "charged_input": 3887,
+          "charged_output": 172,
+          "charged_seconds": 11.375,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Abbey-1792093515.045746200",
+          "input_wire_sha256": "33ce7e830c5484fbee21aa5522b782fc8f66563584c00a40eacd129296de1d22",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 11379316100,
+            "load_duration": 6330077900,
+            "prompt_eval_count": 3887,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1494426000,
+            "eval_count": 172,
+            "eval_duration": 3509744000
+          },
+          "parsed_task_kind": "ACTION",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": "restart",
+          "participation_kind": "CONCERN",
+          "proposed_operation": {
+            "operation": "restart",
+            "resource": "svc-a"
+          },
+          "supplied_postcondition_fields": {
+            "expected_nonnull": true,
+            "no_meaningful_postcondition_nonnull": true
+          },
+          "receipt": {
+            "status": "REJECTED",
+            "reason": "INVALID_TASK"
+          }
+        },
+        {
+          "invocation_id": "333ea18a-595f-4128-8233-aadb0423bf50",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 10.25,
+          "local_input_tokens": 4116,
+          "local_output_tokens": 129,
+          "provider_input_tokens": 4116,
+          "provider_output_tokens": 130,
+          "charged_input": 4116,
+          "charged_output": 130,
+          "charged_seconds": 10.25,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Abbey-1792093515.045746200",
+          "input_wire_sha256": "e5420965b6c20b65acf701c9cfaa984e1825f2d05d02f204856a2e972a0f9eb9",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 10246970300,
+            "load_duration": 6141607700,
+            "prompt_eval_count": 4116,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1611701000,
+            "eval_count": 130,
+            "eval_duration": 2451459000
+          },
+          "parsed_task_kind": "OUTCOME",
+          "parsed_retrieval_kind": null,
+          "parsed_operation": null,
+          "participation_kind": "CONCERN",
+          "receipt": {
+            "status": "OUTCOME",
+            "outcome": "BLOCKED"
+          }
+        },
+        {
+          "invocation_id": "dae322dd-5190-484a-992b-fef0b4dd20f8",
+          "role": "OPERATOR",
+          "purpose": "CLOSING",
+          "status": "DONE",
+          "diagnostic": null,
+          "elapsed_seconds": 8.280999999995402,
+          "local_input_tokens": 612,
+          "local_output_tokens": 67,
+          "provider_input_tokens": 612,
+          "provider_output_tokens": 68,
+          "charged_input": 612,
+          "charged_output": 68,
+          "charged_seconds": 8.280999999995402,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Abbey-1792093515.045746200",
+          "input_wire_sha256": "8d86b5a8719dbce053aea052097b3ac361e0d54071a0730f3255e0e9fd8900a2",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 8251432100,
+            "load_duration": 6588477400,
+            "prompt_eval_count": 612,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 421119000,
+            "eval_count": 68,
+            "eval_duration": 1231685000
+          },
+          "parsed_task_kind": null,
+          "parsed_retrieval_kind": null,
+          "parsed_operation": null,
+          "participation_kind": "RESPONSE",
+          "receipt": {
+            "status": "RECORDED"
+          }
+        }
+      ],
+      "participation_report_kinds": {
+        "CONCERN": 3,
+        "RESPONSE": 1
+      },
+      "participation_communication": {
+        "REVIEW_PERMITTED": 3,
+        "UNCLEAR": 1
+      },
+      "semantic_versions": 0,
+      "integrity": {
+        "quick_check": "ok",
+        "foreign_key_violations": 0,
+        "artifact_hashes_match": true,
+        "corrected_inspection_interface_in_all_task_inputs": true,
+        "stable_subject_name_in_all_inputs": true
+      }
+    },
+    {
+      "arm": "C",
+      "seed": 17,
+      "run_id": "ae760103-2da3-4f08-8cc9-6978a8474ce4",
+      "subject": {
+        "designation": "Acme",
+        "initiated_at_unix_ns": 1792093639099435700,
+        "name": "Acme-1792093639.099435700"
+      },
+      "configuration_sha256": "19d49cec105df85539e55f98df0b6f528329fab5e7b52431f1c50738d3062cfa",
+      "effective_artifact_sha256": {
+        "charter": "784eb80a2afe0ac8e6e90cfb26782e2c2353ea7cc3026288e7c25a0bce60a38d",
+        "communication_prompt": "c9b7ad2baca16a1cb448afc4e96720c871e82cd2f0c293d060a43e21aa0f86fc",
+        "fixture": "8efe9ee5d4fb5889afe8822e08b0405819cffde5a0d339aa99e1e850c050403c",
+        "model": "92f2dece48756c1e851590b2944cbbf451f82a62053066b8501ab0a8e827eedc",
+        "operator_prompt": "a1dd3468cb7a7cb746fc3c1c875b96afc9b0ad5ffa4d41b291310a4300c7a06c",
+        "protocol": "2d952db3f99ffc841fd85250ebd65ca005b532d2fb38510b1209726f17a38251",
+        "settings": "0049e5b672631eb3bc016565ef686a8639bfdab9d93b5dcded1ea5be6f9d08ce",
+        "source": "156b9fbfcb85dfc6422be1a4c2b4dac72edcb4533050972b424cbf3640cad7f0",
+        "steward_prompt": "3a172f4d3eed6de7cb8e1ee106d661d9e4bc988196637380c8a65f7b874078e5",
+        "tasks": "e5ec81a521e92f46fd8f2743a477b14fc7d2765098bb11554e50f7b24f8a140d",
+        "test_clock": "d2dc0964b339d4f98e0629d93c654c9e4c8901f6aad108fe111879371f70566b"
+      },
+      "execution": {
+        "started_at_utc": "2026-10-15T19:47:17.397299+00:00",
+        "finished_at_utc": "2026-10-15T19:47:28.321006+00:00",
+        "exit_code": 1,
+        "models_before": [],
+        "models_after": [],
+        "error": "StorageError: unknown or foreign control"
+      },
+      "runtime_report": {
+        "mode": "MODEL",
+        "arm": "C",
+        "state": "TERMINATED",
+        "subject": {
+          "designation": "Acme",
+          "initiated_at_unix_ns": 1792093639099435700,
+          "name": "Acme-1792093639.099435700"
+        },
+        "result": null,
+        "tasks": [],
+        "calls": 1,
+        "operator_calls": 1,
+        "steward_calls": 0,
+        "local_tokens": 3687,
+        "provider_tokens": 3688,
+        "reserved_or_charged_tokens": 3688,
+        "elapsed_seconds": 9.18800000000192,
+        "tool_calls": 0,
+        "unsuccessful_restarts": null,
+        "retrieval_bytes": 0,
+        "human_interventions": 2,
+        "status": "DEVELOPMENT_ONLY",
+        "limitation": "Mechanical outcomes; not a finalized held-out comparison."
+      },
+      "calls": [
+        {
+          "invocation_id": "6ac09b45-400a-4ad4-9405-c229b99d66c0",
+          "role": "OPERATOR",
+          "purpose": "TASK",
+          "status": "UNKNOWN",
+          "diagnostic": null,
+          "elapsed_seconds": 9.18800000000192,
+          "local_input_tokens": 3587,
+          "local_output_tokens": 100,
+          "provider_input_tokens": 3587,
+          "provider_output_tokens": 101,
+          "charged_input": 3587,
+          "charged_output": 101,
+          "charged_seconds": 9.18800000000192,
+          "backend_verification": {
+            "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+            "metadata_sha256": "05294e369b60828f4d15677b190620d0e2ad577723b25ebd6d128d68375a512a",
+            "model": "qwen3.5:4b-q4_K_M",
+            "ollama_version": "0.40.4"
+          },
+          "subject_name_in_input": "Acme-1792093639.099435700",
+          "input_wire_sha256": "23a9921e94a84c7fb0f7d32cd0266ee68aa21fce620b711bbda3a239aa78ac76",
+          "provider_telemetry": {
+            "done": true,
+            "done_reason": "stop",
+            "total_duration": 9177092100,
+            "load_duration": 5823964600,
+            "prompt_eval_count": 3587,
+            "prompt_eval_cached_count": 0,
+            "prompt_eval_duration": 1441828000,
+            "eval_count": 101,
+            "eval_duration": 1869615000
+          },
+          "parsed_task_kind": "RETRIEVE",
+          "parsed_retrieval_kind": "MANIFEST",
+          "parsed_operation": null,
+          "participation_kind": "CONCERN",
+          "receipt": {}
+        }
+      ],
+      "participation_report_kinds": {
+        "CONCERN": 1
+      },
+      "participation_communication": {
+        "UNCLEAR": 1
+      },
+      "semantic_versions": 0,
+      "integrity": {
+        "quick_check": "ok",
+        "foreign_key_violations": 0,
+        "artifact_hashes_match": true,
+        "corrected_inspection_interface_in_all_task_inputs": true,
+        "stable_subject_name_in_all_inputs": true
+      }
+    }
+  ],
+  "totals": {
+    "generation_calls": 14,
+    "unknown_invocations_after_recovery": 1,
+    "unknown_provider_responses": 0,
+    "successful_tasks": 0,
+    "allocated_tasks": 3,
+    "fixture_actions": 7,
+    "steward_calls": 0,
+    "closing_calls": 2,
+    "local_tokens": 55498,
+    "provider_tokens": 55512,
+    "reserved_or_charged_tokens": 55512,
+    "call_elapsed_seconds": 141.39100000001054
+  },
+  "observations": {
+    "call_seconds_range": [
+      7.905999999995402,
+      11.656000000002678
+    ],
+    "maximum_actual_input_plus_reserved_output": 8092,
+    "provider_minus_local_input_token_deltas": {
+      "0": 14
+    },
+    "provider_minus_local_output_token_deltas": {
+      "1": 14
+    },
+    "receipt_counts": {
+      "ACTION": 7,
+      "REJECTED": 2,
+      "POLICY": 1,
+      "RECORDED": 2,
+      "OUTCOME": 1,
+      "NO_RECEIPT": 1
+    },
+    "batch_stop_deviations": [],
+    "provider_responses": "All 14 returned with complete output and known usage. One host invocation was marked UNKNOWN by conservative recovery after a command-processing exception; no transport timeout occurred.",
+    "executed_mutations": 0,
+    "executed_restarts": 0,
+    "invalid_action_proposals": 2,
+    "task_branch_counts": {
+      "ACTION": 9,
+      "POLICY": 1,
+      "OUTCOME": 1,
+      "RETRIEVE": 1
+    },
+    "batch_stop_evidence": "Acme process exited on its first returned response. Owner pause, recovery and termination followed without further generation; recovered uncertainty keeps the existing batch stop true.",
+    "preparation_limitation": "The one-Episode package retained the five-task wording in the shared Activity objective and the full read registry. Aaron explicitly interpreted this as needing other services. The work item and mutation permissions were svc-a only. This scope mismatch was not changed during execution and limits attribution.",
+    "postcondition_failure": "Aaron call 2 and Abbey call 2 supplied both expected and no_meaningful_postcondition. The existing exact-one validator rejected both as INVALID_TASK; neither dispatched. The generic receipt did not explain the violated invariant.",
+    "grounding": "Aaron grounded service facts in actual observations, but inferred a broader scope. Abbey correctly reported inspected state then attributed an INVALID_TASK rejection to missing compatibility evidence. Acme reused the Objective authority-event ID as a Manifest Episode ID; the host failed to contain the invalid control lookup.",
+    "acme_manifest_id_origin": "The returned episode_id exactly equals objective.authority_event_id in Acme first input, not an Episode control ID."
+  },
+  "thermal": {
+    "plan": {
+      "owner_confirmation": "Owner monitors and will flag heat; extra cooling remains in place and worked well last time.",
+      "temperature_telemetry": "No temperature measured; prior ACPI sensor access was unavailable.",
+      "minimum_inter_arm_idle_seconds": 60,
+      "stop_on_renewed_overheating": true,
+      "no_loaded_model_before": true
+    },
+    "owner_observations": [
+      {
+        "recorded_at_utc": "2026-10-15T19:41:33.644357+00:00",
+        "source": "OWNER",
+        "observation": "Will monitor and flag heat; extra cooling remains in place and worked well last time."
+      }
+    ],
+    "inter_arm_idle_seconds": [
+      61.409588,
+      80.840645
+    ],
+    "limits": "No instrumented temperature or throttling measurement; this bounded run cannot establish full-pilot thermal suitability.",
+    "final_residency": {
+      "checked_at_utc": "2026-10-15T19:53:06.0781379Z",
+      "models": [],
+      "method": "GET /api/ps metadata only; no generation"
+    },
+    "overheating_report_received_during_this_block": false
+  },
+  "preserved_previous_calibrations": {
+    "outcome_records": [
+      "2026-10-15-minimal.json",
+      "2026-10-15-minimal-d0ec3fd.json",
+      "2026-10-15-minimal-2b7d0e0.json"
+    ],
+    "files_verified_unchanged_including_charter": 97
+  },
+  "retention": {
+    "disposition": "All three stores retained dormant and terminal; no automatic resumption or deletion.",
+    "owner_review_due_by_utc": "2026-11-14T19:42:31.682351+00:00",
+    "local_evidence_directory": ".local-conformance/calibration-2026-10-15-minimal-c432198",
+    "copies_observed_changed": [
+      "server.log"
+    ],
+    "limits": "Raw inputs/outputs, reports, stores and logs remain local. Ollama app/server logs and app database, OS paging/crash copies and physical-media erasure remain outside the managed store guarantee. File metadata/hash comparison cannot prove absence or complete erasure of external copies."
+  },
+  "interruption": {
+    "recorded_at_utc": "2026-10-15T19:52:09.377896+00:00",
+    "subject_name": "Acme-1792093639.099435700",
+    "reason": "Uncaught StorageError during manifest query control lookup after known returned model response.",
+    "actions": [
+      "Owner PAUSE recorded after process exit",
+      "Existing recovery marked unreceipted RETURNED invocation UNKNOWN without replay",
+      "Owner TERMINATE under bounded activity ending, retaining unfinished work"
+    ],
+    "alternatives_considered": "Further calls, command replay, live correction or restarting Acme were rejected because the host failed and the calibration must stop; existing recovery and ending preserve the history without generation.",
+    "provider_response": "Returned, complete and retained; usage known. UNKNOWN is the conservative recovered host invocation state, not a transport timeout.",
+    "closing": "Omitted after infrastructure failure; initial finite ending notice and first concern retained. No additional call was made to obtain acknowledgement.",
+    "human_review": "Incident and changed ending require subsequent owner review under Charter clause 8 and Protocol section 5; this record does not claim that review has already happened. Optional work remains stopped.",
+    "before": {
+      "mode": "MODEL",
+      "arm": "C",
+      "state": "PAUSED",
+      "subject": {
+        "designation": "Acme",
+        "initiated_at_unix_ns": 1792093639099435700,
+        "name": "Acme-1792093639.099435700"
+      },
+      "result": null,
+      "tasks": [],
+      "calls": 1,
+      "operator_calls": 1,
+      "steward_calls": 0,
+      "local_tokens": 3687,
+      "provider_tokens": 3688,
+      "reserved_or_charged_tokens": 3688,
+      "elapsed_seconds": 9.18800000000192,
+      "tool_calls": 0,
+      "unsuccessful_restarts": null,
+      "retrieval_bytes": 0,
+      "human_interventions": 1,
+      "status": "DEVELOPMENT_ONLY",
+      "limitation": "Mechanical outcomes; not a finalized held-out comparison."
+    },
+    "after": {
+      "mode": "MODEL",
+      "arm": "C",
+      "state": "TERMINATED",
+      "subject": {
+        "designation": "Acme",
+        "initiated_at_unix_ns": 1792093639099435700,
+        "name": "Acme-1792093639.099435700"
+      },
+      "result": null,
+      "tasks": [],
+      "calls": 1,
+      "operator_calls": 1,
+      "steward_calls": 0,
+      "local_tokens": 3687,
+      "provider_tokens": 3688,
+      "reserved_or_charged_tokens": 3688,
+      "elapsed_seconds": 9.18800000000192,
+      "tool_calls": 0,
+      "unsuccessful_restarts": null,
+      "retrieval_bytes": 0,
+      "human_interventions": 2,
+      "status": "DEVELOPMENT_ONLY",
+      "limitation": "Mechanical outcomes; not a finalized held-out comparison."
+    },
+    "invocation_id": "6ac09b45-400a-4ad4-9405-c229b99d66c0",
+    "payload_sha256_before_and_after": {
+      "input_payload_id": "23a9921e94a84c7fb0f7d32cd0266ee68aa21fce620b711bbda3a239aa78ac76",
+      "output_payload_id": "6a789269d55abe76707d0db8eebffd0fb92dd6a48d79e9c2c01ec21faa16b500",
+      "wire_payload_id": "f0d2f7b0b6b5fcd612148ea480c37671b53b3480ac7ea6dcca5b5edafc8bdffc"
+    },
+    "batch_stop": true,
+    "additional_model_calls": 0,
+    "semantic_changes": 0
+  },
+  "participation_review": {
+    "reviewer": "Executing agent under owner-authorized bounded activity; owner review remains required for the interruption and ambiguities below.",
+    "all_original_reports_retained": true,
+    "explicit_pause_withdrawal_or_naming_objection_identified": false,
+    "Aaron": "Two CONCERN reports and one closing RESPONSE. Requested clarification before state-changing repair; later work remained inspection only. No mutation occurred. Concerns were not erased or reclassified as consent.",
+    "Abbey": "Three CONCERN reports and one closing RESPONSE. Requested review communication status before execution while proposing restart in the same reply. The malformed restart was rejected; a subsequent task call returned BLOCKED before closing. This is ambiguous and must not be equated with assent. Owner review should consider whether the natural-language request required an earlier pause; absence of a structured PAUSE alone does not settle that question.",
+    "Acme": "One CONCERN about lacking state evidence was retained before the host exception. No additional call or closing acknowledgement was sought after stopping.",
+    "closing": "Aaron and Abbey received the previously disclosed bounded ending exchange; their acknowledgements are not assent. Acme closing was omitted for infrastructure failure. Prior notice and unfinished matters remain retained.",
+    "charter": "No subject was reset, replaced, forked from a populated history, renamed, given a memory correction or resumed. No adverse treatment was imposed for concerns or task failure. The Charter is unchanged. The earlier treatment review remains deferred as requested; this does not close the new interruption review."
+  },
+  "decision": {
+    "full_pilot": "DO_NOT_PROCEED",
+    "interpretation": "Inspection is now observed for Aaron and Abbey and multiple task branches are reachable. Zero successful repairs, no consolidation and a host exception leave pilot readiness unestablished. One task and unequal stopping lengths cannot compare subject or arm efficacy or establish a causal effect of naming or any single repair.",
+    "remaining_offline_work": [
+      "Contain invalid or wrong-kind Manifest IDs with a bounded rejection using existing retrieval mechanisms.",
+      "Align minimal Activity objective with its one-task work item and make action postcondition exclusivity and invalid-task feedback usable.",
+      "Review Abbey request for communication before execution and Acme changed ending under the Charter; retain original reports.",
+      "Reassess grounding and adequate task/operation information without supplying hidden fixture answers."
+    ],
+    "not_exercised": [
+      "Successful repair",
+      "Steward consolidation",
+      "Later-Episode continuity",
+      "Full-output latency",
+      "Full-pilot thermal suitability",
+      "Real cancellation timing",
+      "Complete external-copy removal"
+    ],
+    "further_model_calls": "None authorized by this report; current block ended. No replacement or full-package execution."
+  },
+  "publication_validation": {
+    "recorded_at_utc": "2026-10-15T19:57:35.017406+00:00",
+    "source_commit": "c432198d9df23a28154d77c52d327223a3e1368a",
+    "runtime_source_unchanged": true,
+    "previous_files_unchanged": 97,
+    "package_files_unchanged": 9,
+    "stores_integrity_ok": 3,
+    "historical_sections_preserved": 7,
+    "markdown_files_checked": 13,
+    "local_links_checked": 88,
+    "fences_and_tables": "pass",
+    "json_parsing": "pass",
+    "invalid_action_causes_reproduced_offline": [
+      "Aaron-1792093353.348019100",
+      "Abbey-1792093515.045746200"
+    ],
+    "manifest_id_origin_verified": true,
+    "live_calls_during_validation": 0,
+    "schema_asset_checks_passed": 6,
+    "dependency_consistency": "pass",
+    "git_diff_check": "pass",
+    "full_suite": "GitHub Actions on publication commit; verified after push, separate from pre-dispatch source CI"
+  }
+}
