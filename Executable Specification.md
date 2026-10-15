@@ -121,11 +121,15 @@ Use concise role instructions covering purpose, responsibilities, participation,
 
 Record exact effective prompts, tool/response schemas, model/runtime/framing and each assembled request. Count the complete framed input plus reserved output with the selected tokenizer; report local counts and provider telemetry separately. Backend framing and overflow behavior must be verified for the actual operating arrangement.
 
+Preserve the response contract's declared property order in both the prompt-visible schema and the provider's constrained-output schema. Discriminants precede their arguments; canonical storage serialization must not reorder the decoding schema. Test the actual request bytes and the prompt's literal action example, not only whether injected responses parse.
+
 Expose a small owner-facing resource profile: finite Run count; cumulative calls/tokens/time and fixture-action allowances; per-call context/output and active-memory size; bounded recovery; and communication provision. Derive page, raw-response, queue and other technical limits deterministically where useful. Retain resolved values and versions. No derived limit can enlarge the authorized outer allowance.
 
 Keep a shared Operator opportunity budget across arms, separate measured Steward costs, and bounded control/evidence input. Selected pages and all selected semantic bodies count. No oversized list of inactive objects or obligations is required in an opening prompt.
 
 Retrieval provides exact lookup, ordered range/search and bounded content pages with source references and completeness information. Bind cursors to the query, cutoff and visibility. Evidence pages can be explicitly selected or handled by a disclosed deterministic bounded-window rule. Record what each call actually received; eviction from input never deletes evidence or proves that the model forgot it. A separate model call solely to register a retrieved page is unnecessary.
+
+In the 0.4 interface, label index metadata separately from payload bytes and include authenticated event roles alongside source codes. Explain that source A denotes an agent report in every arm, not arm A, and that a search match or repeated report is not an independent observation. Account for these labels before retaining and admitting pages; preserve original bodies, access boundaries and removal lineage. The Kernel labels provenance, not factual truth.
 
 An Episode ends with an Operator outcome or a distinct interruption. A/C then consolidate while eligible; B closes with its execution record. Reserve finite costs before calls, preserve unknown consumption after interruption, and never repeat an uncertain action automatically.
 

@@ -5,6 +5,9 @@ from ..kernel.inputs import Inputs, ObjectQuery, StateQuery
 
 
 class PilotInputs(Inputs):
+    def _page_view(self, response):
+        return response | {'page_kind': 'PAYLOAD_BYTES' if response['payload'] is not None else 'INDEX_METADATA'}
+
     def _object_rows(self, cutoff):
         if self.k.config.arm == 'B':
             return []
@@ -35,7 +38,14 @@ class PilotInputs(Inputs):
 
     def _entries(self, query, event_cutoff, record_cutoff):
         if not isinstance(query, (ObjectQuery, StateQuery)):
-            return super()._entries(query, event_cutoff, record_cutoff)
+            entries, dependencies = super()._entries(query, event_cutoff, record_cutoff)
+            # Use authenticated event metadata, never a claim inside its body.
+            # Entries still contain no body; PAYLOAD is the existing content route.
+            for entry in entries:
+                row = self.k.store._db.execute('SELECT role FROM events WHERE run_id=? AND id=?',
+                                               (self.k.run_id, entry['id'])).fetchone()
+                entry['role'] = row['role']
+            return entries, dependencies
         if self.k.config.arm == 'B':
             raise PermissionError('B has no semantic retrieval channel')
         if isinstance(query, StateQuery):

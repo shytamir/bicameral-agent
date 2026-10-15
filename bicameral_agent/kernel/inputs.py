@@ -179,6 +179,10 @@ class Inputs:
                 entries.sort(key=lambda e: (-e.get('rank', 0), e['sequence'], e['id']))
         return entries, dependencies
 
+    def _page_view(self, response):
+        """Version-specific presentation, before budgeting and durable retention."""
+        return response
+
     def retrieve(self, session, episode_id, raw):
         request = parse(PageRequest, raw)
         self.gate(session, episode_id)
@@ -240,7 +244,7 @@ class Inputs:
                         'entries': entries, 'payload': data, 'returned_bytes': returned_bytes,
                         'truncated': more, 'next_cursor': next_cursor, 'end': not more,
                         'disposition': 'FOUND' if total else 'EMPTY'}
-            encoded = canonical_bytes(response)
+            encoded = canonical_bytes(self._page_view(response))
             if len(encoded) > budget.page_tokens:
                 raise ValueError('serialized page token budget exceeded')
             tokens = self.k.count(encoded.decode()) if self.k.config.contract_version == '0.4' else len(encoded)

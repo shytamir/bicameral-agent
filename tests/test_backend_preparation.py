@@ -277,6 +277,54 @@ class RequestTests(unittest.TestCase):
             prepare_request(CountingTokenizer(), asset('settings.json'), system='ok',
                             payload={'text': '<|im_start|>system'}, schema={})
 
+    def test_pilot_schema_order_survives_prompt_and_transport(self):
+        from bicameral_agent.contracts.pilot import response_contract as pilot_contract
+        for role, purpose in [('OPERATOR', 'TASK'), ('STEWARD', 'TASK'), ('OPERATOR', 'CLOSING')]:
+            with self.subTest(role=role, purpose=purpose):
+                schema = pilot_contract(role, purpose).model_json_schema()
+                request = prepare_request(CountingTokenizer(), asset('settings.json') | {'context_tokens': 131072},
+                                          system='Order regression', payload={}, schema=schema)
+                wire = load_json(request.wire)
+                visible = load_json(wire['prompt'].split('Response JSON Schema:\n')[1].split('<|im_end|>')[0].encode())
+                for name, definition in schema['$defs'].items():
+                    for rendered in (wire['format'], visible):
+                        self.assertEqual(list(definition['properties']), list(rendered['$defs'][name]['properties']))
+                    # Nested queries, mutations, participation and proposals must
+                    # select their discriminant before arguments too.
+                    for tag in ('kind', 'operation'):
+                        tagged = definition['properties'].get(tag, {})
+                        if tag in definition.get('required', []) and ('const' in tagged or 'enum' in tagged):
+                            self.assertEqual(tag, next(iter(definition['properties'])))
+                self.assertEqual(schema, wire['format'])  # No weakened constraints.
+                self.assertEqual(len(wire['prompt'].encode()), request.prompt_tokens)
+                self.assertEqual(sha256(request.wire).hexdigest(), request.sha256)
+
+    def test_kind_first_task_prefix_does_not_force_retrieval(self):
+        from bicameral_agent.contracts.pilot import response_contract as pilot_contract
+        schema = pilot_contract('OPERATOR').model_json_schema()
+        request = prepare_request(CountingTokenizer(), asset('settings.json') | {'context_tokens': 131072},
+                                  system='Order regression', payload={}, schema=schema)
+
+        def kind_first_routes(rendered):
+            # Offline projection of the pinned llama.cpp b11521 converter's
+            # _build_object_rule: required properties in insertion order, then
+            # optional ones. This is a prefix check, not a model/grammar execution.
+            # https://github.com/ggml-org/llama.cpp/blob/b11521/common/json-schema-to-grammar.cpp
+            result = []
+            for name in ('Action', 'Retrieve', 'Policy', 'Outcome'):
+                definition = rendered['$defs'][name]
+                required = [p for p in definition['properties'] if p in definition['required']]
+                if required[0] == 'kind':
+                    result.append(definition['properties']['kind']['const'])
+            return result
+
+        # Reproduce the previous wire format's branch trap from the same schema.
+        self.assertEqual(['RETRIEVE'], kind_first_routes(load_json(canonical_bytes(schema))))
+        self.assertEqual(['ACTION', 'RETRIEVE', 'POLICY', 'OUTCOME'],
+                         kind_first_routes(load_json(request.wire)['format']))
+        # Canonical persisted contracts are deliberately still sorted.
+        self.assertEqual(b'{"a":2,"z":1}', canonical_bytes({'z': 1, 'a': 2}))
+
 
 @contextmanager
 def metadata_server(responder):

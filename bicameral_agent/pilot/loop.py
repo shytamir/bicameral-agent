@@ -237,7 +237,7 @@ class Loop:
             if call['episode_id']:
                 event = self.k.store._db.execute('SELECT e.id FROM events e JOIN requests r ON r.run_id=e.run_id AND r.request_payload_id=e.payload_id WHERE r.run_id=? AND r.id=? AND r.role=?',
                     (self.k.run_id, key, call['role'])).fetchone()[0]
-                self._record_exchange(call['episode_id'], {'role': call['role'], 'event_id': event,
+                self._record_exchange(call['episode_id'], {'role': call['role'], 'source': 'A', 'event_id': event,
                     'response': load_json(raw)}, sources=[output])
         self.started.pop(key, None)
         if stopped or error == 'PARTICIPATION_INSPECTION':
@@ -293,7 +293,8 @@ class Loop:
             event = self.k.store._db.execute('SELECT payload_id FROM events WHERE id=? AND run_id=?',
                 (action['result_event_id'], self.k.run_id)).fetchone()
             observation = load_json(self.k.store.read_payload(self.k.run_id, event[0]))
-            return self._finish(key, {'status': 'ACTION', 'event_id': action['result_event_id'], 'observation': observation}, sources=[event[0]])
+            return self._finish(key, {'status': 'ACTION', 'source': 'E', 'event_id': action['result_event_id'],
+                'observation': observation}, sources=[event[0]])
         if command.kind == 'RETRIEVE':
             raw = self.inputs.retrieve(SimpleSession(self.k, call['role']), episode,
                 canonical_bytes({'request_id': key, **command.model_dump(mode='json', exclude={'kind'})}))

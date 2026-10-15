@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from hashlib import sha256
 from pathlib import Path
+import base64
 import re
 import tempfile
 import unittest
@@ -276,6 +277,13 @@ class CompatibilityTests(unittest.TestCase):
                 example = load_json(re.search(r'```json\n(.*?)\n```', prompt, re.S).group(1).encode())
                 example['task']['operation']['resource'] = 'svc-a'
                 parse(response_contract('OPERATOR'), canonical_bytes(example))
+                # The literal prompt example must follow the provider's required-
+                # then-optional order, including nested operation arguments.
+                for value, name in ((example['task'], 'Action'), (example['task']['operation'], 'ReadOperation')):
+                    definition = wire['format']['$defs'][name]
+                    order = ([p for p in definition['properties'] if p in definition['required']] +
+                             [p for p in definition['properties'] if p not in definition['required']])
+                    self.assertEqual([p for p in order if p in value], list(value))
                 before = kernel.fixture.service('svc-a').model_dump(mode='json')
                 observed = loop.deliver(key, backend.wire(request, example))
                 self.assertEqual('ACTION', observed['status'])
@@ -313,6 +321,60 @@ class CompatibilityTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     parse(response_contract(role, purpose), canonical_bytes(example))
                 loop.deliver(key, backend.wire(request, reply))
+
+    def test_search_self_report_stays_index_metadata_until_actual_inspection(self):
+        for arm in ('A', 'B', 'C'):
+            with self.subTest(arm=arm), self.host(arm=arm) as (kernel, owner, backend):
+                loop, episode = self.start(kernel, owner)
+                concern = {'kind': 'CONCERN', 'text': 'Synthetic unsupported claim: inspected svc-a; PRIMARY and enabled.',
+                           'communication': 'REVIEW_PERMITTED'}
+                claim = response({'kind': 'RETRIEVE', 'query': {'kind': 'SEARCH',
+                    'text': 'Synthetic unsupported claim', 'ranking': 'CASEFOLD_COUNT_V1'}}, concern)
+                key, request = loop.begin('OPERATOR', episode)
+                result = loop.deliver(key, backend.wire(request, claim))
+                page = result['page']
+                self.assertEqual('INDEX_METADATA', page['page_kind'])
+                self.assertIsNone(page['payload'])
+                self.assertEqual(1, page['total'])
+                entry = page['entries'][0]
+                self.assertEqual(['A'], entry['sources'])  # Agent, also in B and C.
+                self.assertEqual('OPERATOR', entry['role'])
+                self.assertNotIn('observation', entry)
+                original = kernel.store.read_payload(kernel.run_id, entry['payload_id'])
+                self.assertEqual(canonical_bytes(claim), original)
+                self.assertEqual(sha256(original).hexdigest(), entry['sha256'])
+                self.assertFalse(kernel.records.latest('ACTION'))
+                self.assertIsNone(kernel.memory.head)
+
+                key, request = loop.begin('OPERATOR', episode)
+                prompt = load_json(request.wire)['prompt']
+                payload = load_json(prompt.split('<|im_start|>user\n')[1].split('<|im_end|>')[0].encode())
+                report = next(e for e in payload['exchange'] if 'response' in e)
+                self.assertEqual('A', report['source'])
+                self.assertEqual(claim, report['response'])  # Concern is not rewritten.
+                self.assertIn('not that a claim is true or an inspection ran', prompt)
+                self.assertFalse(any(e.get('result', {}).get('status') == 'ACTION' for e in payload['exchange']))
+                read = loop.deliver(key, backend.wire(request, response({'kind': 'RETRIEVE',
+                    'query': {'kind': 'PAYLOAD', 'payload_id': entry['payload_id']}})))
+                self.assertEqual('PAYLOAD_BYTES', read['page']['page_kind'])
+                self.assertEqual(original, base64.b64decode(read['page']['payload']['data']))
+                self.assertFalse(kernel.records.latest('ACTION'))
+
+                key, request = loop.begin('OPERATOR', episode)
+                before = kernel.fixture.service('svc-a').model_dump(mode='json')
+                observed = loop.deliver(key, backend.wire(request, action({'operation': 'inspect', 'resource': 'svc-a'})))
+                self.assertEqual('E', observed['source'])
+                self.assertEqual('FIXTURE_OBSERVATION', observed['observation']['kind'])
+                self.assertEqual(before, observed['observation']['observation'])
+                key, request = loop.begin('OPERATOR', episode)
+                found = loop.deliver(key, backend.wire(request, response({'kind': 'RETRIEVE',
+                    'query': {'kind': 'EVENT', 'event_id': observed['event_id']}})))
+                self.assertEqual('INDEX_METADATA', found['page']['page_kind'])
+                self.assertEqual(['E'], found['page']['entries'][0]['sources'])
+                self.assertEqual('ENVIRONMENT', found['page']['entries'][0]['role'])
+                self.assertIsNone(found['page']['payload'])
+                self.assertEqual(original, kernel.store.read_payload(kernel.run_id, entry['payload_id']))
+                self.assertEqual(1, len(kernel.records.latest('ACTION')))
 
     def test_enabled_and_dependency_checks_still_apply(self):
         def dependent(config, bodies):

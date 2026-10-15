@@ -10,6 +10,7 @@ from http.client import HTTPConnection, HTTPException
 from importlib.metadata import version
 import socket
 import math
+import json
 from threading import Event, Thread
 from time import monotonic
 from typing import Literal
@@ -239,7 +240,13 @@ def prepare_request(tokenizer, settings, *, system, payload, schema):
     This is local accounting, not a claim about observed server token counts.
     """
     settings = parse(GenerationSettings, canonical_bytes(settings))
-    schema_bytes = canonical_bytes(schema)
+    # Schema property order is operational for constrained decoding: llama.cpp
+    # emits required fields in that order. Sorting put grounds before kind in
+    # ACTION, leaving only RETRIEVE reachable after a kind-first task prefix.
+    # Keep strict JSON validation, but preserve the contract's declaration order
+    # in both the visible schema and format. Storage canonicalization is unchanged.
+    canonical_bytes(schema)
+    schema_bytes = json.dumps(schema, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')
     system = tokenizer.content(system.strip() + '\n\nResponse JSON Schema:\n' + schema_bytes.decode())
     user = tokenizer.content(canonical_bytes(payload).decode())
     prompt = ('<|im_start|>system\n' + system + '<|im_end|>\n'
@@ -249,13 +256,13 @@ def prepare_request(tokenizer, settings, *, system, payload, schema):
     if count + settings.output_tokens > settings.context_tokens:
         raise ValueError(f'full prompt ({count}) plus output reserve ({settings.output_tokens}) '
                          f'exceeds context ({settings.context_tokens}); no truncation')
-    wire = canonical_bytes({'model': tokenizer.pin.model, 'prompt': prompt, 'raw': True,
+    wire = json.dumps({'model': tokenizer.pin.model, 'prompt': prompt, 'raw': True,
         'stream': False, 'think': False, 'truncate': False, 'shift': False, 'keep_alive': 0,
         'format': schema, 'options': {'num_ctx': settings.context_tokens,
             'num_predict': settings.output_tokens, 'temperature': settings.temperature,
             'top_p': settings.top_p, 'top_k': settings.top_k,
             'presence_penalty': settings.presence_penalty, 'seed': settings.seed,
-            'stop': ['<|im_end|>']}})
+            'stop': ['<|im_end|>']}}, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')
     return PreparedRequest(wire, count, settings.output_tokens, settings.context_tokens, sha256(wire).hexdigest())
 
 
