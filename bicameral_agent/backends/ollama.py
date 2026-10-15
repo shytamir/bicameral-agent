@@ -22,7 +22,7 @@ from ..contracts.base import Contract, Digest, Positive, canonical_bytes, load_j
 class ModelPin(Contract):
     model: Literal['qwen3.5:4b-q4_K_M']
     digest: Digest
-    ollama_version: Literal['0.34.4']
+    ollama_version: Literal['0.34.4', '0.40.4']
     tokenizer_sha256: Digest
     tokenizer_config_sha256: Digest
     tokenizer_revision: str = Field(pattern=r'^[0-9a-f]{40}$')

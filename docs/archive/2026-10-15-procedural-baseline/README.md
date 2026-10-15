@@ -16,6 +16,12 @@ The text copies preserve the pre-edit working-tree document bytes. The ZIP prese
 
 ZIP SHA-256: `c9dc359e703cfbd98423153f36da986cfcce9b1093b2605b4d59a4355f9b742a`.
 
+## Laptop checkout before setup
+
+At the owner's request, [the laptop's pre-update source snapshot](source-5db8834.zip) preserves revision `5db8834e1e54444efb049335deab6bc52b231a46` alongside the procedural baseline. Its working tree was clean before the fast-forward to `6fcc0c5`; there were no uncommitted tracked or untracked changes to archive. This revision is an ancestor of `22a2807`, so its work was already included in the later baseline with subsequent fixes. The additional ZIP preserves the exact older tree without changing the existing archive or branch history. Ignored local data and model/tokenizer files remain in place and are excluded.
+
+Pre-update ZIP SHA-256: `62b82a2a765d3bd1c02504f533aed7a349f454a4a000097bb7d4504997c52dee`. Every file in this additional snapshot matches its Git blob byte-for-byte.
+
 ## Authority and possible reinstatement
 
 The [current Charter](../../../Reciprocal%20Charter.md) is unchanged. The [current Protocol](../../../Operating%20Constitution%20and%20Execution%20Protocol.md) and [Specification](../../../Executable%20Specification.md) own the active design. Archived rules do not silently override them.

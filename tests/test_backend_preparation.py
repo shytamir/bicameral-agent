@@ -160,6 +160,25 @@ class IdentityTests(unittest.TestCase):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 self.verify(**change)
 
+    def test_supported_versions_remain_exact_per_configuration(self):
+        for expected in ('0.34.4', '0.40.4'):
+            with self.subTest(expected=expected):
+                raw = canonical_bytes(asset('model.json') | {'ollama_version': expected})
+                pin = parse(ModelPin, raw)
+                self.assertEqual(raw, canonical_bytes(pin))
+                for actual in ('0.34.4', '0.40.4'):
+                    args = (pin, canonical_bytes({'version': actual}),
+                            canonical_bytes(self.tags), canonical_bytes(self.show))
+                    if actual == expected:
+                        self.assertEqual(expected, verify_identity(*args)['ollama_version'])
+                    else:
+                        with self.assertRaises(ValueError):
+                            verify_identity(*args)
+        for change in ({'ollama_version': '0.40.5'}, {'ollama_version': 0.404},
+                       {'ollama_version': None}, {'extra': 'ignored'}):
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                parse(ModelPin, canonical_bytes(asset('model.json') | change))
+
     def test_malformed_metadata_fails_as_validation(self):
         for change in ({'version': []}, {'tags': []}, {'tags': {'models': 4}},
                        {'tags': {'models': [None]}}, {'show': []},

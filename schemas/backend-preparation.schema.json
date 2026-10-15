@@ -1544,7 +1544,10 @@
           "type": "string"
         },
         "ollama_version": {
-          "const": "0.34.4",
+          "enum": [
+            "0.34.4",
+            "0.40.4"
+          ],
           "title": "Ollama Version",
           "type": "string"
         },
