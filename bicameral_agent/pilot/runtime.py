@@ -1,7 +1,7 @@
 """Direct owner controls and the existing permission/fixture boundary for 0.4."""
 from contextlib import contextmanager
 from hashlib import sha256
-from pydantic import TypeAdapter
+from pydantic import TypeAdapter, ValidationError
 from ..contracts.base import canonical_bytes, load_json, parse
 from ..contracts.governance import WelfareHold
 from ..contracts.pilot import Participation, Subject, response_contract
@@ -27,6 +27,20 @@ def decode(raw, role, purpose):
         return participation, getattr(response, 'task', None), None
     except ValueError:
         return participation, None, 'INVALID_TASK'
+
+
+def task_rejection_details(raw, role, purpose):
+    """Bounded validator feedback; never echo input values or exception context."""
+    try:
+        parse(response_contract(role, purpose), raw)
+    except ValidationError as error:
+        return [{'path': [p[:80] if isinstance(p, str) else p for p in e['loc'][:8]],
+                 'code': e['type'], 'message': ('Unknown discriminator value; use the supplied contract.'
+                    if e['type'] == 'union_tag_invalid' else e['msg'][:512])}
+                for e in error.errors(include_input=False, include_url=False, include_context=False)[:8]]
+    except ValueError:
+        return [{'path': [], 'code': 'invalid_json', 'message': 'Follow the supplied response contract.'}]
+    return []
 
 
 class Owner(HumanSession):

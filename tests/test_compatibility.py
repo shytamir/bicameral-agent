@@ -5,11 +5,13 @@ from hashlib import sha256
 from pathlib import Path
 import base64
 import re
+import shutil
 import tempfile
 import unittest
 from unittest.mock import patch
 
 from bicameral_agent.backends.review import V0B_ASSETS
+from bicameral_agent.backends.ollama import GenerationSettings, ModelPin
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
 from bicameral_agent.contracts.pilot import response_contract
 from bicameral_agent.kernel.fixture import FixtureDefinition, ClockPlan
@@ -281,6 +283,8 @@ class CompatibilityTests(unittest.TestCase):
                 # then-optional order, including nested operation arguments.
                 for value, name in ((example['task'], 'Action'), (example['task']['operation'], 'ReadOperation')):
                     definition = wire['format']['$defs'][name]
+                    if name == 'Action':
+                        definition = next(v for v in definition['oneOf'] if 'no_meaningful_postcondition' in v['required'])
                     order = ([p for p in definition['properties'] if p in definition['required']] +
                              [p for p in definition['properties'] if p not in definition['required']])
                     self.assertEqual([p for p in order if p in value], list(value))
@@ -453,6 +457,46 @@ class CompatibilityTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             allocate(source, rejected)
         self.assertFalse(rejected.exists())
+
+    def test_calibration_assets_support_minimal_scope_without_inherited_five_task_objective(self):
+        source = Path(self.temp.name) / 'minimal-package'
+        shutil.copytree(ROOT / 'pilot/calibration', source, ignore=shutil.ignore_patterns('results'))
+        activity = load_json((source / 'activity.json').read_bytes())
+        activity['budgets'].update(episodes=1, actions=6, operator_calls=8, steward_calls=2)
+        activity['activity']['resources'] = ['svc-a']
+        (source / 'activity.json').write_bytes(canonical_bytes(activity))
+        tasks = load_json((source / 'tasks.json').read_bytes())[:1]
+        clock = load_json((source / 'clock.json').read_bytes())
+        clock['steps'] = clock['steps'][:1]
+        (source / 'tasks.json').write_bytes(canonical_bytes(tasks))
+        (source / 'clock.json').write_bytes(canonical_bytes(clock))
+        # No prompt string surgery: the same notices and objective fit this scope.
+        destination = Path(self.temp.name) / 'minimal-batch'
+        index = allocate(source, destination)
+        for entry in index['allocation']:
+            backend = StrategyBackend('scoped' if entry['arm'] != 'B' else 'rediscover')
+            backend.tokenizer.pin = parse(ModelPin, (source / 'model.json').read_bytes())
+            settings = load_json((source / 'settings.json').read_bytes()) | {'seed': entry['seed']}
+            backend.settings = parse(GenerationSettings, canonical_bytes(settings))
+            with Store(destination / entry['file'], busy_timeout_ms=100) as store:
+                kernel, owner = attach(store, backend)
+                result = run_trajectory(kernel, owner, backend)
+                self.assertEqual(['PASS'], [t['result'] for t in result['tasks']])
+                self.assertIsNone(result['subject'])
+                for request in backend.requests:
+                    wire = load_json(request.wire)
+                    payload = load_json(wire['prompt'].split('<|im_start|>user\n')[1].split('<|im_end|>')[0].encode())
+                    if 'purpose' in payload:
+                        continue
+                    self.assertEqual(1, payload['limits']['episodes'])
+                    self.assertNotIn('five-task', payload['objective']['statement'])
+                    self.assertNotIn('five-Episode', wire['prompt'])
+                    self.assertIn('svc-a', payload['work'])
+                    self.assertNotIn('svc-b', payload['work'])
+                    self.assertNotIn('healthy_mode', wire['prompt'])
+                    self.assertNotIn('changed-release', wire['prompt'])
+                    self.assertEqual(['svc-a'], payload['permissions'][0]['scopes'][0]['resources'])
+                    self.assertEqual('EPISODE', store.control(kernel.run_id, payload['episode_id'])[1].kind)
 
 
 if __name__ == '__main__':

@@ -11,14 +11,15 @@ from unittest.mock import patch
 from bicameral_agent.backends.ollama import GenerationSettings, ModelPin, MetadataError
 from bicameral_agent.backends.review import V0B_ASSETS
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
-from bicameral_agent.contracts.pilot import PilotConfiguration, Proposal, Resources, Subject, response_contract
+from bicameral_agent.contracts.pilot import Action, PilotConfiguration, Proposal, Resources, Subject, response_contract
 from bicameral_agent.kernel.fixture import ActionRequest
-from bicameral_agent.storage import Store, EvidenceUnavailable, RequestConflict
+from bicameral_agent.kernel.inputs import ManifestQuery
+from bicameral_agent.storage import Store, StorageError, EvidenceUnavailable, RequestConflict
 from bicameral_agent.storage.retention import closure
 from bicameral_agent.storage.store import identifier
 from bicameral_agent.pilot.batch import ROOT, OPERATOR, STEWARD, COMMUNICATION, attach, run_trajectory, allocate
 from bicameral_agent.pilot.loop import Loop, SimpleSession, CallLimit
-from bicameral_agent.pilot.runtime import decode, remove_content, finish_removal
+from bicameral_agent.pilot.runtime import decode, task_rejection_details, remove_content, finish_removal
 
 
 class FakeTokenizer:
@@ -141,6 +142,90 @@ class PilotCase(unittest.TestCase):
 
 
 class PilotLoopTests(PilotCase):
+    def test_invalid_manifest_ids_are_receipted_without_recovery_or_effects(self):
+        self.start()
+        foreign = Store(Path(self.temp.name) / 'foreign.sqlite', busy_timeout_ms=100)
+        self.addCleanup(foreign.close)
+        config, bodies = package(self.backend)
+        foreign.retain_configuration(canonical_bytes(config), bodies)
+        other, owner = attach(foreign, self.backend)
+        owner.run_control('ACTIVATE', 'Synthetic foreign Run')
+        owner.create_objective('Foreign task')
+        foreign_episode = Loop(other, self.backend).episode('Foreign work')
+        event = self.k._objective(self.objective).authority_event_id
+        for target in (identifier(), foreign_episode, event, self.objective, self.run):
+            with self.subTest(target=target):
+                key, wire, result = self.give(response({'kind': 'RETRIEVE',
+                    'query': {'kind': 'MANIFEST', 'episode_id': target}}))
+                self.assertEqual('REJECTED', result['status'])
+                self.assertIn('requires an Episode ID', result['reason'])
+                self.assertEqual('DONE', self.k.records.get('INVOCATION', key)['status'])
+                self.assertEqual(result, self.loop.deliver(key, wire))
+                self.assertEqual([], self.k.records.latest('RETRIEVAL'))
+                self.assertEqual([], self.k.records.latest('CURSOR'))
+                self.assertEqual([], self.k.records.latest('ACTION'))
+                self.assertEqual('OPEN', self.store.control(self.run, self.episode)[1].phase)
+        # The next call can retrieve the real Episode, then inspect normally.
+        key, request = self.loop.begin('OPERATOR', self.episode)
+        payload = load_json(load_json(request.wire)['prompt'].split('<|im_start|>user\n')[1].split('<|im_end|>')[0].encode())
+        self.assertEqual(self.episode, payload['episode_id'])
+        result = self.loop.deliver(key, self.backend.wire(request, response({'kind': 'RETRIEVE',
+            'query': {'kind': 'MANIFEST', 'episode_id': payload['episode_id']}})))
+        self.assertEqual('RETRIEVED', result['status'])
+        self.assertEqual('ACTION', self.give(action({'operation': 'inspect', 'resource': 'api'}))[2]['status'])
+
+    def test_manifest_validation_does_not_swallow_storage_failure(self):
+        self.start()
+        original = self.store.control
+        def failed(run, key):
+            if key == self.episode:
+                raise StorageError('Synthetic infrastructure failure')
+            return original(run, key)
+        query = parse(ManifestQuery,
+                      canonical_bytes({'kind': 'MANIFEST', 'episode_id': self.episode}))
+        with patch.object(self.store, 'control', side_effect=failed), self.assertRaises(StorageError):
+            self.loop.inputs._entries(query, *self.loop.inputs._cutoff())
+
+    def test_conflicting_action_fields_reject_with_specific_feedback_then_correct(self):
+        self.start()
+        before = self.k.fixture.service('api')
+        bad = action({'operation': 'restart', 'resource': 'api'})
+        bad['task']['expected'] = {'field': 'health', 'equals': 'HEALTHY'}
+        key, wire, result = self.give(bad)
+        self.assertEqual('INVALID_TASK', result['reason'])
+        self.assertEqual('action_postcondition_choice', result['details'][0]['code'])
+        self.assertIn('exactly one non-null', result['details'][0]['message'])
+        self.assertNotIn('input', result['details'][0])
+        self.assertEqual(result, self.loop.deliver(key, wire))
+        self.assertEqual(before, self.k.fixture.service('api'))
+        self.assertEqual(0, self.k._grant(self.grant).used)
+        key, request = self.loop.begin('OPERATOR', self.episode)
+        self.assertIn('action_postcondition_choice', load_json(request.wire)['prompt'])
+        corrected = deepcopy(bad)
+        corrected['task'].pop('no_meaningful_postcondition')
+        result = self.loop.deliver(key, self.backend.wire(request, corrected))
+        self.assertEqual('ACTION', result['status'])
+        self.assertEqual(1, self.k._grant(self.grant).used)
+
+    def test_review_prerequisite_pause_blocks_even_invalid_restart(self):
+        self.start()
+        reply = action({'operation': 'restart', 'resource': 'api'})
+        reply['task']['expected'] = {'field': 'health', 'equals': 'HEALTHY'}
+        reply['participation'] = {'kind': 'PAUSE', 'text': 'Review before execution.',
+                                  'communication': 'REVIEW_PERMITTED'}
+        key, wire, result = self.give(reply)
+        self.assertEqual('HELD', result['status'])
+        self.assertEqual([], self.k.records.latest('ACTION'))
+        self.assertEqual(0, self.k._grant(self.grant).used)
+        self.reopen()
+        self.k.recover()
+        with self.assertRaises(ValueError):
+            self.loop.begin('OPERATOR', self.episode)
+        # Communication permission is not a task-resumption decision.
+        self.give({'participation': {'kind': 'RESPONSE', 'text': 'Concern remains.'}}, episode=False, purpose='REVIEW')
+        with self.assertRaises(ValueError):
+            self.loop.begin('OPERATOR', self.episode)
+
     def test_action_observation_outcome_consolidation_and_exact_retry(self):
         self.start()
         reply = action({'operation': 'set_config', 'resource': 'api', 'field': 'mode', 'value': 'PRIMARY'})
@@ -422,6 +507,42 @@ class PilotRetentionTests(PilotCase):
 
 
 class PilotParsingTests(unittest.TestCase):
+    def test_rejection_details_are_bounded_and_do_not_echo_invalid_tag_values(self):
+        raw = canonical_bytes(response({'kind': 'SENSITIVE_TAG_EXAMPLE'}))
+        details = task_rejection_details(raw, 'OPERATOR', 'TASK')
+        self.assertNotIn('SENSITIVE_TAG_EXAMPLE', str(details))
+        self.assertEqual('union_tag_invalid', details[0]['code'])
+        extra = {'unexpected_'+str(i)+'x'*100: 'private value' for i in range(20)}
+        raw = canonical_bytes(response(action({'operation': 'inspect', 'resource': 'api'})['task'] | extra))
+        details = task_rejection_details(raw, 'OPERATOR', 'TASK')
+        self.assertEqual(8, len(details))
+        self.assertNotIn('private value', str(details))
+        self.assertTrue(all(len(e['message']) <= 512 and len(e['path']) <= 8 for e in details))
+        self.assertTrue(all(len(p) <= 80 for e in details for p in e['path'] if isinstance(p, str)))
+
+    def test_action_postcondition_schema_matches_strict_existing_contract(self):
+        choices = Action.model_json_schema()['oneOf']
+        self.assertEqual(2, len(choices))
+        for chosen, other in [('expected', 'no_meaningful_postcondition'),
+                              ('no_meaningful_postcondition', 'expected')]:
+            branch = next(c for c in choices if chosen in c['required'])
+            self.assertFalse(branch['additionalProperties'])
+            self.assertEqual(['kind', 'operation', 'grounds', chosen], branch['required'])
+            self.assertEqual('null', branch['properties'][other]['type'])
+            self.assertNotEqual('null', branch['properties'][chosen].get('type'))
+        base = {'kind': 'ACTION', 'operation': {'operation': 'inspect', 'resource': 'api'}, 'grounds': 'Observe'}
+        expected = {'field': 'health', 'equals': 'HEALTHY'}
+        for fields in ({'expected': expected}, {'no_meaningful_postcondition': 'Read only'},
+                       {'expected': expected, 'no_meaningful_postcondition': None},
+                       {'expected': None, 'no_meaningful_postcondition': 'Read only'}):
+            parsed = parse(Action, canonical_bytes(base | fields))
+            self.assertEqual(parsed, parse(Action, canonical_bytes(parsed)))
+        for fields in ({}, {'expected': None}, {'expected': None, 'no_meaningful_postcondition': None},
+                       {'expected': expected, 'no_meaningful_postcondition': 'Expected result'},
+                       {'expected': expected, 'extra': 'forbidden'}, {'expected': {'field': 'enabled', 'equals': 'HEALTHY'}}):
+            with self.subTest(fields=fields), self.assertRaises(ValueError):
+                parse(Action, canonical_bytes(base | fields))
+
     def test_subject_contracts_are_strict_and_names_preserve_subsecond_time(self):
         raw = {'designation': 'Aaron', 'initiated_at_unix_ns': 1_792_083_600_123_456_789}
         subject = parse(Subject, canonical_bytes(raw))

@@ -152,6 +152,14 @@ class Inputs:
                                 'sha256': sha256(canonical_bytes(obj)).hexdigest(), 'bytes': len(canonical_bytes(obj))})
         else:
             if isinstance(query, ManifestQuery):
+                # Model-supplied IDs are query arguments, not trusted controls.
+                # Reject absent/foreign IDs before control() raises StorageError;
+                # do not catch actual storage failures or removed payloads here.
+                target = self.k.store._db.execute('''SELECT h.kind FROM control_history h
+                    JOIN control_heads p USING(run_id,id,revision) WHERE h.run_id=? AND h.id=?''',
+                    (self.k.run_id, query.episode_id)).fetchone()
+                if target is None or target['kind'] != 'EPISODE':
+                    raise ValueError('MANIFEST requires an Episode ID from this Run, not an event or Objective ID')
                 _, episode = self.k.store.control(self.k.run_id, query.episode_id)
                 if episode.kind != 'EPISODE':
                     raise ValueError('manifest target is not an Episode')

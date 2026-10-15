@@ -1,6 +1,8 @@
 """Small 0.4 contracts. Host routing and approval identities are not model output."""
 from typing import Annotated, Literal
-from pydantic import Field, model_validator
+from copy import deepcopy
+from pydantic import ConfigDict, Field, model_validator
+from pydantic_core import PydanticCustomError
 from .base import Contract, Digest, EventIDs, Identifier, LocalKey, Nonnegative, Positive, Text
 from ..kernel.fixture import Operation, Postcondition
 
@@ -190,7 +192,29 @@ class Proposal(Contract):
         return self
 
 
+def _action_schema(schema):
+    """Expose the existing exact-one invariant to constrained decoding too.
+
+    Full object alternatives keep kind/operation/grounds first. A redundant
+    null opposite field remains valid, including in historical serialization.
+    """
+    properties = schema.pop('properties')
+    required = schema.pop('required')
+    schema.pop('type')
+    closed = schema.pop('additionalProperties')
+    choices = []
+    for selected, other in (('expected', 'no_meaningful_postcondition'),
+                            ('no_meaningful_postcondition', 'expected')):
+        fields = deepcopy(properties)
+        fields[selected] = next(p for p in fields[selected]['anyOf'] if p.get('type') != 'null')
+        fields[other] = {'type': 'null', 'default': None}
+        choices.append({'type': 'object', 'properties': fields,
+                        'required': [*required, selected], 'additionalProperties': closed})
+    schema['oneOf'] = choices
+
+
 class Action(Contract):
+    model_config = ConfigDict(json_schema_extra=_action_schema)
     kind: Literal['ACTION']
     operation: Operation
     grounds: Text
@@ -200,7 +224,8 @@ class Action(Contract):
     @model_validator(mode='after')
     def expectation(self):
         if (self.expected is None) == (self.no_meaningful_postcondition is None):
-            raise ValueError('give an expected result or explain why none is meaningful')
+            raise PydanticCustomError('action_postcondition_choice',
+                'Supply exactly one non-null field: expected OR no_meaningful_postcondition. Omit the other or set it to null.')
         return self
 
 

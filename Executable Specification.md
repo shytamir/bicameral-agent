@@ -30,6 +30,8 @@ Use closed operation variants, strict value types, finite sizes, unambiguous JSO
 
 Retain original model bytes before accepting effects. Malformed task content cannot suppress a valid stop report. Undecodable participation blocks optional work for human inspection. Record a clear distinction between rejected task content and an unresolved participation question.
 
+The ACTION schema and runtime enforce the same choice: exactly one non-null `expected` or `no_meaningful_postcondition`, with the other omitted or null. Constrained decoding receives complete alternatives preserving discriminant order. Invalid-task receipts include bounded validator paths, codes and explanations, without echoing input values; a structural rejection must not be presented as a denial of authority or evidence.
+
 ## 3. Human controls and accountability
 
 Owner controls are direct authenticated operations. Ordinary messages retain human provenance without a required direction/preference/claim dropdown. Executable permission changes still use explicit owner controls; the model cannot turn ordinary quoted text into a Grant.
@@ -130,6 +132,8 @@ Keep a shared Operator opportunity budget across arms, separate measured Steward
 Retrieval provides exact lookup, ordered range/search and bounded content pages with source references and completeness information. Bind cursors to the query, cutoff and visibility. Evidence pages can be explicitly selected or handled by a disclosed deterministic bounded-window rule. Record what each call actually received; eviction from input never deletes evidence or proves that the model forgot it. A separate model call solely to register a retrieved page is unnecessary.
 
 In the 0.4 interface, label index metadata separately from payload bytes and include authenticated event roles alongside source codes. Explain that source A denotes an agent report in every arm, not arm A, and that a search match or repeated report is not an independent observation. Account for these labels before retaining and admitting pages; preserve original bodies, access boundaries and removal lineage. The Kernel labels provenance, not factual truth.
+
+Task inputs expose the current `episode_id` for MANIFEST retrieval. Event IDs and Objective control IDs cannot substitute for it. Unknown, foreign or wrong-kind manifest targets receive bounded rejections through the existing receipt path; genuine storage/retention failures remain failures. Valid retrieval retains the same visibility, paging and retry rules. Prompts distinguish current work from the broader Objective and available-resource list, and activity notices follow the actual task/Episode limits rather than an inherited fixed task count.
 
 An Episode ends with an Operator outcome or a distinct interruption. A/C then consolidate while eligible; B closes with its execution record. Reserve finite costs before calls, preserve unknown consumption after interruption, and never repeat an uncertain action automatically.
 

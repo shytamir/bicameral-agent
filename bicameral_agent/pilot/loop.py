@@ -8,6 +8,7 @@ from ..kernel.models import Grant
 from ..storage.contracts import EpisodeState
 from ..storage.store import identifier, RequestConflict
 from .inputs import PilotInputs
+from .runtime import task_rejection_details
 
 
 class CallLimit(ValueError):
@@ -110,7 +111,7 @@ class Loop:
                     raise CallLimit('rendered selected memory exceeds allowance')
                 grants = [v for _, v in self.k.records.latest('GRANT') if v['status'] == 'ACTIVE']
                 objective = self.k._objective(run.objective_id)
-                payload = {'work': work['prompt'], 'work_event_id': work['event_id'], 'arm': self.k.config.arm,
+                payload = {'work': work['prompt'], 'work_event_id': work['event_id'], 'episode_id': episode, 'arm': self.k.config.arm,
                     'objective': {'statement': objective.statement, 'authority_event_id': objective.authority_event_id},
                     'task_tick': run.task_tick, 'memory': memory, 'exchange': exchange,
                     'permissions': [{'scopes': g['scopes'], 'remaining': None if g['invocation_limit'] is None else
@@ -248,7 +249,8 @@ class Loop:
             self.interrupt(key, 'PROVIDER_LIMIT_MISMATCH', raw=wire)
             return {'status': 'UNKNOWN', 'invocation': key}
         if error:
-            return self._finish(key, {'status': 'REJECTED', 'reason': error})
+            return self._finish(key, {'status': 'REJECTED', 'reason': error,
+                'details': task_rejection_details(raw, call['role'], call['purpose'])})
         try:
             return self._command(key, task)
         except (ValueError, PermissionError) as error:

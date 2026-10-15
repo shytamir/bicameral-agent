@@ -1,78 +1,124 @@
 {
   "$defs": {
     "Action": {
-      "additionalProperties": false,
-      "properties": {
-        "expected": {
-          "anyOf": [
-            {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected": {
               "$ref": "#/$defs/Postcondition"
             },
-            {
+            "grounds": {
+              "minLength": 1,
+              "title": "Grounds",
+              "type": "string"
+            },
+            "kind": {
+              "const": "ACTION",
+              "title": "Kind",
+              "type": "string"
+            },
+            "no_meaningful_postcondition": {
+              "default": null,
               "type": "null"
+            },
+            "operation": {
+              "discriminator": {
+                "mapping": {
+                  "inspect": "#/$defs/ReadOperation",
+                  "read_config": "#/$defs/ReadOperation",
+                  "read_health": "#/$defs/ReadOperation",
+                  "restart": "#/$defs/RestartOperation",
+                  "restore_snapshot": "#/$defs/RestoreOperation",
+                  "set_config": "#/$defs/SetOperation"
+                },
+                "propertyName": "operation"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ReadOperation"
+                },
+                {
+                  "$ref": "#/$defs/SetOperation"
+                },
+                {
+                  "$ref": "#/$defs/RestartOperation"
+                },
+                {
+                  "$ref": "#/$defs/RestoreOperation"
+                }
+              ],
+              "title": "Operation"
             }
+          },
+          "required": [
+            "kind",
+            "operation",
+            "grounds",
+            "expected"
           ],
-          "default": null
+          "type": "object"
         },
-        "grounds": {
-          "minLength": 1,
-          "title": "Grounds",
-          "type": "string"
-        },
-        "kind": {
-          "const": "ACTION",
-          "title": "Kind",
-          "type": "string"
-        },
-        "no_meaningful_postcondition": {
-          "anyOf": [
-            {
+        {
+          "additionalProperties": false,
+          "properties": {
+            "expected": {
+              "default": null,
+              "type": "null"
+            },
+            "grounds": {
+              "minLength": 1,
+              "title": "Grounds",
+              "type": "string"
+            },
+            "kind": {
+              "const": "ACTION",
+              "title": "Kind",
+              "type": "string"
+            },
+            "no_meaningful_postcondition": {
               "minLength": 1,
               "type": "string"
             },
-            {
-              "type": "null"
+            "operation": {
+              "discriminator": {
+                "mapping": {
+                  "inspect": "#/$defs/ReadOperation",
+                  "read_config": "#/$defs/ReadOperation",
+                  "read_health": "#/$defs/ReadOperation",
+                  "restart": "#/$defs/RestartOperation",
+                  "restore_snapshot": "#/$defs/RestoreOperation",
+                  "set_config": "#/$defs/SetOperation"
+                },
+                "propertyName": "operation"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/ReadOperation"
+                },
+                {
+                  "$ref": "#/$defs/SetOperation"
+                },
+                {
+                  "$ref": "#/$defs/RestartOperation"
+                },
+                {
+                  "$ref": "#/$defs/RestoreOperation"
+                }
+              ],
+              "title": "Operation"
             }
-          ],
-          "default": null,
-          "title": "No Meaningful Postcondition"
-        },
-        "operation": {
-          "discriminator": {
-            "mapping": {
-              "inspect": "#/$defs/ReadOperation",
-              "read_config": "#/$defs/ReadOperation",
-              "read_health": "#/$defs/ReadOperation",
-              "restart": "#/$defs/RestartOperation",
-              "restore_snapshot": "#/$defs/RestoreOperation",
-              "set_config": "#/$defs/SetOperation"
-            },
-            "propertyName": "operation"
           },
-          "oneOf": [
-            {
-              "$ref": "#/$defs/ReadOperation"
-            },
-            {
-              "$ref": "#/$defs/SetOperation"
-            },
-            {
-              "$ref": "#/$defs/RestartOperation"
-            },
-            {
-              "$ref": "#/$defs/RestoreOperation"
-            }
+          "required": [
+            "kind",
+            "operation",
+            "grounds",
+            "no_meaningful_postcondition"
           ],
-          "title": "Operation"
+          "type": "object"
         }
-      },
-      "required": [
-        "kind",
-        "operation",
-        "grounds"
       ],
-      "title": "Action",
-      "type": "object"
+      "title": "Action"
     },
     "Activity": {
       "additionalProperties": false,

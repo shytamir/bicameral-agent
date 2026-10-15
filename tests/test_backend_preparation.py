@@ -287,14 +287,18 @@ class RequestTests(unittest.TestCase):
                 wire = load_json(request.wire)
                 visible = load_json(wire['prompt'].split('Response JSON Schema:\n')[1].split('<|im_end|>')[0].encode())
                 for name, definition in schema['$defs'].items():
+                    variants = definition.get('oneOf', [definition])
                     for rendered in (wire['format'], visible):
-                        self.assertEqual(list(definition['properties']), list(rendered['$defs'][name]['properties']))
-                    # Nested queries, mutations, participation and proposals must
-                    # select their discriminant before arguments too.
-                    for tag in ('kind', 'operation'):
-                        tagged = definition['properties'].get(tag, {})
-                        if tag in definition.get('required', []) and ('const' in tagged or 'enum' in tagged):
-                            self.assertEqual(tag, next(iter(definition['properties'])))
+                        actual = rendered['$defs'][name].get('oneOf', [rendered['$defs'][name]])
+                        for original, encoded in zip(variants, actual):
+                            self.assertEqual(list(original['properties']), list(encoded['properties']))
+                    # Include both complete ACTION alternatives; nested contracts
+                    # must still select their discriminant before arguments.
+                    for variant in variants:
+                        for tag in ('kind', 'operation'):
+                            tagged = variant['properties'].get(tag, {})
+                            if tag in variant.get('required', []) and ('const' in tagged or 'enum' in tagged):
+                                self.assertEqual(tag, next(iter(variant['properties'])))
                 self.assertEqual(schema, wire['format'])  # No weakened constraints.
                 self.assertEqual(len(wire['prompt'].encode()), request.prompt_tokens)
                 self.assertEqual(sha256(request.wire).hexdigest(), request.sha256)
@@ -313,9 +317,9 @@ class RequestTests(unittest.TestCase):
             result = []
             for name in ('Action', 'Retrieve', 'Policy', 'Outcome'):
                 definition = rendered['$defs'][name]
-                required = [p for p in definition['properties'] if p in definition['required']]
-                if required[0] == 'kind':
-                    result.append(definition['properties']['kind']['const'])
+                variants = definition.get('oneOf', [definition])
+                if all(next(p for p in v['properties'] if p in v['required']) == 'kind' for v in variants):
+                    result.append(variants[0]['properties']['kind']['const'])
             return result
 
         # Reproduce the previous wire format's branch trap from the same schema.
