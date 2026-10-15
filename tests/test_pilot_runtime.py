@@ -11,7 +11,7 @@ from unittest.mock import patch
 from bicameral_agent.backends.ollama import GenerationSettings, ModelPin, MetadataError
 from bicameral_agent.backends.review import V0B_ASSETS
 from bicameral_agent.contracts.base import canonical_bytes, load_json, parse
-from bicameral_agent.contracts.pilot import PilotConfiguration, Proposal, Resources, response_contract
+from bicameral_agent.contracts.pilot import PilotConfiguration, Proposal, Resources, Subject, response_contract
 from bicameral_agent.kernel.fixture import ActionRequest
 from bicameral_agent.storage import Store, EvidenceUnavailable, RequestConflict
 from bicameral_agent.storage.retention import closure
@@ -422,6 +422,32 @@ class PilotRetentionTests(PilotCase):
 
 
 class PilotParsingTests(unittest.TestCase):
+    def test_subject_contracts_are_strict_and_names_preserve_subsecond_time(self):
+        raw = {'designation': 'Aaron', 'initiated_at_unix_ns': 1_792_083_600_123_456_789}
+        subject = parse(Subject, canonical_bytes(raw))
+        self.assertEqual('Aaron-1792083600.123456789', subject.name)
+        self.assertEqual(canonical_bytes(raw), canonical_bytes(subject))
+        self.assertEqual(subject, parse(Subject, canonical_bytes(subject)))
+        later = parse(Subject, canonical_bytes(raw | {'initiated_at_unix_ns': raw['initiated_at_unix_ns'] + 1}))
+        self.assertNotEqual(subject.name, later.name)
+        for changes in ({'designation': 'Other'}, {'initiated_at_unix_ns': '1792083600123456789'},
+                        {'initiated_at_unix_ns': True}, {'initiated_at_unix_ns': 0}, {'name': subject.name}):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                parse(Subject, canonical_bytes(raw | changes))
+        config, _ = package(FakeBackend())
+        self.assertIsNone(parse(PilotConfiguration, canonical_bytes(config)).subject_designation)
+        with self.assertRaises(ValueError):
+            parse(PilotConfiguration, canonical_bytes(config | {'subject_designation': 'Aaron'}))
+        config['mode'] = config['activity']['execution'] = 'MODEL'
+        for arm, designation in (('A', 'Aaron'), ('B', 'Abbey'), ('C', 'Acme')):
+            value = parse(PilotConfiguration, canonical_bytes(config | {'arm': arm, 'subject_designation': designation}))
+            self.assertEqual(value, parse(PilotConfiguration, canonical_bytes(value)))
+        with self.assertRaises(ValueError):
+            parse(PilotConfiguration, canonical_bytes(config | {'subject_designation': 'Abbey'}))
+        for role in ('OPERATOR', 'STEWARD'):
+            with self.assertRaises(ValueError):
+                parse(response_contract(role), canonical_bytes(response() | {'subject': raw}))
+
     def test_generated_schema_and_configuration_version_roundtrip(self):
         from bicameral_agent.pilot.schema import schema_bytes
         self.assertEqual(schema_bytes(), (ROOT / 'schemas/pilot-0.4.schema.json').read_bytes())

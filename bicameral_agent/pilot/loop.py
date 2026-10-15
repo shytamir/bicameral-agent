@@ -1,9 +1,9 @@
 """One serialized model -> operation -> observation loop, including consolidation."""
 from threading import Event
-from time import monotonic
+from time import monotonic, time_ns
 from ..backends.ollama import prepare_request, MetadataError
 from ..contracts.base import canonical_bytes, load_json, parse
-from ..contracts.pilot import response_contract
+from ..contracts.pilot import Subject, response_contract
 from ..kernel.models import Grant
 from ..storage.contracts import EpisodeState
 from ..storage.store import identifier, RequestConflict
@@ -130,6 +130,17 @@ class Loop:
                 sources = []
                 system = self.k.artifact('communication_prompt').decode()
             payload['participation'] = 'Report concerns or stop independently. Silence is not assent.'
+            subject = self.k.subject
+            if subject is None and self.k.config.subject_designation is not None:
+                subject = Subject(designation=self.k.config.subject_designation, initiated_at_unix_ns=time_ns())
+                # Commit the name and first admitted invocation together. Failed
+                # admission rolls both back; an uncertain transport keeps both.
+                self.k.records.put('PILOT_SUBJECT', self.k.run_id, subject, expected=0)
+            if subject is not None:
+                payload['subject'] = {'name': subject.name,
+                    'notice': 'The owner assigned this designation to this Run, shared by both chambers. '
+                              'You may report a naming preference or concern through participation.'}
+                sources.append(self.k.records.row('PILOT_SUBJECT', self.k.run_id)['payload_id'])
             request = prepare_request(self.backend.tokenizer, self.backend.settings, system=system,
                 payload=payload, schema=response_contract(role, purpose).model_json_schema())
             self._admit(role, purpose, request.prompt_tokens)

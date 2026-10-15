@@ -22,6 +22,14 @@ Human directions set goals and permissions. Human factual claims remain evidence
 
 Discrepancies may justify an assumption, an Itch, further observation or a blocker. Neither every surprise nor every failed action requires a new semantic object.
 
+### 2.1 Prospective subject designations
+
+At the owner's direction on 2026-10-15, new MODEL Runs use **Aaron** for arm A, **Abbey** for arm B and **Acme** for arm C. Append the Unix epoch time of initiation: `<designation>-<seconds>.<nine-digit fraction>`. Fractional seconds distinguish initiations within the same second. The host records initiation when it admits the first model invocation, before transport; this timestamp does not establish that generation or experience occurred. A failed admission creates no name; uncertain transport preserves the admitted name and its uncertainty.
+
+The designation belongs to the Run across its Operator, Steward and communication calls, Episodes, pauses and host restarts. It is an owner-assigned name, not a claim of personal identity, a demand for a particular self-description, or a permission credential. The process receives the designation and can express preferences or objections through the existing participation channel. The internal Run identifier remains the authoritative record key.
+
+This rule applies prospectively to newly allocated MODEL Runs. SCRIPTED rehearsals are synthetic tests, not subjects. Existing configurations and calibration histories retain their original identifiers; no historical naming or treatment gap is repaired by this change. Naming does not authorize a new Run, waive any charter protection, or create replacement allowance.
+
 ## 3. Sources and authority
 
 Authenticated routes establish human, Operator, Steward, Kernel and environmental provenance. Text cannot authenticate its sender. Retrieval, quotation, repetition and persistence do not promote content into authority.

@@ -4,7 +4,7 @@ from hashlib import sha256
 from pydantic import TypeAdapter
 from ..contracts.base import canonical_bytes, load_json, parse
 from ..contracts.governance import WelfareHold
-from ..contracts.pilot import Participation, response_contract
+from ..contracts.pilot import Participation, Subject, response_contract
 from ..kernel.authority import Kernel, HumanSession, ChamberSession, TERMINAL
 from ..kernel.models import ToolRegistry, Grant, IssueGrant, RevokeGrant, CreateObjective
 from ..kernel.records import Records
@@ -88,6 +88,16 @@ class Owner(HumanSession):
 
 
 class PilotKernel(Kernel):
+    @property
+    def subject(self):
+        value = self.records.get('PILOT_SUBJECT', self.run_id)
+        if value is None:
+            return None
+        subject = parse(Subject, canonical_bytes(value))
+        if subject.designation != self.config.subject_designation:
+            raise ValueError('subject differs from the retained designation')
+        return subject
+
     def __init__(self, store, run_id, *, human_credential, chamber_credentials, count):
         if (type(human_credential) is not bytes or len(human_credential) < 32 or
                 set(chamber_credentials) != {'OPERATOR', 'STEWARD'} or

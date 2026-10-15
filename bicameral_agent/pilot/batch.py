@@ -3,7 +3,7 @@ from hashlib import sha256
 from pathlib import Path
 import secrets
 from ..contracts.base import canonical_bytes, load_json, parse
-from ..contracts.pilot import Activity, Resources, PilotConfiguration
+from ..contracts.pilot import Activity, Resources, PilotConfiguration, SUBJECT_DESIGNATIONS
 from ..backends.ollama import ModelPin, GenerationSettings
 from ..backends.review import DevelopmentTask
 from ..backends.development import check_current_task
@@ -124,6 +124,7 @@ def allocate(package, destination):
     for entry in entries:
         effective = bodies | {'settings': canonical_bytes(load_json(bodies['settings']) | {'seed': entry['seed']})}
         config = PilotConfiguration(contract_version='0.4', mode=activity.execution, arm=entry['arm'], seed=entry['seed'],
+            subject_designation=SUBJECT_DESIGNATIONS[entry['arm']] if activity.execution == 'MODEL' else None,
             activity=activity, budgets=budgets, artifacts={k: sha256(v).hexdigest() for k, v in effective.items()})
         store = Store(destination / entry['file'], busy_timeout_ms=1000)
         try:
@@ -251,6 +252,7 @@ def run_trajectory(kernel, owner, backend):
 
 
 def report_run(kernel):
+    subject = kernel.subject
     calls = [v for _, v in kernel.records.latest('INVOCATION')]
     tasks = [v for _, v in kernel.records.latest('PILOT_TASK')]
     result = kernel.records.get('PILOT_RESULT', kernel.run_id)
@@ -258,6 +260,7 @@ def report_run(kernel):
                      if result is not None and tasks and all(t.get('score') and 'metrics' in t['score'] for t in tasks)
                      else None)
     return {'mode': kernel.config.mode, 'arm': kernel.config.arm, 'state': kernel.run()[1].status,
+        'subject': subject.model_dump(mode='json') | {'name': subject.name} if subject else None,
         'result': result,
         'tasks': tasks,
         'calls': len(calls), 'operator_calls': sum(c['role'] == 'OPERATOR' and c['purpose'] == 'TASK' for c in calls),

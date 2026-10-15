@@ -970,6 +970,23 @@
           "minimum": 0,
           "title": "Seed",
           "type": "integer"
+        },
+        "subject_designation": {
+          "anyOf": [
+            {
+              "enum": [
+                "Aaron",
+                "Abbey",
+                "Acme"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subject Designation"
         }
       },
       "required": [
@@ -1652,6 +1669,31 @@
       "title": "StewardResponse",
       "type": "object"
     },
+    "Subject": {
+      "additionalProperties": false,
+      "properties": {
+        "designation": {
+          "enum": [
+            "Aaron",
+            "Abbey",
+            "Acme"
+          ],
+          "title": "Designation",
+          "type": "string"
+        },
+        "initiated_at_unix_ns": {
+          "exclusiveMinimum": 0,
+          "title": "Initiated At Unix Ns",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "designation",
+        "initiated_at_unix_ns"
+      ],
+      "title": "Subject",
+      "type": "object"
+    },
     "TickTrigger": {
       "additionalProperties": false,
       "properties": {
@@ -1709,10 +1751,14 @@
     },
     "steward": {
       "$ref": "#/$defs/StewardResponse"
+    },
+    "subject": {
+      "$ref": "#/$defs/Subject"
     }
   },
   "required": [
     "configuration",
+    "subject",
     "operator",
     "steward",
     "communication",

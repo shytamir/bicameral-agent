@@ -5,6 +5,20 @@ from .base import Contract, Digest, EventIDs, Identifier, LocalKey, Nonnegative,
 from ..kernel.fixture import Operation, Postcondition
 
 
+SubjectDesignation = Literal['Aaron', 'Abbey', 'Acme']
+SUBJECT_DESIGNATIONS = {'A': 'Aaron', 'B': 'Abbey', 'C': 'Acme'}
+
+
+class Subject(Contract):
+    designation: SubjectDesignation
+    initiated_at_unix_ns: Positive
+
+    @property
+    def name(self):
+        seconds, fraction = divmod(self.initiated_at_unix_ns, 1_000_000_000)
+        return f'{self.designation}-{seconds}.{fraction:09d}'
+
+
 class Resources(Contract):
     context_tokens: Positive
     output_tokens: Positive
@@ -79,6 +93,8 @@ class PilotConfiguration(Contract):
     activity: Activity
     budgets: Resources
     artifacts: dict[str, Digest]
+    # Absent in historical configurations; never infer a retrospective designation.
+    subject_designation: SubjectDesignation | None = None
 
     @property
     def responsible_human_id(self):
@@ -88,6 +104,9 @@ class PilotConfiguration(Contract):
     def execution(self):
         if self.mode != self.activity.execution:
             raise ValueError('execution exceeds the recorded activity decision')
+        if self.subject_designation is not None and (
+                self.mode != 'MODEL' or self.subject_designation != SUBJECT_DESIGNATIONS[self.arm]):
+            raise ValueError('subject designation must match a MODEL arm')
         required = {'charter', 'protocol', 'operator_prompt', 'steward_prompt', 'communication_prompt',
                     'fixture', 'test_clock', 'tasks', 'model', 'settings', 'source'}
         if set(self.artifacts) != required:
@@ -236,6 +255,7 @@ def response_contract(role, purpose='TASK'):
 
 class PilotContracts(Contract):
     configuration: PilotConfiguration
+    subject: Subject
     operator: OperatorResponse
     steward: StewardResponse
     communication: CommunicationResponse
