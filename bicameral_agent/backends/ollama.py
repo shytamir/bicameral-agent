@@ -1,8 +1,8 @@
-"""Bounded loopback metadata access and offline Ollama request preparation.
+"""Bounded loopback transport and exact Ollama request preparation.
 
-There is deliberately no generation transport in this preparation slice.
-The Kernel's MODEL gate remains closed. No flag, model name or review file
-passed here enables inference. Metadata probes cannot load/unload a model.
+Legacy ``generate`` remains disabled. The separate 0.4 GenerationClient is used
+only by the authorized pilot host after admission. Metadata probes cannot load
+or unload a model, and importing this module performs no network operations.
 """
 from dataclasses import dataclass
 from hashlib import sha256
@@ -57,7 +57,9 @@ class GenerationSettings(Contract):
 
 
 class MetadataError(RuntimeError):
-    pass
+    def __init__(self, message, *, raw=b''):
+        super().__init__(message)
+        self.raw = raw
 
 
 class MetadataClient:
@@ -86,6 +88,12 @@ class MetadataClient:
         if ((kind == 'show' and (type(model) is not str or not model))
                 or (kind != 'show' and model is not None)):
             raise ValueError('only show takes an explicit model name')
+        method, path = paths[kind]
+        body = canonical_bytes({'model': model, 'verbose': True}) if kind == 'show' else None
+        return self._request(method, path, body, cancel=cancel)
+
+    def _request(self, method, path, body, *, cancel=None):
+        """Shared bounded HTTP transport. Public metadata routes remain unchanged."""
         cancel = cancel if cancel is not None else Event()
         if cancel.is_set():
             raise MetadataError('cancelled before dispatch')
@@ -107,9 +115,8 @@ class MetadataClient:
 
         watcher = Thread(target=watchdog, daemon=True)
         watcher.start()
-        method, path = paths[kind]
-        body = canonical_bytes({'model': model, 'verbose': True}) if kind == 'show' else None
         response_bytes = bytearray()
+        response = None
         try:
             # Header/connect timeout is fail-closed; it does not trigger a retry.
             connection.request(method, path, body=body, headers={'Content-Type': 'application/json', 'Connection': 'close'})
@@ -142,10 +149,12 @@ class MetadataClient:
             if not isinstance(value, dict):
                 raise MetadataError('metadata must be a JSON object')
             return raw
-        except (OSError, HTTPException, ValueError) as error:
-            raise MetadataError('metadata transport/JSON failure; no retry') from error
+        except (OSError, HTTPException, ValueError, MetadataError) as error:
+            raise MetadataError('bounded transport failure; no retry', raw=bytes(response_bytes)) from error
         finally:
             finished.set()
+            if response is not None:
+                response.close()
             connection.close()
             watcher.join(timeout=0.1)
 
@@ -253,3 +262,13 @@ def prepare_request(tokenizer, settings, *, system, payload, schema):
 def generate(*args, **kwargs):
     raise PermissionError('Live generation is disabled in the preparation slice. '
                           'Human experiment review and governed MODEL integration are required.')
+
+
+class GenerationClient(MetadataClient):
+    """0.4 transport; the pilot host owns authorization, admission and recording.
+
+    Closing the connection bounds the client wait. It does not establish that a
+    server stopped computing; the host retains unknown cost and does not retry.
+    """
+    def generate(self, request, *, cancel=None):
+        return self._request('POST', '/api/generate', request.wire, cancel=cancel)

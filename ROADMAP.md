@@ -12,24 +12,24 @@ That roadmap is complete. Its full restoration/export/removal platform is not a 
 
 ## Present authorization
 
-The owner authorized revision of the Protocol and Specification, reconciliation of the other documents and an accessible fallback archive, and subsequently authorized committing and pushing them. Runtime implementation, stored-history migration and model activity remain outside this work.
+The owner subsequently authorized minimal runtime changes, reuse of existing mechanisms and tests without live model calls, then separately authorized committing and pushing the runtime and updated documents. Stored-history migration and model activity remain outside authorization.
 
-The existing runtime remains SCRIPTED-only. The old v0b package is a superseded, unauthorized draft; its manifest is stale after the document changes. See [development direction](V0B_REVIEW.md).
+The historical runtime remains SCRIPTED-only. A separate 0.4 development path now implements direct controls and an Ollama loop tested with fake responses. The old v0b package remains a superseded, unauthorized draft. See [development direction](V0B_REVIEW.md).
 
-## Remaining transition
+## Bounded transition
 
-A later implementation request can select a coherent bounded change from the Specification's transition section. The substantive changes are:
+The new development path implements:
 
 - Direct owner controls and automatically recorded routine corrections, with proportionate decisions for material interventions.
 - Smaller model-facing operations, host-bound metadata and simplified semantic lifecycles, retaining atomicity, evidence and effective withdrawal.
 - Concise prompts and understandable resource profiles with recorded derived limits.
 - A narrow storage/copy arrangement with verified exceptional removal, using existing machinery where needed.
 
-Preserve the tested stop, permission, transaction, uncertainty and arm-isolation boundaries while making those changes. Version new contracts explicitly; leave existing histories intact unless an actual migration is authorized. Tests should establish the revised guarantees, not preserve obsolete ceremony. Do not create a new epic inventory or general-purpose governance framework to perform the simplification.
+The contracts are explicitly versioned 0.4, with historical records left intact. The retained store and fixture mechanisms keep permission, transaction and uncertainty checks; revised tests exercise the simpler workflow. [README](README.md) owns the evidence, operating envelope and remaining responsibilities.
 
 ## Development and evaluation
 
-Before model use, integrate and validate the actual backend and core operating arrangement, establish feasible data handling, and obtain authorization for a bounded activity. A single authorization may include calibration and development trials, permitted adjustment ranges, cumulative limits and disclosed endings. Routine adjustments inside that scope are recorded without renewed package approval.
+Before model use, verify the actual installed backend and data handling and obtain authorization for a bounded activity. Offline integration is not evidence of actual model behavior. A single authorization may include calibration and development trials, permitted adjustment ranges, cumulative limits and disclosed endings. Routine adjustments inside that scope are recorded without renewed package approval.
 
 Development should first establish protocol usability, manageable costs and tasks where retained history can meaningfully affect performance, especially A versus C. The existing fixture has not established that comparison. Development evidence can revise the design and cannot be presented as held-out confirmation.
 

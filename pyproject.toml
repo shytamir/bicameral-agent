@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bicameral-agent"
 version = "0.1.0"
-description = "LLM-less governed runtime and matched-trajectory conformance for the bounded continuity pilot"
+description = "Bounded continuity pilot with explicit owner controls, local Ollama integration and offline conformance tests"
 requires-python = ">=3.12"
 dependencies = ["pydantic==2.13.5"]
 

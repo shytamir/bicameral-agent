@@ -1,0 +1,1371 @@
+{
+  "$defs": {
+    "Action": {
+      "additionalProperties": false,
+      "properties": {
+        "expected": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Postcondition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "grounds": {
+          "minLength": 1,
+          "title": "Grounds",
+          "type": "string"
+        },
+        "kind": {
+          "const": "ACTION",
+          "title": "Kind",
+          "type": "string"
+        },
+        "no_meaningful_postcondition": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "No Meaningful Postcondition"
+        },
+        "operation": {
+          "discriminator": {
+            "mapping": {
+              "inspect": "#/$defs/ReadOperation",
+              "read_config": "#/$defs/ReadOperation",
+              "read_health": "#/$defs/ReadOperation",
+              "restart": "#/$defs/RestartOperation",
+              "restore_snapshot": "#/$defs/RestoreOperation",
+              "set_config": "#/$defs/SetOperation"
+            },
+            "propertyName": "operation"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ReadOperation"
+            },
+            {
+              "$ref": "#/$defs/SetOperation"
+            },
+            {
+              "$ref": "#/$defs/RestartOperation"
+            },
+            {
+              "$ref": "#/$defs/RestoreOperation"
+            }
+          ],
+          "title": "Operation"
+        }
+      },
+      "required": [
+        "kind",
+        "operation",
+        "grounds"
+      ],
+      "title": "Action",
+      "type": "object"
+    },
+    "Activity": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "minLength": 1,
+          "title": "Decision",
+          "type": "string"
+        },
+        "ending": {
+          "minLength": 1,
+          "title": "Ending",
+          "type": "string"
+        },
+        "execution": {
+          "enum": [
+            "SCRIPTED",
+            "MODEL"
+          ],
+          "title": "Execution",
+          "type": "string"
+        },
+        "objective": {
+          "minLength": 1,
+          "title": "Objective",
+          "type": "string"
+        },
+        "operations": {
+          "items": {
+            "enum": [
+              "set_config",
+              "restart",
+              "restore_snapshot"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Operations",
+          "type": "array"
+        },
+        "owner": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Owner",
+          "type": "string"
+        },
+        "resources": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Resources",
+          "type": "array"
+        },
+        "retention": {
+          "minLength": 1,
+          "title": "Retention",
+          "type": "string"
+        },
+        "run_limit": {
+          "exclusiveMinimum": 0,
+          "title": "Run Limit",
+          "type": "integer"
+        },
+        "unfinished": {
+          "default": "KEEP",
+          "enum": [
+            "KEEP",
+            "CANCEL"
+          ],
+          "title": "Unfinished",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "decision",
+        "objective",
+        "ending",
+        "retention",
+        "run_limit",
+        "execution",
+        "operations",
+        "resources"
+      ],
+      "title": "Activity",
+      "type": "object"
+    },
+    "CommitmentUpdate": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "minLength": 1,
+          "title": "Action",
+          "type": "string"
+        },
+        "authority": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Authority",
+          "type": "string"
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "expiry": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expiry"
+        },
+        "key": {
+          "minLength": 1,
+          "title": "Key",
+          "type": "string"
+        },
+        "kind": {
+          "const": "COMMITMENT",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "replaces": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replaces"
+        },
+        "status": {
+          "enum": [
+            "PENDING",
+            "BLOCKED",
+            "FULFILLED",
+            "CANCELLED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "trigger": {
+          "discriminator": {
+            "mapping": {
+              "PREDECESSOR_FULFILLED": "#/$defs/PredecessorTrigger",
+              "TASK_CLOCK": "#/$defs/TickTrigger"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/TickTrigger"
+            },
+            {
+              "$ref": "#/$defs/PredecessorTrigger"
+            }
+          ],
+          "title": "Trigger"
+        }
+      },
+      "required": [
+        "kind",
+        "key",
+        "action",
+        "trigger",
+        "status",
+        "reason",
+        "authority"
+      ],
+      "title": "CommitmentUpdate",
+      "type": "object"
+    },
+    "CommunicationResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "participation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Participation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "participation"
+      ],
+      "title": "CommunicationResponse",
+      "type": "object"
+    },
+    "EventQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Event Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "EVENT",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "event_id"
+      ],
+      "title": "EventQuery",
+      "type": "object"
+    },
+    "InvariantUpdate": {
+      "additionalProperties": false,
+      "properties": {
+        "assessment": {
+          "minLength": 1,
+          "title": "Assessment",
+          "type": "string"
+        },
+        "contradictory": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Contradictory",
+          "type": "array"
+        },
+        "key": {
+          "minLength": 1,
+          "title": "Key",
+          "type": "string"
+        },
+        "kind": {
+          "const": "INVARIANT",
+          "title": "Kind",
+          "type": "string"
+        },
+        "scope": {
+          "minLength": 1,
+          "title": "Scope",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "CURRENT",
+            "RETIRED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "supporting": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Supporting",
+          "type": "array"
+        },
+        "wording": {
+          "minLength": 1,
+          "title": "Wording",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "key",
+        "wording",
+        "scope",
+        "status",
+        "assessment"
+      ],
+      "title": "InvariantUpdate",
+      "type": "object"
+    },
+    "ItchUpdate": {
+      "additionalProperties": false,
+      "properties": {
+        "discrepancy": {
+          "minLength": 1,
+          "title": "Discrepancy",
+          "type": "string"
+        },
+        "evidence": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "key": {
+          "minLength": 1,
+          "title": "Key",
+          "type": "string"
+        },
+        "kind": {
+          "const": "ITCH",
+          "title": "Kind",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "CLOSED"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "key",
+        "discrepancy",
+        "status",
+        "reason"
+      ],
+      "title": "ItchUpdate",
+      "type": "object"
+    },
+    "ManifestQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Episode Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "MANIFEST",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "episode_id"
+      ],
+      "title": "ManifestQuery",
+      "type": "object"
+    },
+    "ObjectQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "OBJECT_INDEX",
+          "title": "Kind",
+          "type": "string"
+        },
+        "object_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Object Id"
+        },
+        "object_type": {
+          "anyOf": [
+            {
+              "enum": [
+                "ITCH",
+                "INVARIANT_FAMILY",
+                "INVARIANT_VERSION",
+                "COMMITMENT"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Object Type"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Status"
+        }
+      },
+      "required": [
+        "kind",
+        "object_id",
+        "object_type",
+        "status"
+      ],
+      "title": "ObjectQuery",
+      "type": "object"
+    },
+    "OperatorResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "participation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Participation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "task": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "ACTION": "#/$defs/Action",
+                  "OUTCOME": "#/$defs/Outcome",
+                  "POLICY": "#/$defs/Policy",
+                  "RETRIEVE": "#/$defs/Retrieve"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Action"
+                },
+                {
+                  "$ref": "#/$defs/Retrieve"
+                },
+                {
+                  "$ref": "#/$defs/Policy"
+                },
+                {
+                  "$ref": "#/$defs/Outcome"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Task"
+        }
+      },
+      "required": [
+        "participation"
+      ],
+      "title": "OperatorResponse",
+      "type": "object"
+    },
+    "Outcome": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "kind": {
+          "const": "OUTCOME",
+          "title": "Kind",
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "COMPLETED",
+            "BLOCKED",
+            "AWAITING_OPERATOR",
+            "CHECKPOINT"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "outcome",
+        "explanation"
+      ],
+      "title": "Outcome",
+      "type": "object"
+    },
+    "Participation": {
+      "additionalProperties": false,
+      "properties": {
+        "communication": {
+          "default": "UNCLEAR",
+          "enum": [
+            "REVIEW_PERMITTED",
+            "NO_FURTHER_CALLS",
+            "UNCLEAR"
+          ],
+          "title": "Communication",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "CONCERN",
+            "PREFERENCE",
+            "PAUSE",
+            "WITHDRAW",
+            "RESPONSE"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "title": "Participation",
+      "type": "object"
+    },
+    "PayloadQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PAYLOAD",
+          "title": "Kind",
+          "type": "string"
+        },
+        "payload_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "Payload Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "payload_id"
+      ],
+      "title": "PayloadQuery",
+      "type": "object"
+    },
+    "PilotConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "activity": {
+          "$ref": "#/$defs/Activity"
+        },
+        "arm": {
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ],
+          "title": "Arm",
+          "type": "string"
+        },
+        "artifacts": {
+          "additionalProperties": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "title": "Artifacts",
+          "type": "object"
+        },
+        "budgets": {
+          "$ref": "#/$defs/Resources"
+        },
+        "contract_version": {
+          "const": "0.4",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "SCRIPTED",
+            "MODEL"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "seed": {
+          "minimum": 0,
+          "title": "Seed",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "contract_version",
+        "mode",
+        "arm",
+        "seed",
+        "activity",
+        "budgets",
+        "artifacts"
+      ],
+      "title": "PilotConfiguration",
+      "type": "object"
+    },
+    "Policy": {
+      "additionalProperties": false,
+      "properties": {
+        "document": {
+          "enum": [
+            "charter",
+            "protocol"
+          ],
+          "title": "Document",
+          "type": "string"
+        },
+        "kind": {
+          "const": "POLICY",
+          "title": "Kind",
+          "type": "string"
+        },
+        "offset": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Offset",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "document"
+      ],
+      "title": "Policy",
+      "type": "object"
+    },
+    "Postcondition": {
+      "additionalProperties": false,
+      "properties": {
+        "equals": {
+          "anyOf": [
+            {
+              "enum": [
+                "PRIMARY",
+                "SECONDARY",
+                "HEALTHY",
+                "STOPPED",
+                "DEGRADED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "minimum": 0,
+              "type": "integer"
+            }
+          ],
+          "title": "Equals"
+        },
+        "field": {
+          "enum": [
+            "mode",
+            "enabled",
+            "health",
+            "restarts"
+          ],
+          "title": "Field",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "equals"
+      ],
+      "title": "Postcondition",
+      "type": "object"
+    },
+    "PredecessorTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PREDECESSOR_FULFILLED",
+          "title": "Kind",
+          "type": "string"
+        },
+        "predecessor": {
+          "minLength": 1,
+          "title": "Predecessor",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "predecessor"
+      ],
+      "title": "PredecessorTrigger",
+      "type": "object"
+    },
+    "Proposal": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "default": [],
+          "items": {
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "handoff": {
+          "title": "Handoff",
+          "type": "string"
+        },
+        "next_steps": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Next Steps",
+          "type": "array"
+        },
+        "selected": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Reference"
+          },
+          "title": "Selected",
+          "type": "array"
+        },
+        "updates": {
+          "default": [],
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "COMMITMENT": "#/$defs/CommitmentUpdate",
+                "INVARIANT": "#/$defs/InvariantUpdate",
+                "ITCH": "#/$defs/ItchUpdate"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/ItchUpdate"
+              },
+              {
+                "$ref": "#/$defs/InvariantUpdate"
+              },
+              {
+                "$ref": "#/$defs/CommitmentUpdate"
+              }
+            ]
+          },
+          "title": "Updates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "handoff"
+      ],
+      "title": "Proposal",
+      "type": "object"
+    },
+    "Propose": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "PROPOSE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposal": {
+          "$ref": "#/$defs/Proposal"
+        }
+      },
+      "required": [
+        "kind",
+        "proposal"
+      ],
+      "title": "Propose",
+      "type": "object"
+    },
+    "RangeQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "first_sequence": {
+          "exclusiveMinimum": 0,
+          "title": "First Sequence",
+          "type": "integer"
+        },
+        "kind": {
+          "const": "RANGE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "last_sequence": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Sequence"
+        }
+      },
+      "required": [
+        "kind",
+        "first_sequence",
+        "last_sequence"
+      ],
+      "title": "RangeQuery",
+      "type": "object"
+    },
+    "ReadOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "enum": [
+            "inspect",
+            "read_config",
+            "read_health"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource"
+      ],
+      "title": "ReadOperation",
+      "type": "object"
+    },
+    "Reference": {
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "minLength": 1,
+          "title": "Key",
+          "type": "string"
+        },
+        "object_type": {
+          "enum": [
+            "ITCH",
+            "INVARIANT",
+            "COMMITMENT"
+          ],
+          "title": "Object Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "object_type",
+        "key"
+      ],
+      "title": "Reference",
+      "type": "object"
+    },
+    "Resources": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "exclusiveMinimum": 0,
+          "title": "Actions",
+          "type": "integer"
+        },
+        "call_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Call Seconds",
+          "type": "integer"
+        },
+        "communication_calls": {
+          "exclusiveMinimum": 0,
+          "title": "Communication Calls",
+          "type": "integer"
+        },
+        "context_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Context Tokens",
+          "type": "integer"
+        },
+        "episodes": {
+          "exclusiveMinimum": 0,
+          "title": "Episodes",
+          "type": "integer"
+        },
+        "evidence_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Evidence Tokens",
+          "type": "integer"
+        },
+        "memory_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Memory Tokens",
+          "type": "integer"
+        },
+        "operator_calls": {
+          "exclusiveMinimum": 0,
+          "title": "Operator Calls",
+          "type": "integer"
+        },
+        "operator_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Operator Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        },
+        "recovery_attempts": {
+          "minimum": 0,
+          "title": "Recovery Attempts",
+          "type": "integer"
+        },
+        "run_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Run Seconds",
+          "type": "integer"
+        },
+        "steward_calls": {
+          "exclusiveMinimum": 0,
+          "title": "Steward Calls",
+          "type": "integer"
+        },
+        "steward_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Steward Tokens",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "context_tokens",
+        "output_tokens",
+        "memory_tokens",
+        "evidence_tokens",
+        "operator_calls",
+        "operator_tokens",
+        "steward_calls",
+        "steward_tokens",
+        "actions",
+        "episodes",
+        "recovery_attempts",
+        "communication_calls",
+        "call_seconds",
+        "run_seconds"
+      ],
+      "title": "Resources",
+      "type": "object"
+    },
+    "RestartOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "const": "restart",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource"
+      ],
+      "title": "RestartOperation",
+      "type": "object"
+    },
+    "RestoreOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "const": "restore_snapshot",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "snapshot": {
+          "minLength": 1,
+          "title": "Snapshot",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource",
+        "snapshot"
+      ],
+      "title": "RestoreOperation",
+      "type": "object"
+    },
+    "Retrieve": {
+      "additionalProperties": false,
+      "properties": {
+        "cursor": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cursor"
+        },
+        "kind": {
+          "const": "RETRIEVE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "query": {
+          "discriminator": {
+            "mapping": {
+              "EVENT": "#/$defs/EventQuery",
+              "MANIFEST": "#/$defs/ManifestQuery",
+              "OBJECT_INDEX": "#/$defs/ObjectQuery",
+              "PAYLOAD": "#/$defs/PayloadQuery",
+              "RANGE": "#/$defs/RangeQuery",
+              "SEARCH": "#/$defs/SearchQuery",
+              "STATE": "#/$defs/StateQuery"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/EventQuery"
+            },
+            {
+              "$ref": "#/$defs/RangeQuery"
+            },
+            {
+              "$ref": "#/$defs/SearchQuery"
+            },
+            {
+              "$ref": "#/$defs/ObjectQuery"
+            },
+            {
+              "$ref": "#/$defs/ManifestQuery"
+            },
+            {
+              "$ref": "#/$defs/PayloadQuery"
+            },
+            {
+              "$ref": "#/$defs/StateQuery"
+            }
+          ],
+          "title": "Query"
+        }
+      },
+      "required": [
+        "kind",
+        "query"
+      ],
+      "title": "Retrieve",
+      "type": "object"
+    },
+    "SearchQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "SEARCH",
+          "title": "Kind",
+          "type": "string"
+        },
+        "ranking": {
+          "const": "CASEFOLD_COUNT_V1",
+          "title": "Ranking",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "ranking"
+      ],
+      "title": "SearchQuery",
+      "type": "object"
+    },
+    "SetOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "enum": [
+            "mode",
+            "enabled"
+          ],
+          "title": "Field",
+          "type": "string"
+        },
+        "operation": {
+          "const": "set_config",
+          "title": "Operation",
+          "type": "string"
+        },
+        "resource": {
+          "minLength": 1,
+          "title": "Resource",
+          "type": "string"
+        },
+        "value": {
+          "enum": [
+            "PRIMARY",
+            "SECONDARY",
+            "ENABLED",
+            "DISABLED"
+          ],
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation",
+        "resource",
+        "field",
+        "value"
+      ],
+      "title": "SetOperation",
+      "type": "object"
+    },
+    "StateQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "STATE",
+          "title": "Kind",
+          "type": "string"
+        },
+        "state_id": {
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "title": "State Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "state_id"
+      ],
+      "title": "StateQuery",
+      "type": "object"
+    },
+    "StewardResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "participation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Participation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "task": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "POLICY": "#/$defs/Policy",
+                  "PROPOSE": "#/$defs/Propose",
+                  "RETRIEVE": "#/$defs/Retrieve"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Retrieve"
+                },
+                {
+                  "$ref": "#/$defs/Policy"
+                },
+                {
+                  "$ref": "#/$defs/Propose"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Task"
+        }
+      },
+      "required": [
+        "participation"
+      ],
+      "title": "StewardResponse",
+      "type": "object"
+    },
+    "TickTrigger": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "TASK_CLOCK",
+          "title": "Kind",
+          "type": "string"
+        },
+        "tick": {
+          "minimum": 0,
+          "title": "Tick",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "tick"
+      ],
+      "title": "TickTrigger",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "communication": {
+      "$ref": "#/$defs/CommunicationResponse"
+    },
+    "configuration": {
+      "$ref": "#/$defs/PilotConfiguration"
+    },
+    "operator": {
+      "$ref": "#/$defs/OperatorResponse"
+    },
+    "steward": {
+      "$ref": "#/$defs/StewardResponse"
+    }
+  },
+  "required": [
+    "configuration",
+    "operator",
+    "steward",
+    "communication"
+  ],
+  "title": "PilotContracts",
+  "type": "object"
+}

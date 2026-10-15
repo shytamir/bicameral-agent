@@ -10,11 +10,11 @@ The owner-adopted [Reciprocal Charter](Reciprocal%20Charter.md) remains unchange
 
 On 2026-10-15 the owner directed a prospective simplification of the Protocol and Specification: trust the accountable owner, remove repeated procedural approval for routine decisions, simplify contracts, and keep the previous stronger procedures accessible if needed.
 
-**The active design is 0.4; the implemented runtime remains the procedural 0.3 baseline.** This revision changes documents only. It does not implement new contracts, migrate records, authorize model calls or publish a code release.
+**A bounded 0.4 development runtime is implemented and tested offline.** It reuses the SQLite store, fixture executor, journal retrieval, permission boundary and development scorer. The new path supplies direct owner controls, compact model contracts, semantic updates and an Ollama request/action/observation loop. No live model calls have been made in this change.
 
 The existing code at `22a28073bb37851f96c9313e6749fa6fff0de807` implements P01-P10 and integrated v0a within its previously accepted local SCRIPTED envelope. It includes the additional withdrawal/removal fixes, offline backend preparation and development fixture checks. Its historical handoff records 230 discovered tests, 228 passing and two optional tokenizer tests skipped. Those are prior results, not a fresh validation of this design.
 
-The Kernel still rejects MODEL execution. No empirical model result has been produced. Existing schemas, tests and wire version `0.3.p01` describe that earlier implementation; they do not silently acquire the new policy's meaning.
+The historical Kernel and `0.3.p01` interfaces retain their earlier meaning and remain SCRIPTED-only. New Runs use the explicitly separate [0.4 contracts](bicameral_agent/contracts/pilot.py) and [pilot host](bicameral_agent/pilot/runtime.py). Existing histories are not migrated. No empirical model result has been produced.
 
 ## Active documents
 
@@ -50,9 +50,30 @@ The [archive index](docs/archive/2026-10-15-procedural-baseline/README.md) links
 
 The owner requested this fallback because trust is compatible with fallibility and may need to be reconsidered. Suspected breaches require appropriate suspension, honest records and remedies. Stronger controls can be reinstated prospectively with reasons under Protocol section 8. The archive is not a second active policy, and reinstatement must not roll back current histories or excuse past conduct.
 
-## Existing implementation and validation
+## Running the development host
 
-Use an existing Python 3.12+ environment with the dependencies in [pyproject.toml](pyproject.toml). These commands check the earlier implementation, not 0.4 conformance:
+The [command-line entry point](bicameral_agent/pilot/__main__.py) supports allocation, running, status, pause/resume/termination and bounded evidence inspection. The [owner API](bicameral_agent/pilot/runtime.py) also provides direct correction, participation review, explicit consolidation skip and exceptional removal. Neither interface uses routine preview/confirmation tickets.
+
+A development package contains `activity.json` (one owner decision, resource profile, trajectory seeds and order seed), `fixture.json`, `clock.json`, `tasks.json`, `model.json` and `settings.json`. Optional `operator.md`, `steward.md` and `communication.md` override the concise supplied prompts; their effective bytes are retained. The [0.4 schema](schemas/pilot-0.4.schema.json) defines the activity and resource profile. Task/fixture shapes reuse the existing development assets, but the superseded v0b plan is not an activity authorization. Preparing the actual package is part of the separately authorized calibration, not paperwork required for each task.
+
+The activity states the ending in advance. Its `unfinished` setting defaults to `KEEP`, preserving outstanding commitments at termination; `CANCEL` requires an explicit activity choice.
+
+```text
+python -B -m bicameral_agent.pilot allocate <reviewed-package> <new-batch-directory>
+python -B -m bicameral_agent.pilot status <run.sqlite>
+python -B -m bicameral_agent.pilot inspect <run.sqlite> --limit 20
+python -B -m bicameral_agent.pilot pause <run.sqlite> --reason "Pause for inspection"
+```
+
+After explicit MODEL activity authorization and backend/data-handling readiness, the execution command is `python -B -m bicameral_agent.pilot run <batch-directory> --tokenizer-directory <existing-pinned-tokenizer>`. This command can invoke Ollama. Allocation, status, controls and inspection do not. No component installation or model download is performed. The adapter currently reuses the existing Qwen/Ollama/tokenizer pin and raw framing; these are supported configuration constraints, not current machine-readiness claims.
+
+Every allocated Run has its own store. The store's WAL/SHM files and `.removals.sqlite` journal are managed sidecars, not independent backups. The host creates no routine exports or backup restores. Removal reuses durable blocking, dependency closure, SQLite scrubbing and compaction; real provider/log copies require explicit assessment, and unverified copies prevent a claim of complete removal. Removal never automatically resumes execution.
+
+The runner executes matched, counterbalanced development Runs with actual fixture observations and independent mechanical scoring. It reports development results only. The previous held-out analysis remains a historical SCRIPTED implementation; this change does not claim to have integrated a live finalized study, selected a sample size or established A-versus-C separation.
+
+## Validation
+
+Use an existing Python 3.12+ environment with the dependencies in [pyproject.toml](pyproject.toml). The model-preparation tokenizer dependency is needed only for the real pinned backend. Tests inject a fake tokenizer/backend; transport tests use a synthetic local HTTP server and never contact Ollama.
 
 ```text
 python -B -m unittest discover -s tests -q
@@ -61,18 +82,21 @@ python -B -m bicameral_agent.storage.schema --check
 python -B -m bicameral_agent.kernel.schema --check
 python -B -m bicameral_agent.backends.prepare --check-schema
 python -B -m bicameral_agent.backends.prepare --check-assets
+python -B -m bicameral_agent.pilot.schema --check
 git diff --check
 ```
 
 The old [pilot package](pilot/v0b/plan.json) remains `DRAFT_NOT_AUTHORIZED` and is superseded as a proposal. Its Markdown assets are marked historical. Its original [integrity manifest](pilot/v0b/manifest.json) is deliberately not regenerated against these changed documents: `--check-manifest` must report it stale. Successful legacy schema/asset checks do not make that package an executable 0.4 configuration. See [V0B_REVIEW](V0B_REVIEW.md) before using any preparation command.
 
-No runtime source, test, schema, dependency or pilot JSON contract changes are included in this document revision. A later implementation needs explicit scope and updated validation, particularly for direct owner controls, simplified semantic operations, effective participation, concise prompts and the actual retention arrangement. Existing histories must not be reinterpreted or migrated implicitly.
+Token admission counts the entire framed request with the supplied tokenizer before generation. Local counts and provider telemetry remain separate; unknown calls retain their reservations. Connection cancellation bounds the client wait and does not prove that Ollama stopped computing. No uncertain action or generation is automatically replayed. Tests establish these host behaviors; actual tokenizer parity, GPU fit, speed, server cancellation, and provider/log retention still require a bounded live calibration.
 
-## Document revision handoff
+## Current implementation handoff
 
-The owner's request authorizes this policy/document revision and preservation of the fallback. The owner subsequently authorized committing and pushing the documents and archive. Runtime implementation and live experiments remain outside this revision. The charter is preserved byte-for-byte. Active policy, research scope, implementation status and historical material are distinguished explicitly. Documentation validation covers archive integrity, charter preservation, relative links and Markdown structure, cross-document consistency, and whitespace; it does not establish implementation conformance.
+The owner authorized the minimal runtime integration and offline tests, then separately authorized committing and pushing the runtime and updated documents. Live model calls remain excluded. The implementation revision is the commit containing this handoff, following `93d96b0`. The Charter and procedural archive are preserved. No stored-history migration, workstation tools, new dependency or live experiment is included.
 
-Validation passed: all 87 archived tracked files match the preserved Git tree allowing Git's CRLF conversion; the readable Protocol/Specification copies and ZIP checksum match; the Charter's exact byte hash is unchanged; all 59 local Markdown links resolve; tables and code fences are structurally consistent; terminology and policy were checked across active documents; and `git diff --check` passes. The archived pilot manifest verifies, while the current legacy manifest is stale only for the changed Markdown files. Runtime tests were not rerun for this documentation-only revision.
+Offline coverage includes full A/B/C development trajectories, C restrictions, exact retries, direct owner correction, role-bound participation review, malformed/late stop reports, interruption around action/semantic commits, finite budgets, evaluator isolation, retrieval lineage, removal interruption/non-resurrection, allocation and CLI inspection. Scope remains the finite development fixture and one serialized lane per Run; real backend behavior and a scientifically useful task sequence remain integration responsibilities.
+
+Validation on 2026-10-15: the complete 280-test suite passed with two optional tokenizer tests skipped; after expanding C-arm coverage, all 12 C-arm tests passed separately. Together those runs exercise all 291 tests in the final tree. All six schema/asset checks above passed, as did Python syntax, Markdown links and structure, and `git diff --check`. One earlier suite run encountered a Windows temporary-database cleanup lock; that test passed in isolation and the complete rerun passed using an ignored repository-local temporary directory. These checks used real SQLite files and fake model responses, including a synthetic HTTP server; they made no live model calls. The Charter hash matches the baseline and the archive is untouched.
 
 ## License
 

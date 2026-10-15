@@ -2,7 +2,7 @@
 
 **Version:** 0.4-design, owner-directed revision of 2026-10-15.
 
-**Status:** implementation target for the revised [Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md). The repository's existing code and generated schemas implement the earlier procedural baseline; this document does not relabel them as conformant to 0.4. See [README](README.md) for current status and the [archive](docs/archive/2026-10-15-procedural-baseline/README.md) for the complete previous specification and implementation.
+**Status:** implementation target for the revised [Protocol](Operating%20Constitution%20and%20Execution%20Protocol.md). A bounded 0.4 development path is now implemented and tested offline; the earlier runtime and schemas keep their historical meaning. This does not establish live backend readiness or finalized-study conformance. See [README](README.md) for the implementation envelope and the [archive](docs/archive/2026-10-15-procedural-baseline/README.md) for the complete previous specification and implementation.
 
 ## 1. Boundary and minimum mechanism
 
@@ -182,9 +182,9 @@ Before model use, additionally verify the selected transport, framing, cancellat
 
 ## 12. Transition from the procedural baseline
 
-This revision authorizes a simpler design, not an in-place reinterpretation of stored records. Existing code, wire version 0.3.p01, schemas, tests and pilot JSON assets retain their earlier meanings. They have not been changed by this documentation revision.
+This design does not authorize in-place reinterpretation of stored records. Wire version 0.3.p01, its schemas, tests and legacy pilot JSON assets retain their earlier meanings. The separately authorized implementation uses version 0.4 for fresh development Runs; it does not migrate historical records.
 
-A later authorized implementation should replace routine confirmation/review machinery, simplify model-facing metadata and semantic operations, introduce resolved budget profiles and concise prompts, and narrow offered copy/restoration features. Preserve the effective stop/permission/transaction boundaries throughout. New contracts need explicit versioning; any conversion of existing histories needs a separately scoped migration preserving provenance, obligations and holds. There is no need to migrate synthetic records merely to make a new design appear implemented.
+The bounded implementation replaces routine confirmation/review machinery, simplifies model-facing metadata and semantic operations, introduces resource profiles and concise prompts, and narrows offered copy/restoration features. Preserve the effective stop/permission/transaction boundaries in subsequent changes. Any conversion of existing histories still needs a separately scoped migration preserving provenance, obligations and holds. There is no need to migrate synthetic records merely to make a new design appear implemented.
 
 Historical acceptance remains tied to the revision and envelope tested. Report new technical evidence and delegated acceptance once in the current handoff. Do not revive a completed ten-slice roadmap or require the whole archived platform before a bounded new implementation can be assessed.
 

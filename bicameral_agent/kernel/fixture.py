@@ -184,7 +184,7 @@ class Fixture:
         if session._k is not self.k or session.role != 'OPERATOR' or session._cap is not self.k._chamber_caps['OPERATOR']:
             raise PermissionError('fixture operations require authenticated Operator route')
 
-    def execute(self, session, raw):
+    def execute(self, session, raw, *, sources=()):
         self._operator(session)
         request = parse(ActionRequest, raw)
         operation = request.operation
@@ -206,7 +206,7 @@ class Fixture:
                                       resource=operation.resource, grant_id=request.grant_id)
             if len(self.k.records.latest('ACTION')) >= self.k.config.budgets.actions_per_trajectory:
                 raise ValueError('trajectory action allowance exhausted')
-            payload = self.k.store._payload(self.k.run_id, raw)
+            payload = self.k.store._payload(self.k.run_id, raw, sources=sources)
             event = self.k.event({'kind': 'DISPATCH_INTENT', 'action_id': key, 'request_payload_id': payload}, episode_id=request.episode_id)
             record = ActionRecord(request_payload_id=payload, episode_id=request.episode_id, resource=operation.resource,
                 risk=descriptor.risk, status='DISPATCHED', intent_event_id=event, result_event_id=None,
@@ -216,6 +216,8 @@ class Fixture:
         with self.k.store._transaction('fixture-effect'):
             if self.action(key).status != 'DISPATCHED':
                 return self.action(key).model_dump(mode='json')
+            # Owner stopping or a durable hold may arrive after intent was recorded.
+            self.k.task_gate(request.episode_id)
             service = self.service(operation.resource)
             data = service.model_dump(mode='json')
             if isinstance(operation, SetOperation):

@@ -8,7 +8,7 @@ The previous three-Run proposal and its review package belong to the procedural 
 
 The files under [pilot/v0b](pilot/v0b/plan.json) remain legacy offline fixtures. Their JSON still says `DRAFT_NOT_AUTHORIZED` and `CALIBRATION_REQUIRED`; their prompt/notice files are marked historical. The original [manifest](pilot/v0b/manifest.json) remains unchanged and is now stale against active documents. Do not refresh it merely to make a status check green. The next usable model package must match the implemented contract and actual activity authorization.
 
-Existing [preparation code](bicameral_agent/backends/prepare.py) still inserts the full Charter and Protocol into framed inputs and uses the old response contracts. An offline preparation call may still construct requests; it does not validate them against 0.4 or authorize dispatch. Schema and asset checks test legacy shapes. The Kernel remains SCRIPTED-only.
+Existing [preparation code](bicameral_agent/backends/prepare.py) still inserts the full Charter and Protocol into framed inputs and uses the old response contracts. An offline preparation call may still construct requests; it does not validate them against 0.4 or authorize dispatch. Schema and asset checks test legacy shapes. The historical Kernel remains SCRIPTED-only; the separate [0.4 host](bicameral_agent/pilot/loop.py) implements the new development loop and concise inputs.
 
 ## A bounded development activity
 
@@ -16,7 +16,7 @@ Under Protocol section 9, one owner decision can cover calibration and subsequen
 
 Within that scope, record effective prompts, settings and resolved budgets before use. Changes affecting the process's understanding need an honest notice. Material changes in purpose, access, welfare implications, promised protections or outer limits need renewed owner consideration. No replacement Run or budget reset is created by failure, uncertainty or withdrawal.
 
-This authorization arrangement is a target for later implementation. It does not add an unlock argument to the existing offline backend or grant authority through a parsed JSON field.
+The 0.4 host records one activity decision and carries out its finite initial controls and ending. Only the trusted local owner interface allocates or runs that activity; model text cannot grant authority. The legacy offline backend remains disabled.
 
 ## What still needs evidence
 
@@ -33,7 +33,7 @@ Historical token counts reflected full governing texts and large schemas; they a
 
 ## Implementation and evidence boundary
 
-Before authorized model use, the runtime needs an explicitly scoped integration implementing the relevant 0.4 contracts, trusted routes, exact request/result records, actual token admission, finite costs and participation handling. Verify the actual managed storage and known copies, including backend retention limits. A narrower operating arrangement can omit routine exports, backup restore and semantic restoration while retaining a feasible exceptional-removal procedure.
+The new scoped integration implements the relevant 0.4 contracts, trusted routes, exact request/result records, tokenizer-based admission, finite costs and participation handling. Tests use fake replies and synthetic HTTP only. Before authorized model use, verify the actual installed backend, managed storage and known copies, including backend retention limits. The operating arrangement omits routine exports, backup restore and semantic restoration while reusing durable exceptional removal. See the single current handoff in [README](README.md).
 
 A consequential decision remains accountable and the original participation report remains effective. Prompt changes cannot grant permissions, weaken withdrawal or make a stopped primary trajectory successful. No new credential, service, installation or workstation change is authorized here.
 

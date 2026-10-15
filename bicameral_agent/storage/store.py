@@ -215,6 +215,8 @@ class Store:
 
     @staticmethod
     def _declared_artifacts(config):
+        if config.contract_version == '0.4':
+            return config.artifacts
         declared = {key: digest for key, digest in config.artifacts.model_dump().items() if digest is not None}
         if config.mode == "SCRIPTED":
             declared.update({key: getattr(config, key) for key in
@@ -230,7 +232,7 @@ class Store:
         Artifact keys are the declared field names, not machine paths. P03 must
         perform preflight and human sealing/activation; this method authorizes none.
         """
-        config = TypeAdapter(RunConfiguration).validate_json(canonical_bytes(load_json(raw)), strict=True)
+        config = self.parse_configuration(raw)
         declared = self._declared_artifacts(config)
         if set(artifacts) != set(declared):
             raise ValueError("artifact manifest differs from configuration")
@@ -255,7 +257,15 @@ class Store:
         row = self._db.execute("SELECT configuration_id FROM runs WHERE id=?", (run_id,)).fetchone()
         if row is None:
             raise StorageError("unknown Run")
-        return TypeAdapter(RunConfiguration).validate_json(self.read_payload(run_id, row[0]), strict=True)
+        return self.parse_configuration(self.read_payload(run_id, row[0]))
+
+    @staticmethod
+    def parse_configuration(raw):
+        value = load_json(raw)
+        if isinstance(value, dict) and value.get('contract_version') == '0.4':
+            from ..contracts.pilot import PilotConfiguration
+            return parse(PilotConfiguration, raw)
+        return TypeAdapter(RunConfiguration).validate_json(canonical_bytes(value), strict=True)
 
     def _event(self, run_id, payload_id, *, role, source, visibility, episode_id=None):
         event_id = identifier()

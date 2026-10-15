@@ -243,6 +243,9 @@ class Inputs:
             encoded = canonical_bytes(response)
             if len(encoded) > budget.page_tokens:
                 raise ValueError('serialized page token budget exceeded')
+            tokens = self.k.count(encoded.decode()) if self.k.config.contract_version == '0.4' else len(encoded)
+            if self.k.config.contract_version == '0.4' and tokens > budget.evidence_tokens:
+                raise ValueError('retrieval page exceeds actual evidence token allowance')
             if more:
                 self.k.records.put('CURSOR', next_cursor, {'role': session.role, 'query': request.query.model_dump(mode='json'),
                     'event_cutoff': event_cutoff, 'record_cutoff': record_cutoff, 'offset': next_offset,
@@ -250,7 +253,7 @@ class Inputs:
             request_payload = self.k.store._payload(self.k.run_id, raw)
             response_payload = self.k.store._payload(self.k.run_id, encoded, sources=dependencies)
             self.k.records.put('RETRIEVAL', key, {'request_payload_id': request_payload, 'response_payload_id': response_payload,
-                'dependencies': dependencies, 'episode_id': episode_id, 'bytes': returned_bytes, 'tokens': len(encoded)}, expected=0)
+                'dependencies': dependencies, 'episode_id': episode_id, 'bytes': returned_bytes, 'tokens': tokens}, expected=0)
             self.k.event({'kind': 'RETRIEVAL', 'request_id': request.request_id, 'response_payload_id': response_payload}, episode_id=episode_id)
             return encoded
 

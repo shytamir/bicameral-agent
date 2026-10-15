@@ -147,4 +147,4 @@ Held-out evaluation requires a separately authorized, fixed study configuration.
 
 Passing the required technical validations satisfies definition of done for an authorized implementation slice within its documented operational envelope. When the owner delegates acceptance, the implementing agent may accept and complete handoff without another sign-off. Record the delegation, decision, implementation revision, envelope, checks and remaining integration responsibilities once in the handoff.
 
-This revision is authorized document work. It does not implement the revised contracts, authorize model calls, amend the charter or retrospectively certify earlier conduct. Existing acceptance evidence remains evidence for the implementation actually tested.
+This Protocol does not itself authorize implementation or model calls, amend the charter or retrospectively certify earlier conduct. Separate owner instructions and the current implementation handoff are recorded in README. Existing acceptance evidence remains evidence for the implementation actually tested.
